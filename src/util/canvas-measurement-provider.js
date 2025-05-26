@@ -15,14 +15,14 @@ class CanvasMeasurementProvider {
      * Called by the TextWrapper before a batch of zero or more calls to measureText().
      */
     beginMeasurementSession () {
-        
+
     }
 
     /**
      * Called by the TextWrapper after a batch of zero or more calls to measureText().
      */
     endMeasurementSession () {
-        
+
     }
 
     /**
@@ -38,4 +38,4 @@ class CanvasMeasurementProvider {
     }
 }
 
-module.exports = CanvasMeasurementProvider;
+export default CanvasMeasurementProvider;

@@ -53,7 +53,6 @@ const __cornerWork = [
  */
 const getColor4b = ({_width: width, _height: height, _colorData: data}, x, y, dst) => {
     // Clamp coords to edge, matching GL_CLAMP_TO_EDGE.
-    // (See github.com/LLK/scratch-render/blob/954cfff02b08069a082cbedd415c1fecd9b1e4fb/src/BitmapSkin.js#L88)
     x = intMax(0, intMin(x, width - 1));
     y = intMax(0, intMin(y, height - 1));
 
@@ -94,7 +93,7 @@ const getPremultipliedColor4b = ({_width: width, _height: height, _colorData: da
 };
 
 class Silhouette {
-    constructor () {
+    constructor() {
         /**
          * The width of the data representing the current skin data.
          * @type {number}
@@ -127,7 +126,7 @@ class Silhouette {
      * @param {boolean} isPremultiplied True if the source bitmap data comes premultiplied (e.g. from readPixels).
      * rendering can be queried from.
      */
-    update (bitmapData, isPremultiplied = false) {
+    update(bitmapData, isPremultiplied = false) {
         let imageData;
         if (bitmapData instanceof ImageData) {
             // If handed ImageData directly, use it directly.
@@ -170,7 +169,7 @@ class Silhouette {
      * @param {Uint8ClampedArray} dst The memory buffer to store the value in. (4 bytes)
      * @returns {Uint8ClampedArray} dst
      */
-    colorAtNearest (vec, dst) {
+    colorAtNearest(vec, dst) {
         return this._getColor(
             this,
             Math.floor(vec[0] * (this._width - 1)),
@@ -186,7 +185,7 @@ class Silhouette {
      * @param {Uint8ClampedArray} dst The memory buffer to store the value in. (4 bytes)
      * @returns {Uint8ClampedArray} dst
      */
-    colorAtLinear (vec, dst) {
+    colorAtLinear(vec, dst) {
         const x = vec[0] * (this._width - 1);
         const y = vec[1] * (this._height - 1);
 
@@ -216,7 +215,7 @@ class Silhouette {
      * @param {twgl.v3} vec A texture coordinate.
      * @return {boolean} If the nearest pixel has an alpha value.
      */
-    isTouchingNearest (vec) {
+    isTouchingNearest(vec) {
         if (!this._colorData) return;
         return getPoint(
             this,
@@ -231,7 +230,7 @@ class Silhouette {
      * @param {twgl.v3} vec A texture coordinate.
      * @return {boolean} Any of the pixels have some alpha.
      */
-    isTouchingLinear (vec) {
+    isTouchingLinear(vec) {
         if (!this._colorData) return;
         const x = Math.floor(vec[0] * (this._width - 1));
         const y = Math.floor(vec[1] * (this._height - 1));
@@ -246,7 +245,7 @@ class Silhouette {
      * @private
      * @return {CanvasElement} A canvas to draw bitmap data to.
      */
-    static _updateCanvas () {
+    static _updateCanvas() {
         if (typeof __SilhouetteUpdateCanvas === 'undefined') {
             __SilhouetteUpdateCanvas = document.createElement('canvas');
         }
@@ -254,4 +253,4 @@ class Silhouette {
     }
 }
 
-module.exports = Silhouette;
+export default Silhouette;

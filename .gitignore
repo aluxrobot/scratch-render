@@ -13,7 +13,6 @@ npm-*
 /.idea
 
 # Build
-/dist
 /playground
 
 # Act

@@ -1,0 +1,56 @@
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+
+export default defineConfig(({ mode }) => ({
+    server: {
+        port: process.env.PORT || 8361,
+        open: '/playground/',
+    },
+
+    build: {
+        lib: {
+            entry: resolve(process.cwd(), 'src/index.js'),
+            name: 'ScratchRender',
+            formats: ['es', 'cjs', 'umd'],
+            fileName: (format) => {
+                if (format === 'es') return 'web/scratch-render.js';
+                if (format === 'cjs') return 'node/scratch-render.js';
+                if (format === 'umd') return 'umd/scratch-render.js';
+                return `scratch-render.${format}.js`;
+            }
+        },
+        rollupOptions: {
+            external: [
+                'events',
+                'grapheme-breaker',
+                'linebreak',
+                'hull.js',
+                'scratch-svg-renderer',
+                'twgl.js',
+                'xml-escape'
+            ],
+            output: {
+                // 더 작은 번들
+                compact: mode === 'production'
+            }
+        },
+        // 환경별 설정
+        sourcemap: mode === 'development',
+        minify: mode === 'production' ? 'esbuild' : false, // terser 대신 esbuild 사용
+        target: 'es2018',
+
+        // 프로덕션 전용 최적화 (esbuild용)
+        ...(mode === 'production' && {
+            esbuild: {
+                drop: ['console', 'debugger'], // console.log와 debugger 제거
+                legalComments: 'none' // 주석 제거
+            }
+        })
+    },
+
+    resolve: {
+        alias: {
+            '@': resolve(process.cwd(), './src')
+        }
+    }
+}));
