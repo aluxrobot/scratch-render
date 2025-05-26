@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import twgl from 'twgl.js';
+import * as twgl from 'twgl.js';
 import RenderConstants from './RenderConstants';
 import Silhouette from './Silhouette';
 

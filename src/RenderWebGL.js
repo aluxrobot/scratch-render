@@ -1,7 +1,7 @@
 // External Dependencies
 import EventEmitter from 'events';
 import hull from 'hull.js';
-import twgl from 'twgl.js';
+import * as twgl from 'twgl.js';
 
 // Skins
 import BitmapSkin from './BitmapSkin';

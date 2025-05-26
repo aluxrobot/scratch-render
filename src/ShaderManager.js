@@ -1,4 +1,4 @@
-import twgl from 'twgl.js';
+import * as twgl from 'twgl.js';
 
 // Vite의 ?raw 방식으로 shader 파일들 import
 import spriteVert from './shaders/sprite.vert?raw';

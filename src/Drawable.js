@@ -1,4 +1,4 @@
-import twgl from 'twgl.js';
+import * as twgl from 'twgl.js';
 import Rectangle from './Rectangle';
 import RenderConstants from './RenderConstants';
 import ShaderManager from './ShaderManager';

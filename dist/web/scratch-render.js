@@ -1,10 +1,9 @@
 import bt from "events";
 import St from "hull.js";
-import * as Dt from "twgl.js";
-import f from "twgl.js";
-import { loadSvgString as Tt, serializeSvgToString as Ct } from "scratch-svg-renderer";
-import Mt from "linebreak";
-import kt from "grapheme-breaker";
+import * as f from "twgl.js";
+import { loadSvgString as Dt, serializeSvgToString as Tt } from "scratch-svg-renderer";
+import Ct from "linebreak";
+import Mt from "grapheme-breaker";
 const v = {
   /**
    * The ID value to use for "no item" or when an object has been disposed.
@@ -42,7 +41,7 @@ const W = (h, t) => t ^ (h ^ t) & h - t >> 31, U = (h, t) => h ^ (h ^ t) & h - t
     return s.fill(0);
   const r = (n * h + i) * 4, a = e[r + 3] / 255;
   return s[0] = e[r] * a, s[1] = e[r + 1] * a, s[2] = e[r + 2] * a, s[3] = e[r + 3], s;
-}, It = ({ _width: h, _height: t, _colorData: e }, i, n, s) => {
+}, kt = ({ _width: h, _height: t, _colorData: e }, i, n, s) => {
   i = U(0, W(i, h - 1)), n = U(0, W(n, t - 1));
   const r = (n * h + i) * 4;
   return s[0] = e[r], s[1] = e[r + 1], s[2] = e[r + 2], s[3] = e[r + 3], s;
@@ -67,7 +66,7 @@ class nt {
         return;
       a.clearRect(0, 0, s, r), a.drawImage(t, 0, 0, s, r), i = a.getImageData(0, 0, s, r);
     }
-    e ? this._getColor = It : this._getColor = at, this._colorData = i.data, delete this.colorAtNearest, delete this.colorAtLinear;
+    e ? this._getColor = kt : this._getColor = at, this._colorData = i.data, delete this.colorAtNearest, delete this.colorAtLinear;
   }
   /**
    * Sample a color from the silhouette at a given local position using
@@ -344,7 +343,7 @@ class B extends x {
     return t instanceof HTMLImageElement ? [t.naturalWidth || t.width, t.naturalHeight || t.height] : t instanceof HTMLVideoElement ? [t.videoWidth || t.width, t.videoHeight || t.height] : [t.width, t.height];
   }
 }
-const At = `precision mediump float;
+const It = `precision mediump float;
 
 #ifdef DRAW_MODE_line
 uniform vec2 u_stageSize;
@@ -419,7 +418,7 @@ void main() {
 	v_texCoord = a_texCoord;
 	#endif
 }
-`, Rt = `precision mediump float;
+`, At = `precision mediump float;
 
 #ifdef DRAW_MODE_silhouette
 uniform vec4 u_silhouetteColor;
@@ -707,7 +706,7 @@ class m {
       e & 1 << o && n.push(`#define ENABLE_${m.EFFECTS[o]}`);
     const s = `${n.join(`
 `)}
-`, r = s + At, a = s + Rt;
+`, r = s + It, a = s + At;
     return f.createProgramInfo(this._gl, [r, a]);
   }
 }
@@ -793,7 +792,7 @@ const V = {
   color4f: [0, 0, 1, 1],
   diameter: 1
 }, A = [0, 0, 0, 0];
-class Nt extends x {
+class Rt extends x {
   /**
    * Create a Skin which implements a Scratch pen layer.
    * @param {int} id - The unique ID for this Skin.
@@ -1002,7 +1001,7 @@ class Nt extends x {
     }
   }
 }
-const Bt = 2048, ht = 8;
+const Nt = 2048, ht = 8;
 class X extends x {
   /**
    * Create a new SVG skin.
@@ -1075,7 +1074,7 @@ class X extends x {
    * @fires Skin.event:WasAltered
    */
   setSVG(t, e) {
-    const i = Tt(t), n = Ct(
+    const i = Dt(t), n = Tt(
       i,
       !0
       /* shouldInjectFonts */
@@ -1089,13 +1088,13 @@ class X extends x {
       }
       const l = Math.ceil(Math.max(a, o));
       let c = 2;
-      for (c; l * c <= Bt; c *= 2)
+      for (c; l * c <= Nt; c *= 2)
         this._maxTextureScale = c;
       this.resetMIPs(), typeof e == "undefined" && (e = this.calculateRotationCenter()), this._rotationCenter[0] = e[0] - s, this._rotationCenter[1] = e[1] - r, this._svgImageLoaded = !0, this.emit(x.Events.WasAltered);
     }, this._svgImage.src = `data:image/svg+xml;utf8,${encodeURIComponent(n)}`;
   }
 }
-class Ft {
+class Bt {
   /**
    * Construct a text wrapper which will measure text using the specified measurement provider.
    * @param {MeasurementProvider} measurementProvider - a helper object to provide text measurement services.
@@ -1114,7 +1113,7 @@ class Ft {
     const i = `${t}-${e}`;
     if (this._cache[i])
       return this._cache[i];
-    const n = this._measurementProvider.beginMeasurementSession(), s = new Mt(e);
+    const n = this._measurementProvider.beginMeasurementSession(), s = new Ct(e);
     let r = 0, a, o = null;
     const l = [];
     for (; a = s.nextBreak(); ) {
@@ -1123,7 +1122,7 @@ class Ft {
       if (_ > t)
         if (this._measurementProvider.measureText(c) > t) {
           let d = 0, p;
-          for (; d !== (p = kt.nextBreak(c, d)); ) {
+          for (; d !== (p = Mt.nextBreak(c, d)); ) {
             const E = c.substring(d, p);
             u = (o || "").concat(E), _ = this._measurementProvider.measureText(u), o === null || _ <= t ? o = u : (l.push(o), o = E), d = p;
           }
@@ -1136,7 +1135,7 @@ class Ft {
     return o = o || "", (o.length > 0 || l.length === 0) && l.push(o), this._cache[i] = l, this._measurementProvider.endMeasurementSession(n), l;
   }
 }
-class Lt {
+class Ft {
   /**
    * @param {CanvasRenderingContext2D} ctx - provides a canvas rendering context
    * with 'font' set to the text style of the text to be wrapped.
@@ -1200,7 +1199,7 @@ class P extends x {
    * @extends Skin
    */
   constructor(t, e) {
-    super(t), this._renderer = e, this._canvas = document.createElement("canvas"), this._size = [0, 0], this._renderedScale = 0, this._lines = [], this._textAreaSize = { width: 0, height: 0 }, this._bubbleType = "", this._pointsLeft = !1, this._textDirty = !0, this._textureDirty = !0, this.measurementProvider = new Lt(this._canvas.getContext("2d")), this.textWrapper = new Ft(this.measurementProvider), this._restyleCanvas();
+    super(t), this._renderer = e, this._canvas = document.createElement("canvas"), this._size = [0, 0], this._renderedScale = 0, this._lines = [], this._textAreaSize = { width: 0, height: 0 }, this._bubbleType = "", this._pointsLeft = !1, this._textDirty = !0, this._textureDirty = !0, this.measurementProvider = new Ft(this._canvas.getContext("2d")), this.textWrapper = new Bt(this.measurementProvider), this._restyleCanvas();
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
@@ -1405,14 +1404,14 @@ class b {
     return Math.abs(this.top - this.bottom);
   }
 }
-const Ot = ([h, t, e], i) => {
+const Lt = ([h, t, e], i) => {
   let n = 0;
   h /= 255, t /= 255, e /= 255;
   let s = 0;
   t < e && (s = t, t = e, e = s, n = -1), h < t && (s = h, h = t, t = s, n = -2 / 6 - n);
   const r = h - Math.min(t, e), a = Math.abs(n + (t - e) / (6 * r + Number.EPSILON)), o = r / (h + Number.EPSILON), l = h;
   return i[0] = a, i[1] = o, i[2] = l, i;
-}, Pt = ([h, t, e], i) => {
+}, Ot = ([h, t, e], i) => {
   if (t === 0)
     return i[0] = i[1] = i[2] = e * 255 + 0.5, i;
   h %= 1;
@@ -1439,7 +1438,7 @@ const Ot = ([h, t, e], i) => {
       break;
   }
   return i[0] = l * 255 + 0.5, i[1] = c * 255 + 0.5, i[2] = u * 255 + 0.5, i;
-}, C = 0.5, M = 0.5, zt = [0, 0, 0];
+}, C = 0.5, M = 0.5, Pt = [0, 0, 0];
 class G {
   /**
    * Transform a color in-place given the drawable's effect uniforms.  Will apply
@@ -1458,8 +1457,8 @@ class G {
     if (r || a) {
       const o = e[3] / 255;
       if (e[0] /= o, e[1] /= o, e[2] /= o, r) {
-        const l = Ot(e, zt), c = 0.11 / 2, u = 0.09;
-        l[2] < c ? (l[0] = 0, l[1] = 1, l[2] = c) : l[1] < u && (l[0] = 0, l[1] = u), l[0] = s.u_color + l[0] + 1, Pt(l, e);
+        const l = Lt(e, Pt), c = 0.11 / 2, u = 0.09;
+        l[2] < c ? (l[0] = 0, l[1] = 1, l[2] = c) : l[1] < u && (l[0] = 0, l[1] = u), l[0] = s.u_color + l[0] + 1, Ot(l, e);
       }
       if (a) {
         const l = s.u_brightness * 255;
@@ -1477,7 +1476,7 @@ class G {
    * @return {twgl.v3} dst - The coordinate after being transform by effects.
    */
   static transformPoint(t, e, i) {
-    Dt.v3.copy(e, i);
+    f.v3.copy(e, i);
     const n = t.enabledEffects, s = t.getUniforms();
     if (n & m.EFFECT_INFO.mosaic.mask && (i[0] = s.u_mosaic * i[0] % 1, i[1] = s.u_mosaic * i[1] % 1), n & m.EFFECT_INFO.pixelate.mask) {
       const r = t.skin.getUniforms(), a = r.u_skinSize[0] / s.u_pixelate, o = r.u_skinSize[1] / s.u_pixelate;
@@ -1494,7 +1493,7 @@ class G {
     return i;
   }
 }
-function Ht(h) {
+function zt(h) {
   return h && h.__esModule && Object.prototype.hasOwnProperty.call(h, "default") ? h.default : h;
 }
 var et = { exports: {} }, it = { exports: {} };
@@ -1541,10 +1540,10 @@ j.mixin = function(h) {
   for (e in t)
     t.hasOwnProperty(e) && (h.prototype[e] = t[e]);
 };
-var Wt = j, Ut = Wt;
+var Ht = j, Wt = Ht;
 function S() {
 }
-Ut.mixin(S);
+Wt.mixin(S);
 S.prototype.write = function(h, t, e) {
   this.emit("item", h, t, e);
 };
@@ -1583,11 +1582,11 @@ S.mixin = function(h) {
   for (e in t)
     t.hasOwnProperty(e) && (h.prototype[e] = t[e]);
 };
-var T = S, Gt = T, $ = { debug: 1, info: 2, warn: 3, error: 4 };
+var T = S, Ut = T, $ = { debug: 1, info: 2, warn: 3, error: 4 };
 function k() {
   this.enabled = !0, this.defaultResult = !0, this.clear();
 }
-Gt.mixin(k);
+Ut.mixin(k);
 k.prototype.allow = function(h, t) {
   return this._white.push({ n: h, l: $[t] }), this;
 };
@@ -1614,9 +1613,9 @@ k.prototype.write = function(h, t, e) {
   if (!this.enabled || this.test(h, t))
     return this.emit("item", h, t, e);
 };
-var jt = k;
+var Gt = k;
 (function(h, t) {
-  var e = T, i = jt, n = new e(), s = Array.prototype.slice;
+  var e = T, i = Gt, n = new e(), s = Array.prototype.slice;
   t = h.exports = function(a) {
     var o = function() {
       return n.write(a, void 0, s.call(arguments)), o;
@@ -1638,7 +1637,7 @@ var jt = k;
     return t.defaultFormatter ? n.pipe(t.suggest).pipe(t.defaultFormatter).pipe(t.defaultBackend) : n.pipe(t.suggest).pipe(t.defaultBackend);
   };
 })(it, it.exports);
-var $t = it.exports, ct = {
+var jt = it.exports, ct = {
   black: "#000",
   red: "#c23621",
   green: "#25bc26",
@@ -1649,17 +1648,17 @@ var $t = it.exports, ct = {
   gray: "#808080",
   purple: "#708"
 };
-function qt(h, t) {
+function $t(h, t) {
   return t ? "color: #fff; background: " + ct[h] + ";" : "color: " + ct[h] + ";";
 }
-var vt = qt, Vt = T, K = vt, Xt = { debug: ["cyan"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, st = new Vt();
+var vt = $t, qt = T, K = vt, Vt = { debug: ["cyan"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, st = new qt();
 st.write = function(h, t, e) {
   var i = console.log;
-  console[t] && console[t].apply && (i = console[t], i.apply(console, ["%c" + h + " %c" + t, K("gray"), K.apply(K, Xt[t])].concat(e)));
+  console[t] && console[t].apply && (i = console[t], i.apply(console, ["%c" + h + " %c" + t, K("gray"), K.apply(K, Vt[t])].concat(e)));
 };
 st.pipe = function() {
 };
-var Kt = st, Yt = T, z = vt, ut = { debug: ["gray"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, rt = new Yt();
+var Xt = st, Kt = T, z = vt, ut = { debug: ["gray"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, rt = new Kt();
 rt.write = function(h, t, e) {
   var i = console.log;
   t != "debug" && console[t] && (i = console[t]);
@@ -1673,14 +1672,14 @@ rt.write = function(h, t, e) {
 };
 rt.pipe = function() {
 };
-var Jt = rt, Qt = T, Zt = /\n+$/, L = new Qt();
+var Yt = rt, Jt = T, Qt = /\n+$/, L = new Jt();
 L.write = function(h, t, e) {
   var i = e.length - 1;
   if (!(typeof console == "undefined" || !console.log)) {
     if (console.log.apply)
       return console.log.apply(console, [h, t].concat(e));
     if (JSON && JSON.stringify) {
-      e[i] && typeof e[i] == "string" && (e[i] = e[i].replace(Zt, ""));
+      e[i] && typeof e[i] == "string" && (e[i] = e[i].replace(Qt, ""));
       try {
         for (i = 0; i < e.length; i++)
           e[i] = JSON.stringify(e[i]);
@@ -1691,10 +1690,10 @@ L.write = function(h, t, e) {
   }
 };
 L.formatters = ["color", "minilog"];
-L.color = Kt;
-L.minilog = Jt;
-var te = L, Y, ft;
-function ee() {
+L.color = Xt;
+L.minilog = Yt;
+var Zt = L, Y, ft;
+function te() {
   if (ft) return Y;
   ft = 1;
   var h = T, t = [], e = new h();
@@ -1707,7 +1706,7 @@ function ee() {
   }, Y = e, Y;
 }
 var J, _t;
-function ie() {
+function ee() {
   if (_t) return J;
   _t = 1;
   var h = T, t = !1, e = new h();
@@ -1720,7 +1719,7 @@ function ie() {
   }, J = e, J;
 }
 var Q, dt;
-function ne() {
+function ie() {
   if (dt) return Q;
   dt = 1;
   var h = T, t = (/* @__PURE__ */ new Date()).valueOf().toString(36);
@@ -1766,7 +1765,7 @@ function ne() {
   }, Q = e, Q;
 }
 (function(h, t) {
-  var e = $t, i = e.enable, n = e.disable, s = typeof navigator != "undefined" && /chrome/i.test(navigator.userAgent), r = te;
+  var e = jt, i = e.enable, n = e.disable, s = typeof navigator != "undefined" && /chrome/i.test(navigator.userAgent), r = Zt;
   if (e.defaultBackend = s ? r.minilog : r, typeof window != "undefined") {
     try {
       e.enable(JSON.parse(window.localStorage.minilogSettings));
@@ -1792,17 +1791,17 @@ function ne() {
     }
     return this;
   }, t = h.exports = e, t.backends = {
-    array: ee(),
+    array: te(),
     browser: e.defaultBackend,
-    localStorage: ie(),
-    jQuery: ne()
+    localStorage: ee(),
+    jQuery: ie()
   };
 })(et, et.exports);
-var se = et.exports;
-const xt = /* @__PURE__ */ Ht(se);
+var ne = et.exports;
+const xt = /* @__PURE__ */ zt(ne);
 xt.enable();
-const N = xt("scratch-render"), re = f.v3.create(), gt = 1e-6, Z = (h, t) => {
-  const e = re, i = t[0], n = t[1], s = h._inverseMatrix, r = i * s[3] + n * s[7] + s[15];
+const N = xt("scratch-render"), se = f.v3.create(), gt = 1e-6, Z = (h, t) => {
+  const e = se, i = t[0], n = t[1], s = h._inverseMatrix, r = i * s[3] + n * s[7] + s[15];
   return e[0] = 0.5 - (i * s[0] + n * s[4] + s[12]) / r, e[1] = (i * s[1] + n * s[5] + s[13]) / r + 0.5, Math.abs(e[0]) < gt && (e[0] = 0), Math.abs(e[1]) < gt && (e[1] = 0), h.enabledEffects !== 0 && e[0] >= 0 && e[0] < 1 && e[1] >= 0 && e[1] < 1 && G.transformPoint(h, e, e), e;
 };
 class F {
@@ -2142,7 +2141,7 @@ class F {
     return e.enabledEffects === 0 ? r : G.transformColor(e, r, n);
   }
 }
-const mt = f.v3.create(), oe = new b(), ae = new b(), he = new Uint8ClampedArray(4), R = new Uint8ClampedArray(4), le = 4e4, H = [3, 3], ce = 2, pt = 2048, ue = (h, t) => (
+const mt = f.v3.create(), re = new b(), oe = new b(), ae = new Uint8ClampedArray(4), R = new Uint8ClampedArray(4), he = 4e4, H = [3, 3], le = 2, pt = 2048, ce = (h, t) => (
   // has some non-alpha component to test against
   h[3] > 0 && (h[0] & 252) === (t[0] & 252) && (h[1] & 252) === (t[1] & 252) && (h[2] & 252) === (t[2] & 252)
 ), tt = (h, t, e) => (h[0] & 248) === (t[e + 0] & 248) && (h[1] & 248) === (t[e + 1] & 248) && (h[2] & 240) === (t[e + 2] & 240), wt = 15;
@@ -2297,7 +2296,7 @@ class y extends bt {
    * @returns {!int} the ID for the new skin.
    */
   createPenSkin() {
-    const t = this._nextSkinId++, e = new Nt(t, this);
+    const t = this._nextSkinId++, e = new Rt(t, this);
     return this._allSkins[t] = e, t;
   }
   /**
@@ -2598,14 +2597,14 @@ class y extends bt {
     }
     const r = this._getMaxPixelsForCPU(), a = this._debugCanvas && this._debugCanvas.getContext("2d");
     a && (this._debugCanvas.width = s.width, this._debugCanvas.height = s.height), s.width * s.height * (n.length + 1) >= r && this._isTouchingColorGpuStart(t, n.map(({ id: g }) => g).reverse(), s, e, i);
-    const o = this._allDrawables[t], l = mt, c = he, u = !!i;
+    const o = this._allDrawables[t], l = mt, c = ae, u = !!i;
     o.updateCPURenderAttributes();
     const _ = ~m.EFFECT_INFO.ghost.mask;
     for (let g = s.bottom; g <= s.top; g++) {
       if (s.width * (g - s.bottom) * (n.length + 1) >= r)
         return this._isTouchingColorGpuFin(s, e, g - s.bottom);
       for (let d = s.left; d <= s.right; d++)
-        if (l[1] = g, l[0] = d, (u ? ue(F.sampleColor4b(l, o, c, _), i) : o.isTouching(l)) && (y.sampleColor3b(l, n, c), a && (a.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`, a.fillRect(d - s.left, s.bottom - g, 1, 1)), tt(c, e, 0)))
+        if (l[1] = g, l[0] = d, (u ? ce(F.sampleColor4b(l, o, c, _), i) : o.isTouching(l)) && (y.sampleColor3b(l, n, c), a && (a.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`, a.fillRect(d - s.left, s.bottom - g, 1, 1)), tt(c, e, 0)))
           return !0;
     }
     return !1;
@@ -2618,7 +2617,7 @@ class y extends bt {
         return 0;
       case y.UseGpuModes.Automatic:
       default:
-        return le;
+        return he;
     }
   }
   _enterDrawBackground() {
@@ -2638,7 +2637,7 @@ class y extends bt {
     let o;
     s && (o = {
       u_colorMask: [s[0] / 255, s[1] / 255, s[2] / 255],
-      u_colorMaskTolerance: ce / 255
+      u_colorMaskTolerance: le / 255
     });
     try {
       r.enable(r.STENCIL_TEST), r.stencilFunc(r.ALWAYS, 1, 1), r.stencilOp(r.KEEP, r.KEEP, r.REPLACE), r.colorMask(!1, !1, !1, !1), this._drawThese(
@@ -2949,7 +2948,7 @@ class y extends bt {
    * @return {Rectangle} the outer bounding box union
    */
   _candidatesBounds(t) {
-    return t.reduce((e, { intersection: i }) => e ? b.union(e, i, oe) : i, null);
+    return t.reduce((e, { intersection: i }) => e ? b.union(e, i, re) : i, null);
   }
   /**
    * Update a drawable's skin.
@@ -3037,7 +3036,7 @@ class y extends bt {
     const s = this._allDrawables[t];
     if (!s)
       return [i, n];
-    const r = i - s._position[0], a = n - s._position[1], o = s._skin.getFenceBounds(s, ae), l = Math.floor(Math.min(o.width, o.height) / 2), c = this._xRight - Math.min(wt, l);
+    const r = i - s._position[0], a = n - s._position[1], o = s._skin.getFenceBounds(s, oe), l = Math.floor(Math.min(o.width, o.height) / 2), c = this._xRight - Math.min(wt, l);
     o.right + r < -c ? i = Math.ceil(s._position[0] - (c + o.right)) : o.left + r > c && (i = Math.floor(s._position[0] + (c - o.left)));
     const u = this._yTop - Math.min(wt, l);
     return o.top + a < -u ? n = Math.ceil(s._position[1] - (u + o.top)) : o.bottom + a > u && (n = Math.floor(s._position[1] + (u - o.bottom))), [i, n];
