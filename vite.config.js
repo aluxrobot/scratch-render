@@ -1,11 +1,18 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import rawPlugin from 'vite-raw-plugin';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 export default defineConfig(({ mode }) => ({
     server: {
         port: process.env.PORT || 8361,
         open: '/playground/',
+    },
+
+    // 브라우저 호환성을 위한 define 설정
+    define: {
+        global: 'globalThis',
+        'process.env.NODE_ENV': JSON.stringify(mode),
     },
 
     build: {
@@ -31,24 +38,24 @@ export default defineConfig(({ mode }) => ({
                 'xml-escape'
             ],
             output: {
-                // 더 작은 번들
                 compact: mode === 'production'
-            }
+            },
+            plugins: [
+                // Node.js polyfills 추가
+                nodePolyfills()
+            ]
         },
-        // 환경별 설정
         sourcemap: mode === 'development',
-        minify: mode === 'production' ? 'esbuild' : false, // terser 대신 esbuild 사용
+        minify: mode === 'production' ? 'esbuild' : false,
         target: 'es2018',
 
-        // 프로덕션 전용 최적화 (esbuild용)
         ...(mode === 'production' && {
             esbuild: {
-                drop: ['console', 'debugger'], // console.log와 debugger 제거
-                legalComments: 'none' // 주석 제거
+                drop: ['console', 'debugger'],
+                legalComments: 'none'
             }
         }),
 
-        // 커먼JS 종속성 미리 번들링
         commonjsOptions: {
             include: [/node_modules/],
             transformMixedEsModules: true
@@ -61,14 +68,12 @@ export default defineConfig(({ mode }) => ({
         }
     },
 
-    // Vite 플러그인
     plugins: [
         rawPlugin({
             fileRegex: /\.(txt|md|vert|frag|glsl)$/,
         })
     ],
 
-    // 최적화 설정
     optimizeDeps: {
         include: [
             'twgl.js',
@@ -77,4 +82,3 @@ export default defineConfig(({ mode }) => ({
         exclude: ['raw-loader']
     }
 }));
-

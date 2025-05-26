@@ -1,6 +1,6 @@
 {
     "name": "scratch-render",
-    "version": "2.0.387",
+    "version": "2.0.388",
     "description": "WebGL Renderer for Scratch 3.0",
     "author": "Massachusetts Institute of Technology",
     "license": "AGPL-3.0-only",
@@ -66,6 +66,7 @@
         "json": "9.0.6",
         "playwright-chromium": "1.52.0",
         "rollup-plugin-copy": "^3.5.0",
+        "rollup-plugin-polyfill-node": "^0.13.0",
         "scratch-render-fonts": "1.0.196",
         "scratch-semantic-release-config": "3.0.0",
         "scratch-storage": "4.0.145",
