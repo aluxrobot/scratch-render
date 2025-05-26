@@ -28,15 +28,23 @@ export default defineConfig(({ mode }) => ({
             }
         },
         rollupOptions: {
-            external: [
-                'events',
-                'grapheme-breaker',
-                'linebreak',
-                'hull.js',
-                'scratch-svg-renderer',
-                'twgl.js',
-                'xml-escape'
-            ],
+            external: (id) => {
+                // Node.js 내장 모듈들을 external로 처리
+                const nodeBuiltins = ['fs', 'path', 'os', 'util', 'url', 'buffer', 'stream', 'events'];
+                if (nodeBuiltins.includes(id)) return true;
+
+                // 다른 external 모듈들
+                const externals = [
+                    'events',
+                    'grapheme-breaker',
+                    'linebreak',
+                    'hull.js',
+                    'scratch-svg-renderer',
+                    'twgl.js',
+                    'xml-escape'
+                ];
+                return externals.includes(id);
+            },
             output: {
                 compact: mode === 'production'
             },
