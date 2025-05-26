@@ -24,7 +24,6 @@ export default defineConfig(({ mode }) => ({
             external: [
                 'events',
                 'grapheme-breaker',
-                'linebreak',
                 'hull.js',
                 'scratch-svg-renderer',
                 'twgl.js',
