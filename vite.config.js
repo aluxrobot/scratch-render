@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import rawPlugin from 'vite-raw-plugin';
 
 export default defineConfig(({ mode }) => ({
     server: {
@@ -45,12 +46,35 @@ export default defineConfig(({ mode }) => ({
                 drop: ['console', 'debugger'], // console.log와 debugger 제거
                 legalComments: 'none' // 주석 제거
             }
-        })
+        }),
+
+        // 커먼JS 종속성 미리 번들링
+        commonjsOptions: {
+            include: [/node_modules/],
+            transformMixedEsModules: true
+        }
     },
 
     resolve: {
         alias: {
             '@': resolve(process.cwd(), './src')
         }
+    },
+
+    // Vite 플러그인
+    plugins: [
+        rawPlugin({
+            fileRegex: /\.(txt|md|vert|frag|glsl)$/,
+        })
+    ],
+
+    // 최적화 설정
+    optimizeDeps: {
+        include: [
+            'twgl.js',
+            'scratch-svg-renderer'
+        ],
+        exclude: ['raw-loader']
     }
 }));
+

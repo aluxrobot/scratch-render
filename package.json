@@ -1,6 +1,6 @@
 {
     "name": "scratch-render",
-    "version": "2.0.382",
+    "version": "2.0.383",
     "description": "WebGL Renderer for Scratch 3.0",
     "author": "Massachusetts Institute of Technology",
     "license": "AGPL-3.0-only",
@@ -74,6 +74,7 @@
         "tap": "11.1.5",
         "terser": "^5.39.2",
         "travis-after-all": "1.4.5",
-        "vite": "^5.0.0"
+        "vite": "^5.0.0",
+        "vite-raw-plugin": "^1.0.2"
     }
 }

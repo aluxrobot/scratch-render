@@ -1,11 +1,11 @@
 import bt from "events";
-import yt from "hull.js";
-import * as Et from "twgl.js";
+import St from "hull.js";
+import * as Dt from "twgl.js";
 import f from "twgl.js";
-import { loadSvgString as Ct, serializeSvgToString as Dt } from "scratch-svg-renderer";
-import It from "linebreak";
+import { loadSvgString as Tt, serializeSvgToString as Ct } from "scratch-svg-renderer";
+import Mt from "linebreak";
 import kt from "grapheme-breaker";
-const x = {
+const v = {
   /**
    * The ID value to use for "no item" or when an object has been disposed.
    * @const {int}
@@ -32,22 +32,22 @@ const x = {
   }
 };
 let q;
-const U = (h, t) => t ^ (h ^ t) & h - t >> 31, G = (h, t) => h ^ (h ^ t) & h - t >> 31, M = ({ _width: h, _height: t, _colorData: e }, i, s) => i >= h || s >= t || i < 0 || s < 0 ? 0 : e[(s * h + i) * 4 + 3], R = [
+const W = (h, t) => t ^ (h ^ t) & h - t >> 31, U = (h, t) => h ^ (h ^ t) & h - t >> 31, I = ({ _width: h, _height: t, _colorData: e }, i, n) => i >= h || n >= t || i < 0 || n < 0 ? 0 : e[(n * h + i) * 4 + 3], O = [
   new Uint8ClampedArray(4),
   new Uint8ClampedArray(4),
   new Uint8ClampedArray(4),
   new Uint8ClampedArray(4)
-], at = ({ _width: h, _height: t, _colorData: e }, i, s, n) => {
-  if (i = G(0, U(i, h - 1)), s = G(0, U(s, t - 1)), i >= h || s >= t || i < 0 || s < 0)
-    return n.fill(0);
-  const r = (s * h + i) * 4, a = e[r + 3] / 255;
-  return n[0] = e[r] * a, n[1] = e[r + 1] * a, n[2] = e[r + 2] * a, n[3] = e[r + 3], n;
-}, Mt = ({ _width: h, _height: t, _colorData: e }, i, s, n) => {
-  i = G(0, U(i, h - 1)), s = G(0, U(s, t - 1));
-  const r = (s * h + i) * 4;
-  return n[0] = e[r], n[1] = e[r + 1], n[2] = e[r + 2], n[3] = e[r + 3], n;
+], at = ({ _width: h, _height: t, _colorData: e }, i, n, s) => {
+  if (i = U(0, W(i, h - 1)), n = U(0, W(n, t - 1)), i >= h || n >= t || i < 0 || n < 0)
+    return s.fill(0);
+  const r = (n * h + i) * 4, a = e[r + 3] / 255;
+  return s[0] = e[r] * a, s[1] = e[r + 1] * a, s[2] = e[r + 2] * a, s[3] = e[r + 3], s;
+}, It = ({ _width: h, _height: t, _colorData: e }, i, n, s) => {
+  i = U(0, W(i, h - 1)), n = U(0, W(n, t - 1));
+  const r = (n * h + i) * 4;
+  return s[0] = e[r], s[1] = e[r + 1], s[2] = e[r + 2], s[3] = e[r + 3], s;
 };
-class st {
+class nt {
   constructor() {
     this._width = 0, this._height = 0, this._colorData = null, this._getColor = at, this.colorAtNearest = this.colorAtLinear = (t, e) => e.fill(0);
   }
@@ -62,12 +62,12 @@ class st {
     if (t instanceof ImageData)
       i = t, this._width = t.width, this._height = t.height;
     else {
-      const s = st._updateCanvas(), n = this._width = s.width = t.width, r = this._height = s.height = t.height, a = s.getContext("2d");
-      if (!(n && r))
+      const n = nt._updateCanvas(), s = this._width = n.width = t.width, r = this._height = n.height = t.height, a = n.getContext("2d");
+      if (!(s && r))
         return;
-      a.clearRect(0, 0, n, r), a.drawImage(t, 0, 0, n, r), i = a.getImageData(0, 0, n, r);
+      a.clearRect(0, 0, s, r), a.drawImage(t, 0, 0, s, r), i = a.getImageData(0, 0, s, r);
     }
-    e ? this._getColor = Mt : this._getColor = at, this._colorData = i.data, delete this.colorAtNearest, delete this.colorAtLinear;
+    e ? this._getColor = It : this._getColor = at, this._colorData = i.data, delete this.colorAtNearest, delete this.colorAtLinear;
   }
   /**
    * Sample a color from the silhouette at a given local position using
@@ -92,8 +92,8 @@ class st {
    * @returns {Uint8ClampedArray} dst
    */
   colorAtLinear(t, e) {
-    const i = t[0] * (this._width - 1), s = t[1] * (this._height - 1), n = i % 1, r = s % 1, a = 1 - n, o = 1 - r, l = Math.floor(i), c = Math.floor(s), u = this._getColor(this, l, c, R[0]), _ = this._getColor(this, l + 1, c, R[1]), g = this._getColor(this, l, c + 1, R[2]), d = this._getColor(this, l + 1, c + 1, R[3]);
-    return e[0] = u[0] * a * o + g[0] * a * r + _[0] * n * o + d[0] * n * r, e[1] = u[1] * a * o + g[1] * a * r + _[1] * n * o + d[1] * n * r, e[2] = u[2] * a * o + g[2] * a * r + _[2] * n * o + d[2] * n * r, e[3] = u[3] * a * o + g[3] * a * r + _[3] * n * o + d[3] * n * r, e;
+    const i = t[0] * (this._width - 1), n = t[1] * (this._height - 1), s = i % 1, r = n % 1, a = 1 - s, o = 1 - r, l = Math.floor(i), c = Math.floor(n), u = this._getColor(this, l, c, O[0]), _ = this._getColor(this, l + 1, c, O[1]), g = this._getColor(this, l, c + 1, O[2]), d = this._getColor(this, l + 1, c + 1, O[3]);
+    return e[0] = u[0] * a * o + g[0] * a * r + _[0] * s * o + d[0] * s * r, e[1] = u[1] * a * o + g[1] * a * r + _[1] * s * o + d[1] * s * r, e[2] = u[2] * a * o + g[2] * a * r + _[2] * s * o + d[2] * s * r, e[3] = u[3] * a * o + g[3] * a * r + _[3] * s * o + d[3] * s * r, e;
   }
   /**
    * Test if texture coordinate touches the silhouette using nearest neighbor.
@@ -102,7 +102,7 @@ class st {
    */
   isTouchingNearest(t) {
     if (this._colorData)
-      return M(
+      return I(
         this,
         Math.floor(t[0] * (this._width - 1)),
         Math.floor(t[1] * (this._height - 1))
@@ -117,7 +117,7 @@ class st {
   isTouchingLinear(t) {
     if (!this._colorData) return;
     const e = Math.floor(t[0] * (this._width - 1)), i = Math.floor(t[1] * (this._height - 1));
-    return M(this, e, i) > 0 || M(this, e + 1, i) > 0 || M(this, e, i + 1) > 0 || M(this, e + 1, i + 1) > 0;
+    return I(this, e, i) > 0 || I(this, e + 1, i) > 0 || I(this, e, i + 1) > 0 || I(this, e + 1, i + 1) > 0;
   }
   /**
    * Get the canvas element reused by Silhouettes to update their data with.
@@ -128,7 +128,7 @@ class st {
     return typeof q == "undefined" && (q = document.createElement("canvas")), q;
   }
 }
-class v extends bt {
+class x extends bt {
   /**
    * Create a Skin, which stores and/or generates textures for use in rendering.
    * @param {int} id - The unique ID for this Skin.
@@ -146,13 +146,13 @@ class v extends bt {
        * @type {WebGLTexture}
        */
       u_skin: null
-    }, this._silhouette = new st(), this.setMaxListeners(x.SKIN_SHARE_SOFT_LIMIT);
+    }, this._silhouette = new nt(), this.setMaxListeners(v.SKIN_SHARE_SOFT_LIMIT);
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
    */
   dispose() {
-    this._id = x.ID_NONE;
+    this._id = v.ID_NONE;
   }
   /**
    * @return {int} the unique ID for this Skin.
@@ -247,7 +247,7 @@ class v extends bt {
       };
       this._emptyImageTexture = f.createTexture(t, e);
     }
-    this._rotationCenter[0] = 0, this._rotationCenter[1] = 0, this._silhouette.update(this._emptyImageData), this.emit(v.Events.WasAltered);
+    this._rotationCenter[0] = 0, this._rotationCenter[1] = 0, this._silhouette.update(this._emptyImageData), this.emit(x.Events.WasAltered);
   }
   /**
    * Does this point touch an opaque or translucent point on this skin?
@@ -274,14 +274,14 @@ class v extends bt {
     return this._silhouette.isTouchingLinear(t);
   }
 }
-v.Events = {
+x.Events = {
   /**
    * Emitted when anything about the Skin has been altered, such as the appearance or rotation center.
    * @event Skin.event:WasAltered
    */
   WasAltered: "WasAltered"
 };
-class O extends v {
+class B extends x {
   /**
    * Create a new Bitmap Skin.
    * @extends Skin
@@ -324,16 +324,16 @@ class O extends v {
       super.setEmptyImageData();
       return;
     }
-    const s = this._renderer.gl;
-    let n = t;
-    if (t instanceof HTMLCanvasElement && (n = t.getContext("2d").getImageData(0, 0, t.width, t.height)), this._texture === null) {
+    const n = this._renderer.gl;
+    let s = t;
+    if (t instanceof HTMLCanvasElement && (s = t.getContext("2d").getImageData(0, 0, t.width, t.height)), this._texture === null) {
       const r = {
         auto: !1,
-        wrap: s.CLAMP_TO_EDGE
+        wrap: n.CLAMP_TO_EDGE
       };
-      this._texture = f.createTexture(s, r);
+      this._texture = f.createTexture(n, r);
     }
-    this._setTexture(n), this._costumeResolution = e || 2, this._textureSize = O._getBitmapSize(t), typeof i == "undefined" && (i = this.calculateRotationCenter()), this._rotationCenter[0] = i[0], this._rotationCenter[1] = i[1], this.emit(v.Events.WasAltered);
+    this._setTexture(s), this._costumeResolution = e || 2, this._textureSize = B._getBitmapSize(t), typeof i == "undefined" && (i = this.calculateRotationCenter()), this._rotationCenter[0] = i[0], this._rotationCenter[1] = i[1], this.emit(x.Events.WasAltered);
   }
   /**
    * @param {ImageData|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement} bitmapData - bitmap data to inspect.
@@ -344,6 +344,331 @@ class O extends v {
     return t instanceof HTMLImageElement ? [t.naturalWidth || t.width, t.naturalHeight || t.height] : t instanceof HTMLVideoElement ? [t.videoWidth || t.width, t.videoHeight || t.height] : [t.width, t.height];
   }
 }
+const At = `precision mediump float;
+
+#ifdef DRAW_MODE_line
+uniform vec2 u_stageSize;
+uniform float u_lineThickness;
+uniform float u_lineLength;
+// The X and Y components of u_penPoints hold the first pen point. The Z and W components hold the difference between
+// the second pen point and the first. This is done because calculating the difference in the shader leads to floating-
+// point error when both points have large-ish coordinates.
+uniform vec4 u_penPoints;
+
+// Add this to divisors to prevent division by 0, which results in NaNs propagating through calculations.
+// Smaller values can cause problems on some mobile devices.
+const float epsilon = 1e-3;
+#endif
+
+#if !(defined(DRAW_MODE_line) || defined(DRAW_MODE_background))
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_modelMatrix;
+attribute vec2 a_texCoord;
+#endif
+
+attribute vec2 a_position;
+
+varying vec2 v_texCoord;
+
+void main() {
+	#ifdef DRAW_MODE_line
+	// Calculate a rotated ("tight") bounding box around the two pen points.
+	// Yes, we're doing this 6 times (once per vertex), but on actual GPU hardware,
+	// it's still faster than doing it in JS combined with the cost of uniformMatrix4fv.
+
+	// Expand line bounds by sqrt(2) / 2 each side-- this ensures that all antialiased pixels
+	// fall within the quad, even at a 45-degree diagonal
+	vec2 position = a_position;
+	float expandedRadius = (u_lineThickness * 0.5) + 1.4142135623730951;
+
+	// The X coordinate increases along the length of the line. It's 0 at the center of the origin point
+	// and is in pixel-space (so at n pixels along the line, its value is n).
+	v_texCoord.x = mix(0.0, u_lineLength + (expandedRadius * 2.0), a_position.x) - expandedRadius;
+	// The Y coordinate is perpendicular to the line. It's also in pixel-space.
+	v_texCoord.y = ((a_position.y - 0.5) * expandedRadius) + 0.5;
+
+	position.x *= u_lineLength + (2.0 * expandedRadius);
+	position.y *= 2.0 * expandedRadius;
+
+	// 1. Center around first pen point
+	position -= expandedRadius;
+
+	// 2. Rotate quad to line angle
+	vec2 pointDiff = u_penPoints.zw;
+	// Ensure line has a nonzero length so it's rendered properly
+	// As long as either component is nonzero, the line length will be nonzero
+	// If the line is zero-length, give it a bit of horizontal length
+	pointDiff.x = (abs(pointDiff.x) < epsilon && abs(pointDiff.y) < epsilon) ? epsilon : pointDiff.x;
+	// The \`normalized\` vector holds rotational values equivalent to sine/cosine
+	// We're applying the standard rotation matrix formula to the position to rotate the quad to the line angle
+	// pointDiff can hold large values so we must divide by u_lineLength instead of calling GLSL's normalize function:
+	// https://asawicki.info/news_1596_watch_out_for_reduced_precision_normalizelength_in_opengl_es
+	vec2 normalized = pointDiff / max(u_lineLength, epsilon);
+	position = mat2(normalized.x, normalized.y, -normalized.y, normalized.x) * position;
+
+	// 3. Translate quad
+	position += u_penPoints.xy;
+
+	// 4. Apply view transform
+	position *= 2.0 / u_stageSize;
+	gl_Position = vec4(position, 0, 1);
+	#elif defined(DRAW_MODE_background)
+	gl_Position = vec4(a_position * 2.0, 0, 1);
+	#else
+	gl_Position = u_projectionMatrix * u_modelMatrix * vec4(a_position, 0, 1);
+	v_texCoord = a_texCoord;
+	#endif
+}
+`, Rt = `precision mediump float;
+
+#ifdef DRAW_MODE_silhouette
+uniform vec4 u_silhouetteColor;
+#else // DRAW_MODE_silhouette
+# ifdef ENABLE_color
+uniform float u_color;
+# endif // ENABLE_color
+# ifdef ENABLE_brightness
+uniform float u_brightness;
+# endif // ENABLE_brightness
+#endif // DRAW_MODE_silhouette
+
+#ifdef DRAW_MODE_colorMask
+uniform vec3 u_colorMask;
+uniform float u_colorMaskTolerance;
+#endif // DRAW_MODE_colorMask
+
+#ifdef ENABLE_fisheye
+uniform float u_fisheye;
+#endif // ENABLE_fisheye
+#ifdef ENABLE_whirl
+uniform float u_whirl;
+#endif // ENABLE_whirl
+#ifdef ENABLE_pixelate
+uniform float u_pixelate;
+uniform vec2 u_skinSize;
+#endif // ENABLE_pixelate
+#ifdef ENABLE_mosaic
+uniform float u_mosaic;
+#endif // ENABLE_mosaic
+#ifdef ENABLE_ghost
+uniform float u_ghost;
+#endif // ENABLE_ghost
+
+#ifdef DRAW_MODE_line
+uniform vec4 u_lineColor;
+uniform float u_lineThickness;
+uniform float u_lineLength;
+#endif // DRAW_MODE_line
+
+#ifdef DRAW_MODE_background
+uniform vec4 u_backgroundColor;
+#endif // DRAW_MODE_background
+
+uniform sampler2D u_skin;
+
+#ifndef DRAW_MODE_background
+varying vec2 v_texCoord;
+#endif
+
+// Add this to divisors to prevent division by 0, which results in NaNs propagating through calculations.
+// Smaller values can cause problems on some mobile devices.
+const float epsilon = 1e-3;
+
+#if !defined(DRAW_MODE_silhouette) && (defined(ENABLE_color))
+// Branchless color conversions based on code from:
+// http://www.chilliant.com/rgb2hsv.html by Ian Taylor
+// Based in part on work by Sam Hocevar and Emil Persson
+// See also: https://en.wikipedia.org/wiki/HSL_and_HSV#Formal_derivation
+
+
+// Convert an RGB color to Hue, Saturation, and Value.
+// All components of input and output are expected to be in the [0,1] range.
+vec3 convertRGB2HSV(vec3 rgb)
+{
+	// Hue calculation has 3 cases, depending on which RGB component is largest, and one of those cases involves a "mod"
+	// operation. In order to avoid that "mod" we split the M==R case in two: one for G<B and one for B>G. The B>G case
+	// will be calculated in the negative and fed through abs() in the hue calculation at the end.
+	// See also: https://en.wikipedia.org/wiki/HSL_and_HSV#Hue_and_chroma
+	const vec4 hueOffsets = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+
+	// temp1.xy = sort B & G (largest first)
+	// temp1.z = the hue offset we'll use if it turns out that R is the largest component (M==R)
+	// temp1.w = the hue offset we'll use if it turns out that R is not the largest component (M==G or M==B)
+	vec4 temp1 = rgb.b > rgb.g ? vec4(rgb.bg, hueOffsets.wz) : vec4(rgb.gb, hueOffsets.xy);
+
+	// temp2.x = the largest component of RGB ("M" / "Max")
+	// temp2.yw = the smaller components of RGB, ordered for the hue calculation (not necessarily sorted by magnitude!)
+	// temp2.z = the hue offset we'll use in the hue calculation
+	vec4 temp2 = rgb.r > temp1.x ? vec4(rgb.r, temp1.yzx) : vec4(temp1.xyw, rgb.r);
+
+	// m = the smallest component of RGB ("min")
+	float m = min(temp2.y, temp2.w);
+
+	// Chroma = M - m
+	float C = temp2.x - m;
+
+	// Value = M
+	float V = temp2.x;
+
+	return vec3(
+		abs(temp2.z + (temp2.w - temp2.y) / (6.0 * C + epsilon)), // Hue
+		C / (temp2.x + epsilon), // Saturation
+		V); // Value
+}
+
+vec3 convertHue2RGB(float hue)
+{
+	float r = abs(hue * 6.0 - 3.0) - 1.0;
+	float g = 2.0 - abs(hue * 6.0 - 2.0);
+	float b = 2.0 - abs(hue * 6.0 - 4.0);
+	return clamp(vec3(r, g, b), 0.0, 1.0);
+}
+
+vec3 convertHSV2RGB(vec3 hsv)
+{
+	vec3 rgb = convertHue2RGB(hsv.x);
+	float c = hsv.z * hsv.y;
+	return rgb * c + hsv.z - c;
+}
+#endif // !defined(DRAW_MODE_silhouette) && (defined(ENABLE_color))
+
+const vec2 kCenter = vec2(0.5, 0.5);
+
+void main()
+{
+	#if !(defined(DRAW_MODE_line) || defined(DRAW_MODE_background))
+	vec2 texcoord0 = v_texCoord;
+
+	#ifdef ENABLE_mosaic
+	texcoord0 = fract(u_mosaic * texcoord0);
+	#endif // ENABLE_mosaic
+
+	#ifdef ENABLE_pixelate
+	{
+		// TODO: clean up "pixel" edges
+		vec2 pixelTexelSize = u_skinSize / u_pixelate;
+		texcoord0 = (floor(texcoord0 * pixelTexelSize) + kCenter) / pixelTexelSize;
+	}
+	#endif // ENABLE_pixelate
+
+	#ifdef ENABLE_whirl
+	{
+		const float kRadius = 0.5;
+		vec2 offset = texcoord0 - kCenter;
+		float offsetMagnitude = length(offset);
+		float whirlFactor = max(1.0 - (offsetMagnitude / kRadius), 0.0);
+		float whirlActual = u_whirl * whirlFactor * whirlFactor;
+		float sinWhirl = sin(whirlActual);
+		float cosWhirl = cos(whirlActual);
+		mat2 rotationMatrix = mat2(
+			cosWhirl, -sinWhirl,
+			sinWhirl, cosWhirl
+		);
+
+		texcoord0 = rotationMatrix * offset + kCenter;
+	}
+	#endif // ENABLE_whirl
+
+	#ifdef ENABLE_fisheye
+	{
+		vec2 vec = (texcoord0 - kCenter) / kCenter;
+		float vecLength = length(vec);
+		float r = pow(min(vecLength, 1.0), u_fisheye) * max(1.0, vecLength);
+		vec2 unit = vec / vecLength;
+
+		texcoord0 = kCenter + r * unit * kCenter;
+	}
+	#endif // ENABLE_fisheye
+
+	gl_FragColor = texture2D(u_skin, texcoord0);
+
+	#if defined(ENABLE_color) || defined(ENABLE_brightness)
+	// Divide premultiplied alpha values for proper color processing
+	// Add epsilon to avoid dividing by 0 for fully transparent pixels
+	gl_FragColor.rgb = clamp(gl_FragColor.rgb / (gl_FragColor.a + epsilon), 0.0, 1.0);
+
+	#ifdef ENABLE_color
+	{
+		vec3 hsv = convertRGB2HSV(gl_FragColor.xyz);
+
+		// this code forces grayscale values to be slightly saturated
+		// so that some slight change of hue will be visible
+		const float minLightness = 0.11 / 2.0;
+		const float minSaturation = 0.09;
+		if (hsv.z < minLightness) hsv = vec3(0.0, 1.0, minLightness);
+		else if (hsv.y < minSaturation) hsv = vec3(0.0, minSaturation, hsv.z);
+
+		hsv.x = mod(hsv.x + u_color, 1.0);
+		if (hsv.x < 0.0) hsv.x += 1.0;
+
+		gl_FragColor.rgb = convertHSV2RGB(hsv);
+	}
+	#endif // ENABLE_color
+
+	#ifdef ENABLE_brightness
+	gl_FragColor.rgb = clamp(gl_FragColor.rgb + vec3(u_brightness), vec3(0), vec3(1));
+	#endif // ENABLE_brightness
+
+	// Re-multiply color values
+	gl_FragColor.rgb *= gl_FragColor.a + epsilon;
+
+	#endif // defined(ENABLE_color) || defined(ENABLE_brightness)
+
+	#ifdef ENABLE_ghost
+	gl_FragColor *= u_ghost;
+	#endif // ENABLE_ghost
+
+	#ifdef DRAW_MODE_silhouette
+	// Discard fully transparent pixels for stencil test
+	if (gl_FragColor.a == 0.0) {
+		discard;
+	}
+	// switch to u_silhouetteColor only AFTER the alpha test
+	gl_FragColor = u_silhouetteColor;
+	#else // DRAW_MODE_silhouette
+
+	#ifdef DRAW_MODE_colorMask
+	vec3 maskDistance = abs(gl_FragColor.rgb - u_colorMask);
+	vec3 colorMaskTolerance = vec3(u_colorMaskTolerance, u_colorMaskTolerance, u_colorMaskTolerance);
+	if (any(greaterThan(maskDistance, colorMaskTolerance)))
+	{
+		discard;
+	}
+	#endif // DRAW_MODE_colorMask
+	#endif // DRAW_MODE_silhouette
+
+	#ifdef DRAW_MODE_straightAlpha
+	// Un-premultiply alpha.
+	gl_FragColor.rgb /= gl_FragColor.a + epsilon;
+	#endif
+
+	#endif // !(defined(DRAW_MODE_line) || defined(DRAW_MODE_background))
+
+	#ifdef DRAW_MODE_line
+	// Maaaaagic antialiased-line-with-round-caps shader.
+
+	// "along-the-lineness". This increases parallel to the line.
+	// It goes from negative before the start point, to 0.5 through the start to the end, then ramps up again
+	// past the end point.
+	float d = ((v_texCoord.x - clamp(v_texCoord.x, 0.0, u_lineLength)) * 0.5) + 0.5;
+
+	// Distance from (0.5, 0.5) to (d, the perpendicular coordinate). When we're in the middle of the line,
+	// d will be 0.5, so the distance will be 0 at points close to the line and will grow at points further from it.
+	// For the "caps", d will ramp down/up, giving us rounding.
+	// See https://www.youtube.com/watch?v=PMltMdi1Wzg for a rough outline of the technique used to round the lines.
+	float line = distance(vec2(0.5), vec2(d, v_texCoord.y)) * 2.0;
+	// Expand out the line by its thickness.
+	line -= ((u_lineThickness - 1.0) * 0.5);
+	// Because "distance to the center of the line" decreases the closer we get to the line, but we want more opacity
+	// the closer we are to the line, invert it.
+	gl_FragColor = u_lineColor * clamp(1.0 - line, 0.0, 1.0);
+	#endif // DRAW_MODE_line
+
+	#ifdef DRAW_MODE_background
+	gl_FragColor = u_backgroundColor;
+	#endif
+}
+`;
 class m {
   /**
    * @param {WebGLRenderingContext} gl WebGL rendering context to create shaders for
@@ -364,8 +689,8 @@ class m {
   getShader(t, e) {
     const i = this._shaderCache[t];
     t === m.DRAW_MODE.silhouette && (e &= ~(m.EFFECT_INFO.color.mask | m.EFFECT_INFO.brightness.mask));
-    let s = i[e];
-    return s || (s = i[e] = this._buildShader(t, e)), s;
+    let n = i[e];
+    return n || (n = i[e] = this._buildShader(t, e)), n;
   }
   /**
    * Build the shader for a particular set of active effects.
@@ -375,14 +700,14 @@ class m {
    * @private
    */
   _buildShader(t, e) {
-    const i = m.EFFECTS.length, s = [
+    const i = m.EFFECTS.length, n = [
       `#define DRAW_MODE_${t}`
     ];
     for (let o = 0; o < i; ++o)
-      e & 1 << o && s.push(`#define ENABLE_${m.EFFECTS[o]}`);
-    const n = `${s.join(`
+      e & 1 << o && n.push(`#define ENABLE_${m.EFFECTS[o]}`);
+    const s = `${n.join(`
 `)}
-`, r = n + require("raw-loader!./shaders/sprite.vert"), a = n + require("raw-loader!./shaders/sprite.frag");
+`, r = s + At, a = s + Rt;
     return f.createProgramInfo(this._gl, [r, a]);
   }
 }
@@ -464,11 +789,11 @@ m.DRAW_MODE = {
    */
   background: "background"
 };
-const X = {
+const V = {
   color4f: [0, 0, 1, 1],
   diameter: 1
-}, F = [0, 0, 0, 0];
-class Ft extends v {
+}, A = [0, 0, 0, 0];
+class Nt extends x {
   /**
    * Create a Skin which implements a Scratch pen layer.
    * @param {int} id - The unique ID for this Skin.
@@ -503,13 +828,13 @@ class Ft extends v {
       }
     });
     const i = 0;
-    this._lineShader = this._renderer._shaderManager.getShader(m.DRAW_MODE.line, i), this.onNativeSizeChanged = this.onNativeSizeChanged.bind(this), this._renderer.on(x.Events.NativeSizeChanged, this.onNativeSizeChanged), this._setCanvasSize(e.getNativeSize());
+    this._lineShader = this._renderer._shaderManager.getShader(m.DRAW_MODE.line, i), this.onNativeSizeChanged = this.onNativeSizeChanged.bind(this), this._renderer.on(v.Events.NativeSizeChanged, this.onNativeSizeChanged), this._setCanvasSize(e.getNativeSize());
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
    */
   dispose() {
-    this._renderer.removeListener(x.Events.NativeSizeChanged, this.onNativeSizeChanged), this._renderer.gl.deleteTexture(this._texture), this._texture = null, super.dispose();
+    this._renderer.removeListener(v.Events.NativeSizeChanged, this.onNativeSizeChanged), this._renderer.gl.deleteTexture(this._texture), this._texture = null, super.dispose();
   }
   /**
    * @return {Array<number>} the "native" size, in texels, of this skin. [width, height]
@@ -553,14 +878,14 @@ class Ft extends v {
    * @param {number} x1 - the X coordinate of the end of the line.
    * @param {number} y1 - the Y coordinate of the end of the line.
    */
-  drawLine(t, e, i, s, n) {
-    const r = t.diameter || X.diameter, a = r === 1 || r === 3 ? 0.5 : 0;
+  drawLine(t, e, i, n, s) {
+    const r = t.diameter || V.diameter, a = r === 1 || r === 3 ? 0.5 : 0;
     this._drawLineOnBuffer(
       t,
       e + a,
       i + a,
-      s + a,
-      n + a
+      n + a,
+      s + a
     ), this._silhouetteDirty = !0;
   }
   /**
@@ -606,14 +931,14 @@ class Ft extends v {
    * @param {number} x1 - the X coordinate of the end of the line.
    * @param {number} y1 - the Y coordinate of the end of the line.
    */
-  _drawLineOnBuffer(t, e, i, s, n) {
+  _drawLineOnBuffer(t, e, i, n, s) {
     const r = this._renderer.gl, a = this._lineShader;
     this._renderer.enterDrawRegion(this._lineOnBufferDrawRegionId);
-    const o = t.color4f || X.color4f;
-    F[0] = o[0] * o[3], F[1] = o[1] * o[3], F[2] = o[2] * o[3], F[3] = o[3];
-    const l = s - e, c = n - i, u = Math.sqrt(l * l + c * c), _ = {
-      u_lineColor: F,
-      u_lineThickness: t.diameter || X.diameter,
+    const o = t.color4f || V.color4f;
+    A[0] = o[0] * o[3], A[1] = o[1] * o[3], A[2] = o[2] * o[3], A[3] = o[3];
+    const l = n - e, c = s - i, u = Math.sqrt(l * l + c * c), _ = {
+      u_lineColor: A,
+      u_lineThickness: t.diameter || V.diameter,
       u_lineLength: u,
       u_penPoints: [e, -i, l, -c]
     };
@@ -634,24 +959,24 @@ class Ft extends v {
   _setCanvasSize(t) {
     const [e, i] = t;
     this._size = t, this._rotationCenter[0] = e / 2, this._rotationCenter[1] = i / 2;
-    const s = this._renderer.gl;
+    const n = this._renderer.gl;
     this._texture = f.createTexture(
-      s,
+      n,
       {
-        mag: s.NEAREST,
-        min: s.NEAREST,
-        wrap: s.CLAMP_TO_EDGE,
+        mag: n.NEAREST,
+        min: n.NEAREST,
+        wrap: n.CLAMP_TO_EDGE,
         width: e,
         height: i
       }
     );
-    const n = [
+    const s = [
       {
-        format: s.RGBA,
+        format: n.RGBA,
         attachment: this._texture
       }
     ];
-    this._framebuffer ? f.resizeFramebufferInfo(s, this._framebuffer, n, e, i) : this._framebuffer = f.createFramebufferInfo(s, n, e, i), s.clearColor(0, 0, 0, 0), s.clear(s.COLOR_BUFFER_BIT), this._silhouettePixels = new Uint8Array(Math.floor(e * i * 4)), this._silhouetteImageData = new ImageData(e, i), this._silhouetteDirty = !0;
+    this._framebuffer ? f.resizeFramebufferInfo(n, this._framebuffer, s, e, i) : this._framebuffer = f.createFramebufferInfo(n, s, e, i), n.clearColor(0, 0, 0, 0), n.clear(n.COLOR_BUFFER_BIT), this._silhouettePixels = new Uint8Array(Math.floor(e * i * 4)), this._silhouetteImageData = new ImageData(e, i), this._silhouetteDirty = !0;
   }
   /**
    * If there have been pen operations that have dirtied the canvas, update
@@ -677,8 +1002,8 @@ class Ft extends v {
     }
   }
 }
-const Pt = 2048, ht = 8;
-class K extends v {
+const Bt = 2048, ht = 8;
+class X extends x {
   /**
    * Create a new SVG skin.
    * @param {!int} id - The ID for this Skin.
@@ -717,13 +1042,13 @@ class K extends v {
     // drawn at that scale, resulting in an IndexSizeError if we attempt to draw it.
     this._svgImage.naturalWidth <= 0 || this._svgImage.naturalHeight <= 0) return super.getTexture();
     this._context.clearRect(0, 0, this._canvas.width, this._canvas.height), this._context.setTransform(t, 0, 0, t, 0, 0), this._context.drawImage(this._svgImage, 0, 0);
-    const s = this._context.getImageData(0, 0, this._canvas.width, this._canvas.height), n = {
+    const n = this._context.getImageData(0, 0, this._canvas.width, this._canvas.height), s = {
       auto: !1,
       wrap: this._renderer.gl.CLAMP_TO_EDGE,
-      src: s,
+      src: n,
       premultiplyAlpha: !0
-    }, r = f.createTexture(this._renderer.gl, n);
-    return this._largestMIPScale < t && (this._silhouette.update(s), this._largestMIPScale = t), r;
+    }, r = f.createTexture(this._renderer.gl, s);
+    return this._largestMIPScale < t && (this._silhouette.update(n), this._largestMIPScale = t), r;
   }
   updateSilhouette(t = [100, 100]) {
     this.getTexture(t);
@@ -733,8 +1058,8 @@ class K extends v {
    * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
    */
   getTexture(t) {
-    const e = t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100, i = Math.min(e / 100, this._maxTextureScale), s = Math.max(Math.ceil(Math.log2(i)) + ht, 0), n = Math.pow(2, s - ht);
-    return this._svgImageLoaded && !this._scaledMIPs[s] && (this._scaledMIPs[s] = this.createMIP(n)), this._scaledMIPs[s] || super.getTexture();
+    const e = t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100, i = Math.min(e / 100, this._maxTextureScale), n = Math.max(Math.ceil(Math.log2(i)) + ht, 0), s = Math.pow(2, n - ht);
+    return this._svgImageLoaded && !this._scaledMIPs[n] && (this._scaledMIPs[n] = this.createMIP(s)), this._scaledMIPs[n] || super.getTexture();
   }
   /**
    * Do a hard reset of the existing MIPs by deleting them.
@@ -750,13 +1075,13 @@ class K extends v {
    * @fires Skin.event:WasAltered
    */
   setSVG(t, e) {
-    const i = Ct(t), s = Dt(
+    const i = Tt(t), n = Ct(
       i,
       !0
       /* shouldInjectFonts */
     );
     this._svgImageLoaded = !1;
-    const { x: n, y: r, width: a, height: o } = i.viewBox.baseVal;
+    const { x: s, y: r, width: a, height: o } = i.viewBox.baseVal;
     this._size[0] = a, this._size[1] = o, this._svgImage.onload = () => {
       if (a === 0 || o === 0) {
         super.setEmptyImageData();
@@ -764,13 +1089,13 @@ class K extends v {
       }
       const l = Math.ceil(Math.max(a, o));
       let c = 2;
-      for (c; l * c <= Pt; c *= 2)
+      for (c; l * c <= Bt; c *= 2)
         this._maxTextureScale = c;
-      this.resetMIPs(), typeof e == "undefined" && (e = this.calculateRotationCenter()), this._rotationCenter[0] = e[0] - n, this._rotationCenter[1] = e[1] - r, this._svgImageLoaded = !0, this.emit(v.Events.WasAltered);
-    }, this._svgImage.src = `data:image/svg+xml;utf8,${encodeURIComponent(s)}`;
+      this.resetMIPs(), typeof e == "undefined" && (e = this.calculateRotationCenter()), this._rotationCenter[0] = e[0] - s, this._rotationCenter[1] = e[1] - r, this._svgImageLoaded = !0, this.emit(x.Events.WasAltered);
+    }, this._svgImage.src = `data:image/svg+xml;utf8,${encodeURIComponent(n)}`;
   }
 }
-class Nt {
+class Ft {
   /**
    * Construct a text wrapper which will measure text using the specified measurement provider.
    * @param {MeasurementProvider} measurementProvider - a helper object to provide text measurement services.
@@ -789,18 +1114,18 @@ class Nt {
     const i = `${t}-${e}`;
     if (this._cache[i])
       return this._cache[i];
-    const s = this._measurementProvider.beginMeasurementSession(), n = new It(e);
+    const n = this._measurementProvider.beginMeasurementSession(), s = new Mt(e);
     let r = 0, a, o = null;
     const l = [];
-    for (; a = n.nextBreak(); ) {
+    for (; a = s.nextBreak(); ) {
       const c = e.slice(r, a.position).replace(/\n+$/, "");
       let u = (o || "").concat(c), _ = this._measurementProvider.measureText(u);
       if (_ > t)
         if (this._measurementProvider.measureText(c) > t) {
           let d = 0, p;
           for (; d !== (p = kt.nextBreak(c, d)); ) {
-            const S = c.substring(d, p);
-            u = (o || "").concat(S), _ = this._measurementProvider.measureText(u), o === null || _ <= t ? o = u : (l.push(o), o = S), d = p;
+            const E = c.substring(d, p);
+            u = (o || "").concat(E), _ = this._measurementProvider.measureText(u), o === null || _ <= t ? o = u : (l.push(o), o = E), d = p;
           }
         } else
           o !== null && l.push(o), o = c;
@@ -808,10 +1133,10 @@ class Nt {
         o = u;
       a.required && (o !== null && l.push(o), o = null), r = a.position;
     }
-    return o = o || "", (o.length > 0 || l.length === 0) && l.push(o), this._cache[i] = l, this._measurementProvider.endMeasurementSession(s), l;
+    return o = o || "", (o.length > 0 || l.length === 0) && l.push(o), this._cache[i] = l, this._measurementProvider.endMeasurementSession(n), l;
   }
 }
-class Ot {
+class Lt {
   /**
    * @param {CanvasRenderingContext2D} ctx - provides a canvas rendering context
    * with 'font' set to the text style of the text to be wrapped.
@@ -866,7 +1191,7 @@ const w = {
     TEXT_FILL: "#575E75"
   }
 };
-class L extends v {
+class P extends x {
   /**
    * Create a new text bubble skin.
    * @param {!int} id - The ID for this Skin.
@@ -875,7 +1200,7 @@ class L extends v {
    * @extends Skin
    */
   constructor(t, e) {
-    super(t), this._renderer = e, this._canvas = document.createElement("canvas"), this._size = [0, 0], this._renderedScale = 0, this._lines = [], this._textAreaSize = { width: 0, height: 0 }, this._bubbleType = "", this._pointsLeft = !1, this._textDirty = !0, this._textureDirty = !0, this.measurementProvider = new Ot(this._canvas.getContext("2d")), this.textWrapper = new Nt(this.measurementProvider), this._restyleCanvas();
+    super(t), this._renderer = e, this._canvas = document.createElement("canvas"), this._size = [0, 0], this._renderedScale = 0, this._lines = [], this._textAreaSize = { width: 0, height: 0 }, this._bubbleType = "", this._pointsLeft = !1, this._textDirty = !0, this._textureDirty = !0, this.measurementProvider = new Lt(this._canvas.getContext("2d")), this.textWrapper = new Ft(this.measurementProvider), this._restyleCanvas();
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
@@ -896,7 +1221,7 @@ class L extends v {
    * @param {!boolean} pointsLeft - which side the bubble is pointing.
    */
   setTextBubble(t, e, i) {
-    this._text = e, this._bubbleType = t, this._pointsLeft = i, this._textDirty = !0, this._textureDirty = !0, this.emit(v.Events.WasAltered);
+    this._text = e, this._bubbleType = t, this._pointsLeft = i, this._textDirty = !0, this._textureDirty = !0, this.emit(x.Events.WasAltered);
   }
   /**
    * Re-style the canvas after resizing it. This is necessary to ensure proper text measurement.
@@ -910,8 +1235,8 @@ class L extends v {
   _reflowLines() {
     this._lines = this.textWrapper.wrapText(w.MAX_LINE_WIDTH, this._text);
     let t = 0;
-    for (const s of this._lines)
-      t = Math.max(t, this.measurementProvider.measureText(s));
+    for (const n of this._lines)
+      t = Math.max(t, this.measurementProvider.measureText(n));
     const e = Math.max(t, w.MIN_WIDTH) + w.PADDING * 2, i = w.LINE_HEIGHT * this._lines.length + w.PADDING * 2;
     this._textAreaSize.width = e, this._textAreaSize.height = i, this._size[0] = e + w.STROKE_WIDTH, this._size[1] = i + w.STROKE_WIDTH + w.TAIL_HEIGHT, this._textDirty = !1;
   }
@@ -922,17 +1247,17 @@ class L extends v {
   _renderTextBubble(t) {
     const e = this._canvas.getContext("2d");
     this._textDirty && this._reflowLines();
-    const i = this._textAreaSize.width, s = this._textAreaSize.height;
-    this._canvas.width = Math.ceil(this._size[0] * t), this._canvas.height = Math.ceil(this._size[1] * t), this._restyleCanvas(), e.setTransform(1, 0, 0, 1, 0, 0), e.clearRect(0, 0, this._canvas.width, this._canvas.height), e.scale(t, t), e.translate(w.STROKE_WIDTH * 0.5, w.STROKE_WIDTH * 0.5), e.save(), this._pointsLeft && (e.scale(-1, 1), e.translate(-i, 0)), e.beginPath(), e.moveTo(w.CORNER_RADIUS, s), e.arcTo(0, s, 0, s - w.CORNER_RADIUS, w.CORNER_RADIUS), e.arcTo(0, 0, i, 0, w.CORNER_RADIUS), e.arcTo(i, 0, i, s, w.CORNER_RADIUS), e.arcTo(
+    const i = this._textAreaSize.width, n = this._textAreaSize.height;
+    this._canvas.width = Math.ceil(this._size[0] * t), this._canvas.height = Math.ceil(this._size[1] * t), this._restyleCanvas(), e.setTransform(1, 0, 0, 1, 0, 0), e.clearRect(0, 0, this._canvas.width, this._canvas.height), e.scale(t, t), e.translate(w.STROKE_WIDTH * 0.5, w.STROKE_WIDTH * 0.5), e.save(), this._pointsLeft && (e.scale(-1, 1), e.translate(-i, 0)), e.beginPath(), e.moveTo(w.CORNER_RADIUS, n), e.arcTo(0, n, 0, n - w.CORNER_RADIUS, w.CORNER_RADIUS), e.arcTo(0, 0, i, 0, w.CORNER_RADIUS), e.arcTo(i, 0, i, n, w.CORNER_RADIUS), e.arcTo(
       i,
-      s,
+      n,
       i - w.CORNER_RADIUS,
-      s,
+      n,
       w.CORNER_RADIUS
-    ), e.save(), e.translate(i - w.CORNER_RADIUS, s), this._bubbleType === "say" ? (e.bezierCurveTo(0, 4, 4, 8, 4, 10), e.arcTo(4, 12, 2, 12, 2), e.bezierCurveTo(-1, 12, -11, 8, -16, 0), e.closePath()) : (e.arc(-16, 0, 4, 0, Math.PI), e.closePath(), e.moveTo(-7, 7.25), e.arc(-9.25, 7.25, 2.25, 0, Math.PI * 2), e.moveTo(0, 9.5), e.arc(-1.5, 9.5, 1.5, 0, Math.PI * 2)), e.restore(), e.fillStyle = w.COLORS.BUBBLE_FILL, e.strokeStyle = w.COLORS.BUBBLE_STROKE, e.lineWidth = w.STROKE_WIDTH, e.stroke(), e.fill(), e.restore(), e.fillStyle = w.COLORS.TEXT_FILL, e.font = `${w.FONT_SIZE}px ${w.FONT}, sans-serif`;
-    const n = this._lines;
-    for (let r = 0; r < n.length; r++) {
-      const a = n[r];
+    ), e.save(), e.translate(i - w.CORNER_RADIUS, n), this._bubbleType === "say" ? (e.bezierCurveTo(0, 4, 4, 8, 4, 10), e.arcTo(4, 12, 2, 12, 2), e.bezierCurveTo(-1, 12, -11, 8, -16, 0), e.closePath()) : (e.arc(-16, 0, 4, 0, Math.PI), e.closePath(), e.moveTo(-7, 7.25), e.arc(-9.25, 7.25, 2.25, 0, Math.PI * 2), e.moveTo(0, 9.5), e.arc(-1.5, 9.5, 1.5, 0, Math.PI * 2)), e.restore(), e.fillStyle = w.COLORS.BUBBLE_FILL, e.strokeStyle = w.COLORS.BUBBLE_STROKE, e.lineWidth = w.STROKE_WIDTH, e.stroke(), e.fill(), e.restore(), e.fillStyle = w.COLORS.TEXT_FILL, e.font = `${w.FONT_SIZE}px ${w.FONT}, sans-serif`;
+    const s = this._lines;
+    for (let r = 0; r < s.length; r++) {
+      const a = s[r];
       e.fillText(
         a,
         w.PADDING,
@@ -952,7 +1277,7 @@ class L extends v {
     const i = (t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100) / 100;
     if (this._textureDirty || this._renderedScale !== i) {
       this._renderTextBubble(i), this._textureDirty = !1;
-      const n = this._canvas.getContext("2d").getImageData(0, 0, this._canvas.width, this._canvas.height), r = this._renderer.gl;
+      const s = this._canvas.getContext("2d").getImageData(0, 0, this._canvas.width, this._canvas.height), r = this._renderer.gl;
       if (this._texture === null) {
         const a = {
           auto: !1,
@@ -960,7 +1285,7 @@ class L extends v {
         };
         this._texture = f.createTexture(r, a);
       }
-      this._setTexture(n);
+      this._setTexture(s);
     }
     return this._texture;
   }
@@ -982,8 +1307,8 @@ class b {
    * @param {number} bottom Bottom bound of the rectangle.
    * @param {number} top Top bound of the rectangle.
    */
-  initFromBounds(t, e, i, s) {
-    this.left = t, this.right = e, this.bottom = i, this.top = s;
+  initFromBounds(t, e, i, n) {
+    this.left = t, this.right = e, this.bottom = i, this.top = n;
   }
   /**
    * Initialize a Rectangle to the minimum AABB around a set of points.
@@ -992,8 +1317,8 @@ class b {
   initFromPointsAABB(t) {
     this.left = 1 / 0, this.right = -1 / 0, this.top = -1 / 0, this.bottom = 1 / 0;
     for (let e = 0; e < t.length; e++) {
-      const i = t[e][0], s = t[e][1];
-      i < this.left && (this.left = i), i > this.right && (this.right = i), s > this.top && (this.top = s), s < this.bottom && (this.bottom = s);
+      const i = t[e][0], n = t[e][1];
+      i < this.left && (this.left = i), i > this.right && (this.right = i), n > this.top && (this.top = n), n < this.bottom && (this.bottom = n);
     }
   }
   /**
@@ -1003,8 +1328,8 @@ class b {
    * @tutorial Rectangle-AABB-Matrix
    */
   initFromModelMatrix(t) {
-    const e = t[12], i = t[3 * 4 + 1], s = Math.abs(0.5 * t[0 * 4 + 0]) + Math.abs(0.5 * t[1 * 4 + 0]), n = Math.abs(0.5 * t[0 * 4 + 1]) + Math.abs(0.5 * t[1 * 4 + 1]);
-    this.left = -s + e, this.right = s + e, this.top = n + i, this.bottom = -n + i;
+    const e = t[12], i = t[3 * 4 + 1], n = Math.abs(0.5 * t[0 * 4 + 0]) + Math.abs(0.5 * t[1 * 4 + 0]), s = Math.abs(0.5 * t[0 * 4 + 1]) + Math.abs(0.5 * t[1 * 4 + 1]);
+    this.left = -n + e, this.right = n + e, this.top = s + i, this.bottom = -s + i;
   }
   /**
    * Determine if this Rectangle intersects some other.
@@ -1033,8 +1358,8 @@ class b {
    * @param {number} bottom Bottom clamp.
    * @param {number} top Top clamp.
    */
-  clamp(t, e, i, s) {
-    this.left = Math.max(this.left, t), this.right = Math.min(this.right, e), this.bottom = Math.max(this.bottom, i), this.top = Math.min(this.top, s), this.left = Math.min(this.left, e), this.right = Math.max(this.right, t), this.bottom = Math.min(this.bottom, s), this.top = Math.max(this.top, i);
+  clamp(t, e, i, n) {
+    this.left = Math.max(this.left, t), this.right = Math.min(this.right, e), this.bottom = Math.max(this.bottom, i), this.top = Math.min(this.top, n), this.left = Math.min(this.left, e), this.right = Math.max(this.right, t), this.bottom = Math.min(this.bottom, n), this.top = Math.max(this.top, i);
   }
   /**
    * Push out the Rectangle to integer bounds.
@@ -1080,20 +1405,20 @@ class b {
     return Math.abs(this.top - this.bottom);
   }
 }
-const At = ([h, t, e], i) => {
-  let s = 0;
-  h /= 255, t /= 255, e /= 255;
+const Ot = ([h, t, e], i) => {
   let n = 0;
-  t < e && (n = t, t = e, e = n, s = -1), h < t && (n = h, h = t, t = n, s = -2 / 6 - s);
-  const r = h - Math.min(t, e), a = Math.abs(s + (t - e) / (6 * r + Number.EPSILON)), o = r / (h + Number.EPSILON), l = h;
+  h /= 255, t /= 255, e /= 255;
+  let s = 0;
+  t < e && (s = t, t = e, e = s, n = -1), h < t && (s = h, h = t, t = s, n = -2 / 6 - n);
+  const r = h - Math.min(t, e), a = Math.abs(n + (t - e) / (6 * r + Number.EPSILON)), o = r / (h + Number.EPSILON), l = h;
   return i[0] = a, i[1] = o, i[2] = l, i;
-}, Bt = ([h, t, e], i) => {
+}, Pt = ([h, t, e], i) => {
   if (t === 0)
     return i[0] = i[1] = i[2] = e * 255 + 0.5, i;
   h %= 1;
-  const s = h * 6 | 0, n = h * 6 - s, r = e * (1 - t), a = e * (1 - t * n), o = e * (1 - t * (1 - n));
+  const n = h * 6 | 0, s = h * 6 - n, r = e * (1 - t), a = e * (1 - t * s), o = e * (1 - t * (1 - s));
   let l = 0, c = 0, u = 0;
-  switch (s) {
+  switch (n) {
     case 0:
       l = e, c = o, u = r;
       break;
@@ -1114,8 +1439,8 @@ const At = ([h, t, e], i) => {
       break;
   }
   return i[0] = l * 255 + 0.5, i[1] = c * 255 + 0.5, i[2] = u * 255 + 0.5, i;
-}, D = 0.5, I = 0.5, Rt = [0, 0, 0];
-class W {
+}, C = 0.5, M = 0.5, zt = [0, 0, 0];
+class G {
   /**
    * Transform a color in-place given the drawable's effect uniforms.  Will apply
    * Ghost and Color and Brightness effects.
@@ -1127,22 +1452,22 @@ class W {
   static transformColor(t, e, i) {
     if (e[3] === 0)
       return e;
-    let s = t.enabledEffects;
-    typeof i == "number" && (s &= i);
-    const n = t.getUniforms(), r = (s & m.EFFECT_INFO.color.mask) !== 0, a = (s & m.EFFECT_INFO.brightness.mask) !== 0;
+    let n = t.enabledEffects;
+    typeof i == "number" && (n &= i);
+    const s = t.getUniforms(), r = (n & m.EFFECT_INFO.color.mask) !== 0, a = (n & m.EFFECT_INFO.brightness.mask) !== 0;
     if (r || a) {
       const o = e[3] / 255;
       if (e[0] /= o, e[1] /= o, e[2] /= o, r) {
-        const l = At(e, Rt), c = 0.11 / 2, u = 0.09;
-        l[2] < c ? (l[0] = 0, l[1] = 1, l[2] = c) : l[1] < u && (l[0] = 0, l[1] = u), l[0] = n.u_color + l[0] + 1, Bt(l, e);
+        const l = Ot(e, zt), c = 0.11 / 2, u = 0.09;
+        l[2] < c ? (l[0] = 0, l[1] = 1, l[2] = c) : l[1] < u && (l[0] = 0, l[1] = u), l[0] = s.u_color + l[0] + 1, Pt(l, e);
       }
       if (a) {
-        const l = n.u_brightness * 255;
+        const l = s.u_brightness * 255;
         e[0] += l, e[1] += l, e[2] += l;
       }
       e[0] *= o, e[1] *= o, e[2] *= o;
     }
-    return s & m.EFFECT_INFO.ghost.mask && (e[0] *= n.u_ghost, e[1] *= n.u_ghost, e[2] *= n.u_ghost, e[3] *= n.u_ghost), e;
+    return n & m.EFFECT_INFO.ghost.mask && (e[0] *= s.u_ghost, e[1] *= s.u_ghost, e[2] *= s.u_ghost, e[3] *= s.u_ghost), e;
   }
   /**
    * Transform a texture coordinate to one that would be select after applying shader effects.
@@ -1152,24 +1477,24 @@ class W {
    * @return {twgl.v3} dst - The coordinate after being transform by effects.
    */
   static transformPoint(t, e, i) {
-    Et.v3.copy(e, i);
-    const s = t.enabledEffects, n = t.getUniforms();
-    if (s & m.EFFECT_INFO.mosaic.mask && (i[0] = n.u_mosaic * i[0] % 1, i[1] = n.u_mosaic * i[1] % 1), s & m.EFFECT_INFO.pixelate.mask) {
-      const r = t.skin.getUniforms(), a = r.u_skinSize[0] / n.u_pixelate, o = r.u_skinSize[1] / n.u_pixelate;
-      i[0] = (Math.floor(i[0] * a) + D) / a, i[1] = (Math.floor(i[1] * o) + I) / o;
+    Dt.v3.copy(e, i);
+    const n = t.enabledEffects, s = t.getUniforms();
+    if (n & m.EFFECT_INFO.mosaic.mask && (i[0] = s.u_mosaic * i[0] % 1, i[1] = s.u_mosaic * i[1] % 1), n & m.EFFECT_INFO.pixelate.mask) {
+      const r = t.skin.getUniforms(), a = r.u_skinSize[0] / s.u_pixelate, o = r.u_skinSize[1] / s.u_pixelate;
+      i[0] = (Math.floor(i[0] * a) + C) / a, i[1] = (Math.floor(i[1] * o) + M) / o;
     }
-    if (s & m.EFFECT_INFO.whirl.mask) {
-      const a = i[0] - D, o = i[1] - I, l = Math.sqrt(Math.pow(a, 2) + Math.pow(o, 2)), c = Math.max(1 - l / 0.5, 0), u = n.u_whirl * c * c, _ = Math.sin(u), g = Math.cos(u), d = g, p = -_, S = _, E = g;
-      i[0] = d * a + S * o + D, i[1] = p * a + E * o + I;
+    if (n & m.EFFECT_INFO.whirl.mask) {
+      const a = i[0] - C, o = i[1] - M, l = Math.sqrt(Math.pow(a, 2) + Math.pow(o, 2)), c = Math.max(1 - l / 0.5, 0), u = s.u_whirl * c * c, _ = Math.sin(u), g = Math.cos(u), d = g, p = -_, E = _, D = g;
+      i[0] = d * a + E * o + C, i[1] = p * a + D * o + M;
     }
-    if (s & m.EFFECT_INFO.fisheye.mask) {
-      const r = (i[0] - D) / D, a = (i[1] - I) / I, o = Math.sqrt(r * r + a * a), l = Math.pow(Math.min(o, 1), n.u_fisheye) * Math.max(1, o), c = r / o, u = a / o;
-      i[0] = D + l * c * D, i[1] = I + l * u * I;
+    if (n & m.EFFECT_INFO.fisheye.mask) {
+      const r = (i[0] - C) / C, a = (i[1] - M) / M, o = Math.sqrt(r * r + a * a), l = Math.pow(Math.min(o, 1), s.u_fisheye) * Math.max(1, o), c = r / o, u = a / o;
+      i[0] = C + l * c * C, i[1] = M + l * u * M;
     }
     return i;
   }
 }
-function Lt(h) {
+function Ht(h) {
   return h && h.__esModule && Object.prototype.hasOwnProperty.call(h, "default") ? h.default : h;
 }
 var et = { exports: {} }, it = { exports: {} };
@@ -1216,17 +1541,17 @@ j.mixin = function(h) {
   for (e in t)
     t.hasOwnProperty(e) && (h.prototype[e] = t[e]);
 };
-var zt = j, Ht = zt;
-function y() {
+var Wt = j, Ut = Wt;
+function S() {
 }
-Ht.mixin(y);
-y.prototype.write = function(h, t, e) {
+Ut.mixin(S);
+S.prototype.write = function(h, t, e) {
   this.emit("item", h, t, e);
 };
-y.prototype.end = function() {
+S.prototype.end = function() {
   this.emit("end"), this.removeAllListeners();
 };
-y.prototype.pipe = function(h) {
+S.prototype.pipe = function(h) {
   var t = this;
   t.emit("unpipe", h), h.emit("pipe", t);
   function e() {
@@ -1235,15 +1560,15 @@ y.prototype.pipe = function(h) {
   function i() {
     !h._isStdio && h.end();
   }
-  return t.on("item", e), t.on("end", i), t.when("unpipe", function(s) {
-    var n = s === h || typeof s == "undefined";
-    return n && (t.removeListener("item", e), t.removeListener("end", i), h.emit("unpipe")), n;
+  return t.on("item", e), t.on("end", i), t.when("unpipe", function(n) {
+    var s = n === h || typeof n == "undefined";
+    return s && (t.removeListener("item", e), t.removeListener("end", i), h.emit("unpipe")), s;
   }), h;
 };
-y.prototype.unpipe = function(h) {
+S.prototype.unpipe = function(h) {
   return this.emit("unpipe", h), this;
 };
-y.prototype.format = function(h) {
+S.prototype.format = function(h) {
   throw new Error([
     "Warning: .format() is deprecated in Minilog v2! Use .pipe() instead. For example:",
     "var Minilog = require('minilog');",
@@ -1253,16 +1578,16 @@ y.prototype.format = function(h) {
   ].join(`
 `));
 };
-y.mixin = function(h) {
-  var t = y.prototype, e;
+S.mixin = function(h) {
+  var t = S.prototype, e;
   for (e in t)
     t.hasOwnProperty(e) && (h.prototype[e] = t[e]);
 };
-var C = y, Ut = C, $ = { debug: 1, info: 2, warn: 3, error: 4 };
+var T = S, Gt = T, $ = { debug: 1, info: 2, warn: 3, error: 4 };
 function k() {
   this.enabled = !0, this.defaultResult = !0, this.clear();
 }
-Ut.mixin(k);
+Gt.mixin(k);
 k.prototype.allow = function(h, t) {
   return this._white.push({ n: h, l: $[t] }), this;
 };
@@ -1289,31 +1614,31 @@ k.prototype.write = function(h, t, e) {
   if (!this.enabled || this.test(h, t))
     return this.emit("item", h, t, e);
 };
-var Gt = k;
+var jt = k;
 (function(h, t) {
-  var e = C, i = Gt, s = new e(), n = Array.prototype.slice;
+  var e = T, i = jt, n = new e(), s = Array.prototype.slice;
   t = h.exports = function(a) {
     var o = function() {
-      return s.write(a, void 0, n.call(arguments)), o;
+      return n.write(a, void 0, s.call(arguments)), o;
     };
     return o.debug = function() {
-      return s.write(a, "debug", n.call(arguments)), o;
+      return n.write(a, "debug", s.call(arguments)), o;
     }, o.info = function() {
-      return s.write(a, "info", n.call(arguments)), o;
+      return n.write(a, "info", s.call(arguments)), o;
     }, o.warn = function() {
-      return s.write(a, "warn", n.call(arguments)), o;
+      return n.write(a, "warn", s.call(arguments)), o;
     }, o.error = function() {
-      return s.write(a, "error", n.call(arguments)), o;
-    }, o.log = o.debug, o.suggest = t.suggest, o.format = s.format, o;
+      return n.write(a, "error", s.call(arguments)), o;
+    }, o.log = o.debug, o.suggest = t.suggest, o.format = n.format, o;
   }, t.defaultBackend = t.defaultFormatter = null, t.pipe = function(r) {
-    return s.pipe(r);
+    return n.pipe(r);
   }, t.end = t.unpipe = t.disable = function(r) {
-    return s.unpipe(r);
+    return n.unpipe(r);
   }, t.Transform = e, t.Filter = i, t.suggest = new i(), t.enable = function() {
-    return t.defaultFormatter ? s.pipe(t.suggest).pipe(t.defaultFormatter).pipe(t.defaultBackend) : s.pipe(t.suggest).pipe(t.defaultBackend);
+    return t.defaultFormatter ? n.pipe(t.suggest).pipe(t.defaultFormatter).pipe(t.defaultBackend) : n.pipe(t.suggest).pipe(t.defaultBackend);
   };
 })(it, it.exports);
-var Wt = it.exports, ct = {
+var $t = it.exports, ct = {
   black: "#000",
   red: "#c23621",
   green: "#25bc26",
@@ -1324,57 +1649,57 @@ var Wt = it.exports, ct = {
   gray: "#808080",
   purple: "#708"
 };
-function jt(h, t) {
+function qt(h, t) {
   return t ? "color: #fff; background: " + ct[h] + ";" : "color: " + ct[h] + ";";
 }
-var xt = jt, $t = C, V = xt, qt = { debug: ["cyan"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, nt = new $t();
-nt.write = function(h, t, e) {
+var vt = qt, Vt = T, K = vt, Xt = { debug: ["cyan"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, st = new Vt();
+st.write = function(h, t, e) {
   var i = console.log;
-  console[t] && console[t].apply && (i = console[t], i.apply(console, ["%c" + h + " %c" + t, V("gray"), V.apply(V, qt[t])].concat(e)));
+  console[t] && console[t].apply && (i = console[t], i.apply(console, ["%c" + h + " %c" + t, K("gray"), K.apply(K, Xt[t])].concat(e)));
 };
-nt.pipe = function() {
+st.pipe = function() {
 };
-var Xt = nt, Kt = C, z = xt, ut = { debug: ["gray"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, rt = new Kt();
+var Kt = st, Yt = T, z = vt, ut = { debug: ["gray"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, rt = new Yt();
 rt.write = function(h, t, e) {
   var i = console.log;
   t != "debug" && console[t] && (i = console[t]);
-  var s = 0;
+  var n = 0;
   if (t != "info") {
-    for (; s < e.length && typeof e[s] == "string"; s++)
+    for (; n < e.length && typeof e[n] == "string"; n++)
       ;
-    i.apply(console, ["%c" + h + " " + e.slice(0, s).join(" "), z.apply(z, ut[t])].concat(e.slice(s)));
+    i.apply(console, ["%c" + h + " " + e.slice(0, n).join(" "), z.apply(z, ut[t])].concat(e.slice(n)));
   } else
     i.apply(console, ["%c" + h, z.apply(z, ut[t])].concat(e));
 };
 rt.pipe = function() {
 };
-var Vt = rt, Yt = C, Jt = /\n+$/, B = new Yt();
-B.write = function(h, t, e) {
+var Jt = rt, Qt = T, Zt = /\n+$/, L = new Qt();
+L.write = function(h, t, e) {
   var i = e.length - 1;
   if (!(typeof console == "undefined" || !console.log)) {
     if (console.log.apply)
       return console.log.apply(console, [h, t].concat(e));
     if (JSON && JSON.stringify) {
-      e[i] && typeof e[i] == "string" && (e[i] = e[i].replace(Jt, ""));
+      e[i] && typeof e[i] == "string" && (e[i] = e[i].replace(Zt, ""));
       try {
         for (i = 0; i < e.length; i++)
           e[i] = JSON.stringify(e[i]);
-      } catch (s) {
+      } catch (n) {
       }
       console.log(e.join(" "));
     }
   }
 };
-B.formatters = ["color", "minilog"];
-B.color = Xt;
-B.minilog = Vt;
-var Qt = B, Y, ft;
-function Zt() {
+L.formatters = ["color", "minilog"];
+L.color = Kt;
+L.minilog = Jt;
+var te = L, Y, ft;
+function ee() {
   if (ft) return Y;
   ft = 1;
-  var h = C, t = [], e = new h();
-  return e.write = function(i, s, n) {
-    t.push([i, s, n]);
+  var h = T, t = [], e = new h();
+  return e.write = function(i, n, s) {
+    t.push([i, n, s]);
   }, e.get = function() {
     return t;
   }, e.empty = function() {
@@ -1382,40 +1707,40 @@ function Zt() {
   }, Y = e, Y;
 }
 var J, _t;
-function te() {
+function ie() {
   if (_t) return J;
   _t = 1;
-  var h = C, t = !1, e = new h();
-  return e.write = function(i, s, n) {
+  var h = T, t = !1, e = new h();
+  return e.write = function(i, n, s) {
     if (!(typeof window == "undefined" || typeof JSON == "undefined" || !JSON.stringify || !JSON.parse))
       try {
-        t || (t = window.localStorage.minilog ? JSON.parse(window.localStorage.minilog) : []), t.push([(/* @__PURE__ */ new Date()).toString(), i, s, n]), window.localStorage.minilog = JSON.stringify(t);
+        t || (t = window.localStorage.minilog ? JSON.parse(window.localStorage.minilog) : []), t.push([(/* @__PURE__ */ new Date()).toString(), i, n, s]), window.localStorage.minilog = JSON.stringify(t);
       } catch (r) {
       }
   }, J = e, J;
 }
 var Q, dt;
-function ee() {
+function ne() {
   if (dt) return Q;
   dt = 1;
-  var h = C, t = (/* @__PURE__ */ new Date()).valueOf().toString(36);
+  var h = T, t = (/* @__PURE__ */ new Date()).valueOf().toString(36);
   function e(i) {
     this.url = i.url || "", this.cache = [], this.timer = null, this.interval = i.interval || 30 * 1e3, this.enabled = !0, this.jQuery = window.jQuery, this.extras = {};
   }
-  return h.mixin(e), e.prototype.write = function(i, s, n) {
-    this.timer || this.init(), this.cache.push([i, s].concat(n));
+  return h.mixin(e), e.prototype.write = function(i, n, s) {
+    this.timer || this.init(), this.cache.push([i, n].concat(s));
   }, e.prototype.init = function() {
     if (!(!this.enabled || !this.jQuery)) {
       var i = this;
       this.timer = setTimeout(function() {
-        var s, n = [], r, a = i.url;
+        var n, s = [], r, a = i.url;
         if (i.cache.length == 0) return i.init();
-        for (s = 0; s < i.cache.length; s++)
+        for (n = 0; n < i.cache.length; n++)
           try {
-            JSON.stringify(i.cache[s]), n.push(i.cache[s]);
+            JSON.stringify(i.cache[n]), s.push(i.cache[n]);
           } catch (o) {
           }
-        i.jQuery.isEmptyObject(i.extras) ? (r = JSON.stringify({ logs: n }), a = i.url + "?client_id=" + t) : r = JSON.stringify(i.jQuery.extend({ logs: n }, i.extras)), i.jQuery.ajax(a, {
+        i.jQuery.isEmptyObject(i.extras) ? (r = JSON.stringify({ logs: s }), a = i.url + "?client_id=" + t) : r = JSON.stringify(i.jQuery.extend({ logs: s }, i.extras)), i.jQuery.ajax(a, {
           type: "POST",
           cache: !1,
           processData: !1,
@@ -1441,8 +1766,8 @@ function ee() {
   }, Q = e, Q;
 }
 (function(h, t) {
-  var e = Wt, i = e.enable, s = e.disable, n = typeof navigator != "undefined" && /chrome/i.test(navigator.userAgent), r = Qt;
-  if (e.defaultBackend = n ? r.minilog : r, typeof window != "undefined") {
+  var e = $t, i = e.enable, n = e.disable, s = typeof navigator != "undefined" && /chrome/i.test(navigator.userAgent), r = te;
+  if (e.defaultBackend = s ? r.minilog : r, typeof window != "undefined") {
     try {
       e.enable(JSON.parse(window.localStorage.minilogSettings));
     } catch (o) {
@@ -1460,27 +1785,27 @@ function ee() {
     }
     return this;
   }, e.disable = function() {
-    s.call(e);
+    n.call(e);
     try {
       delete window.localStorage.minilogSettings;
     } catch (o) {
     }
     return this;
   }, t = h.exports = e, t.backends = {
-    array: Zt(),
+    array: ee(),
     browser: e.defaultBackend,
-    localStorage: te(),
-    jQuery: ee()
+    localStorage: ie(),
+    jQuery: ne()
   };
 })(et, et.exports);
-var ie = et.exports;
-const vt = /* @__PURE__ */ Lt(ie);
-vt.enable();
-const N = vt("scratch-render"), se = f.v3.create(), gt = 1e-6, Z = (h, t) => {
-  const e = se, i = t[0], s = t[1], n = h._inverseMatrix, r = i * n[3] + s * n[7] + n[15];
-  return e[0] = 0.5 - (i * n[0] + s * n[4] + n[12]) / r, e[1] = (i * n[1] + s * n[5] + n[13]) / r + 0.5, Math.abs(e[0]) < gt && (e[0] = 0), Math.abs(e[1]) < gt && (e[1] = 0), h.enabledEffects !== 0 && e[0] >= 0 && e[0] < 1 && e[1] >= 0 && e[1] < 1 && W.transformPoint(h, e, e), e;
+var se = et.exports;
+const xt = /* @__PURE__ */ Ht(se);
+xt.enable();
+const N = xt("scratch-render"), re = f.v3.create(), gt = 1e-6, Z = (h, t) => {
+  const e = re, i = t[0], n = t[1], s = h._inverseMatrix, r = i * s[3] + n * s[7] + s[15];
+  return e[0] = 0.5 - (i * s[0] + n * s[4] + s[12]) / r, e[1] = (i * s[1] + n * s[5] + s[13]) / r + 0.5, Math.abs(e[0]) < gt && (e[0] = 0), Math.abs(e[1]) < gt && (e[1] = 0), h.enabledEffects !== 0 && e[0] >= 0 && e[0] < 1 && e[1] >= 0 && e[1] < 1 && G.transformPoint(h, e, e), e;
 };
-class A {
+class F {
   /**
    * An object which can be drawn by the renderer.
    * @todo double-buffer all rendering state (position, skin, effects, etc.)
@@ -1498,12 +1823,12 @@ class A {
        * The color to use in the silhouette draw mode.
        * @type {Array<number>}
        */
-      u_silhouetteColor: A.color4fFromID(this._id)
+      u_silhouetteColor: F.color4fFromID(this._id)
     };
     const e = m.EFFECTS.length;
     for (let i = 0; i < e; ++i) {
-      const s = m.EFFECTS[i], n = m.EFFECT_INFO[s], r = n.converter;
-      this._uniforms[n.uniformName] = r(0);
+      const n = m.EFFECTS[i], s = m.EFFECT_INFO[n], r = s.converter;
+      this._uniforms[s.uniformName] = r(0);
     }
     this._position = f.v3.create(0, 0), this._scale = f.v3.create(100, 100), this._direction = 90, this._transformDirty = !0, this._rotationMatrix = f.m4.identity(), this._rotationTransformDirty = !0, this._rotationAdjusted = f.v3.create(), this._rotationCenterDirty = !0, this._skinScale = f.v3.create(0, 0, 0), this._skinScaleDirty = !0, this._inverseMatrix = f.m4.identity(), this._inverseTransformDirty = !0, this._visible = !0, this.enabledEffects = 0, this._convexHullPoints = null, this._convexHullDirty = !0, this._transformedHullPoints = null, this._transformedHullDirty = !0, this._skinWasAltered = this._skinWasAltered.bind(this), this.isTouching = this._isTouchingNever;
   }
@@ -1536,7 +1861,7 @@ class A {
    * @param {Skin} newSkin - A new Skin for this Drawable.
    */
   set skin(t) {
-    this._skin !== t && (this._skin && this._skin.removeListener(v.Events.WasAltered, this._skinWasAltered), this._skin = t, this._skin && this._skin.addListener(v.Events.WasAltered, this._skinWasAltered), this._skinWasAltered());
+    this._skin !== t && (this._skin && this._skin.removeListener(x.Events.WasAltered, this._skinWasAltered), this._skin = t, this._skin && this._skin.addListener(x.Events.WasAltered, this._skinWasAltered), this._skinWasAltered());
   }
   /**
    * @returns {Array<number>} the current scaling percentages applied to this Drawable. [100,100] is normal size.
@@ -1592,8 +1917,8 @@ class A {
   updateEffect(t, e) {
     const i = m.EFFECT_INFO[t];
     e ? this.enabledEffects |= i.mask : this.enabledEffects &= ~i.mask;
-    const s = i.converter;
-    this._uniforms[i.uniformName] = s(e), i.shapeChanges && this.setConvexHullDirty();
+    const n = i.converter;
+    this._uniforms[i.uniformName] = n(e), i.shapeChanges && this.setConvexHullDirty();
   }
   /**
    * Update the position, direction, scale, or effect properties of this Drawable.
@@ -1604,8 +1929,8 @@ class A {
     "position" in t && this.updatePosition(t.position), "direction" in t && this.updateDirection(t.direction), "scale" in t && this.updateScale(t.scale), "visible" in t && this.updateVisible(t.visible);
     const e = m.EFFECTS.length;
     for (let i = 0; i < e; ++i) {
-      const s = m.EFFECTS[i];
-      s in t && this.updateEffect(s, t[s]);
+      const n = m.EFFECTS[i];
+      n in t && this.updateEffect(n, t[n]);
     }
   }
   /**
@@ -1618,15 +1943,15 @@ class A {
       this._rotationMatrix[0] = g, this._rotationMatrix[1] = d, this._rotationMatrix[4] = -d, this._rotationMatrix[5] = g, this._rotationTransformDirty = !1;
     }
     if (this._rotationCenterDirty && this.skin !== null) {
-      const _ = this.skin.rotationCenter, g = this.skin.size, d = _[0], p = _[1], S = g[0], E = g[1], St = this._scale[0], Tt = this._scale[1], ot = this._rotationAdjusted;
-      ot[0] = (d - S / 2) * St / 100, ot[1] = (p - E / 2) * Tt / 100 * -1, this._rotationCenterDirty = !1;
+      const _ = this.skin.rotationCenter, g = this.skin.size, d = _[0], p = _[1], E = g[0], D = g[1], Et = this._scale[0], yt = this._scale[1], ot = this._rotationAdjusted;
+      ot[0] = (d - E / 2) * Et / 100, ot[1] = (p - D / 2) * yt / 100 * -1, this._rotationCenterDirty = !1;
     }
     if (this._skinScaleDirty && this.skin !== null) {
       const _ = this.skin.size, g = this._skinScale;
       g[0] = _[0] * this._scale[0] / 100, g[1] = _[1] * this._scale[1] / 100, this._skinScaleDirty = !1;
     }
-    const t = this._uniforms.u_modelMatrix, e = this._skinScale[0], i = this._skinScale[1], s = this._rotationMatrix[0], n = this._rotationMatrix[1], r = this._rotationMatrix[4], a = this._rotationMatrix[5], o = this._rotationAdjusted[0], l = this._rotationAdjusted[1], c = this._position[0], u = this._position[1];
-    t[0] = e * s, t[1] = e * n, t[4] = i * r, t[5] = i * a, t[12] = s * o + r * l + c, t[13] = n * o + a * l + u, this._transformDirty = !1;
+    const t = this._uniforms.u_modelMatrix, e = this._skinScale[0], i = this._skinScale[1], n = this._rotationMatrix[0], s = this._rotationMatrix[1], r = this._rotationMatrix[4], a = this._rotationMatrix[5], o = this._rotationAdjusted[0], l = this._rotationAdjusted[1], c = this._position[0], u = this._position[1];
+    t[0] = e * n, t[1] = e * s, t[4] = i * r, t[5] = i * a, t[12] = n * o + r * l + c, t[13] = s * o + a * l + u, this._transformDirty = !1;
   }
   /**
    * Whether the Drawable needs convex hull points provided by the renderer.
@@ -1703,8 +2028,8 @@ class A {
     if (this.needsConvexHullPoints())
       throw new Error("Needs updated convex hull points before bubble bounds calculation.");
     this._transformDirty && this._calculateTransform();
-    const e = 8, i = this._getTransformedHullPoints(), s = Math.max.apply(null, i.map((r) => r[1])), n = i.filter((r) => r[1] > s - e);
-    return t = t || new b(), t.initFromPointsAABB(n), t;
+    const e = 8, i = this._getTransformedHullPoints(), n = Math.max.apply(null, i.map((r) => r[1])), s = i.filter((r) => r[1] > n - e);
+    return t = t || new b(), t.initFromPointsAABB(s), t;
   }
   /**
    * Get the rough axis-aligned bounding box for the Drawable.
@@ -1741,10 +2066,10 @@ class A {
   _getTransformedHullPoints() {
     if (!this._transformedHullDirty)
       return this._transformedHullPoints;
-    const t = f.m4.ortho(-1, 1, -1, 1, -1, 1), e = this.skin.size, i = 1 / e[0] / 2, s = 1 / e[1] / 2, n = f.m4.multiply(this._uniforms.u_modelMatrix, t);
+    const t = f.m4.ortho(-1, 1, -1, 1, -1, 1), e = this.skin.size, i = 1 / e[0] / 2, n = 1 / e[1] / 2, s = f.m4.multiply(this._uniforms.u_modelMatrix, t);
     for (let r = 0; r < this._convexHullPoints.length; r++) {
       const a = this._convexHullPoints[r], o = this._transformedHullPoints[r];
-      o[0] = 0.5 + -a[0] / e[0] - i, o[1] = a[1] / e[1] - 0.5 + s, f.m4.transformPoint(n, o, o);
+      o[0] = 0.5 + -a[0] / e[0] - i, o[1] = a[1] / e[1] - 0.5 + n, f.m4.transformPoint(s, o, o);
     }
     return this._transformedHullDirty = !1, this._transformedHullPoints;
   }
@@ -1778,9 +2103,9 @@ class A {
    * @returns {Array<number>} An array of [r,g,b,a], each component in the range [0,1].
    */
   static color4fFromID(t) {
-    t -= x.ID_NONE;
-    const e = (t >> 0 & 255) / 255, i = (t >> 8 & 255) / 255, s = (t >> 16 & 255) / 255;
-    return [e, i, s, 1];
+    t -= v.ID_NONE;
+    const e = (t >> 0 & 255) / 255, i = (t >> 8 & 255) / 255, n = (t >> 16 & 255) / 255;
+    return [e, i, n, 1];
   }
   /**
    * Calculate the ID number represented by the given color. If all components of
@@ -1792,8 +2117,8 @@ class A {
    * @returns {int} The ID represented by that color.
    */
   static color3bToID(t, e, i) {
-    let s;
-    return s = (t & 255) << 0, s |= (e & 255) << 8, s |= (i & 255) << 16, s + x.ID_NONE;
+    let n;
+    return n = (t & 255) << 0, n |= (e & 255) << 8, n |= (i & 255) << 16, n + v.ID_NONE;
   }
   /**
    * Sample a color from a drawable's texture.
@@ -1805,23 +2130,23 @@ class A {
    * @param {number} [effectMask] A bitmask for which effects to use. Optional.
    * @returns {Uint8ClampedArray} The dst object filled with the color4b
    */
-  static sampleColor4b(t, e, i, s) {
-    const n = Z(e, t);
-    if (n[0] < 0 || n[1] < 0 || n[0] > 1 || n[1] > 1)
+  static sampleColor4b(t, e, i, n) {
+    const s = Z(e, t);
+    if (s[0] < 0 || s[1] < 0 || s[0] > 1 || s[1] > 1)
       return i[0] = 0, i[1] = 0, i[2] = 0, i[3] = 0, i;
     const r = (
       // commenting out to only use nearest for now
       // drawable.skin.useNearest(drawable._scale, drawable) ?
-      e.skin._silhouette.colorAtNearest(n, i)
+      e.skin._silhouette.colorAtNearest(s, i)
     );
-    return e.enabledEffects === 0 ? r : W.transformColor(e, r, s);
+    return e.enabledEffects === 0 ? r : G.transformColor(e, r, n);
   }
 }
-const mt = f.v3.create(), ne = new b(), re = new b(), oe = new Uint8ClampedArray(4), P = new Uint8ClampedArray(4), ae = 4e4, H = [3, 3], he = 2, pt = 2048, le = (h, t) => (
+const mt = f.v3.create(), oe = new b(), ae = new b(), he = new Uint8ClampedArray(4), R = new Uint8ClampedArray(4), le = 4e4, H = [3, 3], ce = 2, pt = 2048, ue = (h, t) => (
   // has some non-alpha component to test against
   h[3] > 0 && (h[0] & 252) === (t[0] & 252) && (h[1] & 252) === (t[1] & 252) && (h[2] & 252) === (t[2] & 252)
 ), tt = (h, t, e) => (h[0] & 248) === (t[e + 0] & 248) && (h[1] & 248) === (t[e + 1] & 248) && (h[2] & 240) === (t[e + 2] & 240), wt = 15;
-class T extends bt {
+class y extends bt {
   /**
    * Check if this environment appears to support this renderer before attempting to create an instance.
    * Catching an exception from the constructor is also a valid way to test for (lack of) support.
@@ -1830,7 +2155,7 @@ class T extends bt {
    */
   static isSupported(t) {
     try {
-      return !!T._getContext(t || document.createElement("canvas"));
+      return !!y._getContext(t || document.createElement("canvas"));
     } catch (e) {
       return !1;
     }
@@ -1861,15 +2186,15 @@ class T extends bt {
    * @constructor
    * @listens RenderWebGL#event:NativeSizeChanged
    */
-  constructor(t, e, i, s, n) {
+  constructor(t, e, i, n, s) {
     super();
-    const r = this._gl = T._getContext(t);
+    const r = this._gl = y._getContext(t);
     if (!r)
       throw new Error("Could not get WebGL context: this browser or environment may not support WebGL.");
-    this._useGpuMode = T.UseGpuModes.Automatic, this._allDrawables = [], this._allSkins = [], this._drawList = [], this._groupOrdering = [], this._layerGroups = {}, this._nextDrawableId = x.ID_NONE + 1, this._nextSkinId = x.ID_NONE + 1, this._projection = f.m4.identity(), this._shaderManager = new m(r), this._tempCanvas = document.createElement("canvas"), this._regionId = null, this._exitRegion = null, this._backgroundDrawRegionId = {
+    this._useGpuMode = y.UseGpuModes.Automatic, this._allDrawables = [], this._allSkins = [], this._drawList = [], this._groupOrdering = [], this._layerGroups = {}, this._nextDrawableId = v.ID_NONE + 1, this._nextSkinId = v.ID_NONE + 1, this._projection = f.m4.identity(), this._shaderManager = new m(r), this._tempCanvas = document.createElement("canvas"), this._regionId = null, this._exitRegion = null, this._backgroundDrawRegionId = {
       enter: () => this._enterDrawBackground(),
       exit: () => this._exitDrawBackground()
-    }, this._snapshotCallbacks = [], this._backgroundColor4f = [0, 0, 0, 1], this._backgroundColor3b = new Uint8ClampedArray(3), this._createGeometry(), this.on(x.Events.NativeSizeChanged, this.onNativeSizeChanged), this.setBackgroundColor(1, 1, 1), this.setStageSize(e || -240, i || 240, s || -180, n || 180), this.resize(this._nativeSize[0], this._nativeSize[1]), r.disable(r.DEPTH_TEST), r.enable(r.BLEND), r.blendFunc(r.ONE, r.ONE_MINUS_SRC_ALPHA);
+    }, this._snapshotCallbacks = [], this._backgroundColor4f = [0, 0, 0, 1], this._backgroundColor3b = new Uint8ClampedArray(3), this._createGeometry(), this.on(v.Events.NativeSizeChanged, this.onNativeSizeChanged), this.setBackgroundColor(1, 1, 1), this.setStageSize(e || -240, i || 240, n || -180, s || 180), this.resize(this._nativeSize[0], this._nativeSize[1]), r.disable(r.DEPTH_TEST), r.enable(r.BLEND), r.blendFunc(r.ONE, r.ONE_MINUS_SRC_ALPHA);
   }
   /**
    * @returns {WebGLRenderingContext} the WebGL rendering context associated with this renderer.
@@ -1890,8 +2215,8 @@ class T extends bt {
    * @param {int} pixelsTall The desired height in device-independent pixels.
    */
   resize(t, e) {
-    const { canvas: i } = this._gl, s = window.devicePixelRatio || 1, n = t * s, r = e * s;
-    (i.width !== n || i.height !== r) && (i.width = n, i.height = r, this.draw());
+    const { canvas: i } = this._gl, n = window.devicePixelRatio || 1, s = t * n, r = e * n;
+    (i.width !== s || i.height !== r) && (i.width = s, i.height = r, this.draw());
   }
   /**
    * Set the background color for the stage. The stage will be cleared with this
@@ -1925,8 +2250,8 @@ class T extends bt {
    * @param {int} yBottom The bottom edge's y-coordinate. Scratch 2 uses -180.
    * @param {int} yTop The top edge's y-coordinate. Scratch 2 uses 180.
    */
-  setStageSize(t, e, i, s) {
-    this._xLeft = t, this._xRight = e, this._yBottom = i, this._yTop = s, this._projection = f.m4.ortho(t, e, i, s, -1, 1), this._setNativeSize(Math.abs(e - t), Math.abs(i - s));
+  setStageSize(t, e, i, n) {
+    this._xLeft = t, this._xRight = e, this._yBottom = i, this._yTop = n, this._projection = f.m4.ortho(t, e, i, n, -1, 1), this._setNativeSize(Math.abs(e - t), Math.abs(i - n));
   }
   /**
    * @return {Array<int>} the "native" size of the stage, which is used for pen, query renders, etc.
@@ -1942,7 +2267,7 @@ class T extends bt {
    * @fires RenderWebGL#event:NativeSizeChanged
    */
   _setNativeSize(t, e) {
-    this._nativeSize = [t, e], this.emit(x.Events.NativeSizeChanged, { newSize: this._nativeSize });
+    this._nativeSize = [t, e], this.emit(v.Events.NativeSizeChanged, { newSize: this._nativeSize });
   }
   /**
    * Create a new bitmap skin from a snapshot of the provided bitmap data.
@@ -1953,8 +2278,8 @@ class T extends bt {
    * @returns {!int} the ID for the new skin.
    */
   createBitmapSkin(t, e, i) {
-    const s = this._nextSkinId++, n = new O(s, this);
-    return n.setBitmap(t, e, i), this._allSkins[s] = n, s;
+    const n = this._nextSkinId++, s = new B(n, this);
+    return s.setBitmap(t, e, i), this._allSkins[n] = s, n;
   }
   /**
    * Create a new SVG skin.
@@ -1964,15 +2289,15 @@ class T extends bt {
    * @returns {!int} the ID for the new skin.
    */
   createSVGSkin(t, e) {
-    const i = this._nextSkinId++, s = new K(i, this);
-    return s.setSVG(t, e), this._allSkins[i] = s, i;
+    const i = this._nextSkinId++, n = new X(i, this);
+    return n.setSVG(t, e), this._allSkins[i] = n, i;
   }
   /**
    * Create a new PenSkin - a skin which implements a Scratch pen layer.
    * @returns {!int} the ID for the new skin.
    */
   createPenSkin() {
-    const t = this._nextSkinId++, e = new Ft(t, this);
+    const t = this._nextSkinId++, e = new Nt(t, this);
     return this._allSkins[t] = e, t;
   }
   /**
@@ -1984,8 +2309,8 @@ class T extends bt {
    * @returns {!int} the ID for the new skin.
    */
   createTextSkin(t, e, i) {
-    const s = this._nextSkinId++, n = new L(s, this);
-    return n.setTextBubble(t, e, i), this._allSkins[s] = n, s;
+    const n = this._nextSkinId++, s = new P(n, this);
+    return s.setTextBubble(t, e, i), this._allSkins[n] = s, n;
   }
   /**
    * Update an existing SVG skin, or create an SVG skin if the previous skin was not SVG.
@@ -1995,12 +2320,12 @@ class T extends bt {
    * skin will be used
    */
   updateSVGSkin(t, e, i) {
-    if (this._allSkins[t] instanceof K) {
+    if (this._allSkins[t] instanceof X) {
       this._allSkins[t].setSVG(e, i);
       return;
     }
-    const s = new K(t, this);
-    s.setSVG(e, i), this._reskin(t, s);
+    const n = new X(t, this);
+    n.setSVG(e, i), this._reskin(t, n);
   }
   /**
    * Update an existing bitmap skin, or create a bitmap skin if the previous skin was not bitmap.
@@ -2010,19 +2335,19 @@ class T extends bt {
    * @param {?Array<number>} rotationCenter Optional: rotation center of the skin. If not supplied, the center of the
    * skin will be used
    */
-  updateBitmapSkin(t, e, i, s) {
-    if (this._allSkins[t] instanceof O) {
-      this._allSkins[t].setBitmap(e, i, s);
+  updateBitmapSkin(t, e, i, n) {
+    if (this._allSkins[t] instanceof B) {
+      this._allSkins[t].setBitmap(e, i, n);
       return;
     }
-    const n = new O(t, this);
-    n.setBitmap(e, i, s), this._reskin(t, n);
+    const s = new B(t, this);
+    s.setBitmap(e, i, n), this._reskin(t, s);
   }
   _reskin(t, e) {
     const i = this._allSkins[t];
     this._allSkins[t] = e;
-    for (const s of this._allDrawables)
-      s && s.skin === i && (s.skin = e);
+    for (const n of this._allDrawables)
+      n && n.skin === i && (n.skin = e);
     i.dispose();
   }
   /**
@@ -2032,13 +2357,13 @@ class T extends bt {
    * @param {!string} text - the text for the bubble.
    * @param {!boolean} pointsLeft - which side the bubble is pointing.
    */
-  updateTextSkin(t, e, i, s) {
-    if (this._allSkins[t] instanceof L) {
-      this._allSkins[t].setTextBubble(e, i, s);
+  updateTextSkin(t, e, i, n) {
+    if (this._allSkins[t] instanceof P) {
+      this._allSkins[t].setTextBubble(e, i, n);
       return;
     }
-    const n = new L(t, this);
-    n.setTextBubble(e, i, s), this._reskin(t, n);
+    const s = new P(t, this);
+    s.setTextBubble(e, i, n), this._reskin(t, s);
   }
   /**
    * Destroy an existing skin. Do not use the skin or its ID after calling this.
@@ -2057,7 +2382,7 @@ class T extends bt {
       N.warn("Cannot create a drawable without a known layer group");
       return;
     }
-    const e = this._nextDrawableId++, i = new A(e);
+    const e = this._nextDrawableId++, i = new F(e);
     return this._allDrawables[e] = i, this._addToDrawList(e, t), i.skin = null, e;
   }
   /**
@@ -2074,13 +2399,13 @@ class T extends bt {
       };
   }
   _addToDrawList(t, e) {
-    const i = this._layerGroups[e], s = i.groupIndex, n = this._endIndexForKnownLayerGroup(i);
-    this._drawList.splice(n, 0, t), this._updateOffsets("add", s);
+    const i = this._layerGroups[e], n = i.groupIndex, s = this._endIndexForKnownLayerGroup(i);
+    this._drawList.splice(s, 0, t), this._updateOffsets("add", n);
   }
   _updateOffsets(t, e) {
     for (let i = e + 1; i < this._groupOrdering.length; i++) {
-      const s = this._groupOrdering[i];
-      t === "add" ? this._layerGroups[s].drawListOffset++ : t === "delete" && this._layerGroups[s].drawListOffset--;
+      const n = this._groupOrdering[i];
+      t === "add" ? this._layerGroups[n].drawListOffset++ : t === "delete" && this._layerGroups[n].drawListOffset--;
     }
   }
   get _visibleDrawList() {
@@ -2103,12 +2428,12 @@ class T extends bt {
       return;
     }
     this._allDrawables[t].dispose(), delete this._allDrawables[t];
-    const s = this._layerGroups[e], n = this._endIndexForKnownLayerGroup(s);
-    let r = s.drawListOffset;
-    for (; r < n && this._drawList[r] !== t; )
+    const n = this._layerGroups[e], s = this._endIndexForKnownLayerGroup(n);
+    let r = n.drawListOffset;
+    for (; r < s && this._drawList[r] !== t; )
       r++;
-    if (r < n)
-      this._drawList.splice(r, 1), this._updateOffsets("delete", s.groupIndex);
+    if (r < s)
+      this._drawList.splice(r, 1), this._updateOffsets("delete", n.groupIndex);
     else {
       N.warn("Could not destroy drawable that could not be found in layer group.");
       return;
@@ -2139,7 +2464,7 @@ class T extends bt {
    * @param {number=} optMin If set, order constrained to be at least `optMin`.
    * @return {?number} New order if changed, or null.
    */
-  setDrawableOrder(t, e, i, s, n) {
+  setDrawableOrder(t, e, i, n, s) {
     if (!i || !Object.prototype.hasOwnProperty.call(this._layerGroups, i)) {
       N.warn("Cannot set the order of a drawable without a known layer group.");
       return;
@@ -2153,8 +2478,8 @@ class T extends bt {
         return l;
       this._drawList.splice(l, 1)[0];
       let c = e;
-      s && (c += l);
-      const u = (n || 0) + a, _ = u >= a && u < o ? u : a;
+      n && (c += l);
+      const u = (s || 0) + a, _ = u >= a && u < o ? u : a;
       return c = Math.max(c, _), c = Math.min(c, o), this._drawList.splice(c, 0, t), c;
     }
     return null;
@@ -2181,17 +2506,17 @@ class T extends bt {
   getBounds(t) {
     const e = this._allDrawables[t];
     if (e.needsConvexHullPoints()) {
-      const s = this._getConvexHullPointsForDrawable(t);
-      e.setConvexHullPoints(s);
+      const n = this._getConvexHullPointsForDrawable(t);
+      e.setConvexHullPoints(n);
     }
     const i = e.getFastBounds();
     if (this._debugCanvas) {
-      const s = this._gl;
-      this._debugCanvas.width = s.canvas.width, this._debugCanvas.height = s.canvas.height;
-      const n = this._debugCanvas.getContext("2d");
-      n.drawImage(s.canvas, 0, 0), n.strokeStyle = "#FF0000";
+      const n = this._gl;
+      this._debugCanvas.width = n.canvas.width, this._debugCanvas.height = n.canvas.height;
+      const s = this._debugCanvas.getContext("2d");
+      s.drawImage(n.canvas, 0, 0), s.strokeStyle = "#FF0000";
       const r = window.devicePixelRatio;
-      n.strokeRect(
+      s.strokeRect(
         r * (i.left + this._nativeSize[0] / 2),
         r * (-i.top + this._nativeSize[1] / 2),
         r * (i.right - i.left),
@@ -2209,17 +2534,17 @@ class T extends bt {
   getBoundsForBubble(t) {
     const e = this._allDrawables[t];
     if (e.needsConvexHullPoints()) {
-      const s = this._getConvexHullPointsForDrawable(t);
-      e.setConvexHullPoints(s);
+      const n = this._getConvexHullPointsForDrawable(t);
+      e.setConvexHullPoints(n);
     }
     const i = e.getBoundsForBubble();
     if (this._debugCanvas) {
-      const s = this._gl;
-      this._debugCanvas.width = s.canvas.width, this._debugCanvas.height = s.canvas.height;
-      const n = this._debugCanvas.getContext("2d");
-      n.drawImage(s.canvas, 0, 0), n.strokeStyle = "#FF0000";
+      const n = this._gl;
+      this._debugCanvas.width = n.canvas.width, this._debugCanvas.height = n.canvas.height;
+      const s = this._debugCanvas.getContext("2d");
+      s.drawImage(n.canvas, 0, 0), s.strokeStyle = "#FF0000";
       const r = window.devicePixelRatio;
-      n.strokeRect(
+      s.strokeRect(
         r * (i.left + this._nativeSize[0] / 2),
         r * (-i.top + this._nativeSize[1] / 2),
         r * (i.right - i.left),
@@ -2262,38 +2587,38 @@ class T extends bt {
    * @returns {boolean} True iff the Drawable is touching the color.
    */
   isTouchingColor(t, e, i) {
-    const s = this._candidatesTouching(t, this._visibleDrawList);
-    let n;
+    const n = this._candidatesTouching(t, this._visibleDrawList);
+    let s;
     if (tt(e, this._backgroundColor3b, 0)) {
-      if (n = this._touchingBounds(t), n === null) return !1;
+      if (s = this._touchingBounds(t), s === null) return !1;
     } else {
-      if (s.length === 0)
+      if (n.length === 0)
         return !1;
-      n = this._candidatesBounds(s);
+      s = this._candidatesBounds(n);
     }
     const r = this._getMaxPixelsForCPU(), a = this._debugCanvas && this._debugCanvas.getContext("2d");
-    a && (this._debugCanvas.width = n.width, this._debugCanvas.height = n.height), n.width * n.height * (s.length + 1) >= r && this._isTouchingColorGpuStart(t, s.map(({ id: g }) => g).reverse(), n, e, i);
-    const o = this._allDrawables[t], l = mt, c = oe, u = !!i;
+    a && (this._debugCanvas.width = s.width, this._debugCanvas.height = s.height), s.width * s.height * (n.length + 1) >= r && this._isTouchingColorGpuStart(t, n.map(({ id: g }) => g).reverse(), s, e, i);
+    const o = this._allDrawables[t], l = mt, c = he, u = !!i;
     o.updateCPURenderAttributes();
     const _ = ~m.EFFECT_INFO.ghost.mask;
-    for (let g = n.bottom; g <= n.top; g++) {
-      if (n.width * (g - n.bottom) * (s.length + 1) >= r)
-        return this._isTouchingColorGpuFin(n, e, g - n.bottom);
-      for (let d = n.left; d <= n.right; d++)
-        if (l[1] = g, l[0] = d, (u ? le(A.sampleColor4b(l, o, c, _), i) : o.isTouching(l)) && (T.sampleColor3b(l, s, c), a && (a.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`, a.fillRect(d - n.left, n.bottom - g, 1, 1)), tt(c, e, 0)))
+    for (let g = s.bottom; g <= s.top; g++) {
+      if (s.width * (g - s.bottom) * (n.length + 1) >= r)
+        return this._isTouchingColorGpuFin(s, e, g - s.bottom);
+      for (let d = s.left; d <= s.right; d++)
+        if (l[1] = g, l[0] = d, (u ? ue(F.sampleColor4b(l, o, c, _), i) : o.isTouching(l)) && (y.sampleColor3b(l, n, c), a && (a.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`, a.fillRect(d - s.left, s.bottom - g, 1, 1)), tt(c, e, 0)))
           return !0;
     }
     return !1;
   }
   _getMaxPixelsForCPU() {
     switch (this._useGpuMode) {
-      case T.UseGpuModes.ForceCPU:
+      case y.UseGpuModes.ForceCPU:
         return 1 / 0;
-      case T.UseGpuModes.ForceGPU:
+      case y.UseGpuModes.ForceGPU:
         return 0;
-      case T.UseGpuModes.Automatic:
+      case y.UseGpuModes.Automatic:
       default:
-        return ae;
+        return le;
     }
   }
   _enterDrawBackground() {
@@ -2304,21 +2629,21 @@ class T extends bt {
     const t = this.gl;
     t.enable(t.BLEND);
   }
-  _isTouchingColorGpuStart(t, e, i, s, n) {
+  _isTouchingColorGpuStart(t, e, i, n, s) {
     this._doExitDrawRegion();
     const r = this._gl;
     f.bindFramebufferInfo(r, this._queryBufferInfo), r.viewport(0, 0, i.width, i.height);
     const a = f.m4.ortho(i.left, i.right, i.top, i.bottom, -1, 1);
     r.clearColor(0, 0, 0, 0), r.clear(r.COLOR_BUFFER_BIT | r.STENCIL_BUFFER_BIT);
     let o;
-    n && (o = {
-      u_colorMask: [n[0] / 255, n[1] / 255, n[2] / 255],
-      u_colorMaskTolerance: he / 255
+    s && (o = {
+      u_colorMask: [s[0] / 255, s[1] / 255, s[2] / 255],
+      u_colorMaskTolerance: ce / 255
     });
     try {
       r.enable(r.STENCIL_TEST), r.stencilFunc(r.ALWAYS, 1, 1), r.stencilOp(r.KEEP, r.KEEP, r.REPLACE), r.colorMask(!1, !1, !1, !1), this._drawThese(
         [t],
-        n ? m.DRAW_MODE.colorMask : m.DRAW_MODE.silhouette,
+        s ? m.DRAW_MODE.colorMask : m.DRAW_MODE.silhouette,
         a,
         {
           extraUniforms: o,
@@ -2341,14 +2666,14 @@ class T extends bt {
     }
   }
   _isTouchingColorGpuFin(t, e, i) {
-    const s = this._gl, n = new Uint8Array(Math.floor(t.width * (t.height - i) * 4));
-    if (s.readPixels(0, 0, t.width, t.height - i, s.RGBA, s.UNSIGNED_BYTE, n), this._debugCanvas) {
+    const n = this._gl, s = new Uint8Array(Math.floor(t.width * (t.height - i) * 4));
+    if (n.readPixels(0, 0, t.width, t.height - i, n.RGBA, n.UNSIGNED_BYTE, s), this._debugCanvas) {
       this._debugCanvas.width = t.width, this._debugCanvas.height = t.height;
       const r = this._debugCanvas.getContext("2d"), a = r.getImageData(0, 0, t.width, t.height - i);
-      a.data.set(n), r.putImageData(a, 0, 0);
+      a.data.set(s), r.putImageData(a, 0, 0);
     }
-    for (let r = 0; r < n.length; r += 4)
-      if (n[r + 3] !== 0 && tt(e, n, r))
+    for (let r = 0; r < s.length; r += 4)
+      if (s[r + 3] !== 0 && tt(e, s, r))
         return !0;
     return !1;
   }
@@ -2366,12 +2691,12 @@ class T extends bt {
     );
     if (i.length === 0 || !this._allDrawables[t]._visible)
       return !1;
-    const s = this._candidatesBounds(i), n = this._allDrawables[t], r = mt;
-    n.updateCPURenderAttributes();
-    for (let a = s.left; a <= s.right; a++) {
+    const n = this._candidatesBounds(i), s = this._allDrawables[t], r = mt;
+    s.updateCPURenderAttributes();
+    for (let a = n.left; a <= n.right; a++) {
       r[0] = a;
-      for (let o = s.bottom; o <= s.top; o++)
-        if (r[1] = o, n.isTouching(r)) {
+      for (let o = n.bottom; o <= n.top; o++)
+        if (r[1] = o, s.isTouching(r)) {
           for (let l = 0; l < i.length; l++)
             if (i[l].drawable.isTouching(r))
               return !0;
@@ -2391,15 +2716,15 @@ class T extends bt {
    * @returns {Rectangle} Scratch world space rectangle, iterate bottom <= top,
    *                      left <= right.
    */
-  clientSpaceToScratchBounds(t, e, i = 1, s = 1) {
-    const n = this._gl, r = this._nativeSize[0] / n.canvas.clientWidth, a = this._nativeSize[1] / n.canvas.clientHeight;
-    i *= r, s *= a, i = Math.max(1, Math.min(Math.round(i), H[0])), s = Math.max(1, Math.min(Math.round(s), H[1]));
-    const o = t * r - (i - 1) / 2, l = e * a + (s - 1) / 2, c = i % 2 ? 0 : -0.5, u = s % 2 ? 0 : -0.5, _ = new b();
+  clientSpaceToScratchBounds(t, e, i = 1, n = 1) {
+    const s = this._gl, r = this._nativeSize[0] / s.canvas.clientWidth, a = this._nativeSize[1] / s.canvas.clientHeight;
+    i *= r, n *= a, i = Math.max(1, Math.min(Math.round(i), H[0])), n = Math.max(1, Math.min(Math.round(n), H[1]));
+    const o = t * r - (i - 1) / 2, l = e * a + (n - 1) / 2, c = i % 2 ? 0 : -0.5, u = n % 2 ? 0 : -0.5, _ = new b();
     return _.initFromBounds(
       Math.floor(this._xLeft + o + c),
       Math.floor(this._xLeft + o + c + i - 1),
       Math.ceil(this._yTop - l + u),
-      Math.ceil(this._yTop - l + u + s - 1)
+      Math.ceil(this._yTop - l + u + n - 1)
     ), _;
   }
   /**
@@ -2413,11 +2738,11 @@ class T extends bt {
    * @param {int} [touchHeight] The client height of the touch event (optional).
    * @returns {boolean} If the drawable has any pixels that would draw in the touch area
    */
-  drawableTouching(t, e, i, s, n) {
+  drawableTouching(t, e, i, n, s) {
     const r = this._allDrawables[t];
     if (!r)
       return !1;
-    const a = this.clientSpaceToScratchBounds(e, i, s, n), o = f.v3.create();
+    const a = this.clientSpaceToScratchBounds(e, i, n, s), o = f.v3.create();
     for (r.updateCPURenderAttributes(), o[1] = a.bottom; o[1] <= a.top; o[1]++)
       for (o[0] = a.left; o[0] <= a.right; o[0]++)
         if (r.isTouching(o))
@@ -2438,29 +2763,29 @@ class T extends bt {
    * @returns {int} The ID of the topmost Drawable under the picking location, or
    * RenderConstants.ID_NONE if there is no Drawable at that location.
    */
-  pick(t, e, i, s, n) {
-    const r = this.clientSpaceToScratchBounds(t, e, i, s);
-    if (r.left === -1 / 0 || r.bottom === -1 / 0 || (n = (n || this._drawList).filter((c) => {
+  pick(t, e, i, n, s) {
+    const r = this.clientSpaceToScratchBounds(t, e, i, n);
+    if (r.left === -1 / 0 || r.bottom === -1 / 0 || (s = (s || this._drawList).filter((c) => {
       const u = this._allDrawables[c];
       if (u.getVisible() && u.getUniforms().u_ghost !== 0) {
         const _ = u.getFastBounds();
         return r.intersects(_) ? (u.updateCPURenderAttributes(), !0) : !1;
       }
       return !1;
-    }), n.length === 0))
+    }), s.length === 0))
       return !1;
     const a = [], o = f.v3.create(0, 0, 0);
     for (o[1] = r.bottom; o[1] <= r.top; o[1]++)
       for (o[0] = r.left; o[0] <= r.right; o[0]++)
-        for (let c = n.length - 1; c >= 0; c--) {
-          const u = n[c];
+        for (let c = s.length - 1; c >= 0; c--) {
+          const u = s[c];
           if (this._allDrawables[u].isTouching(o)) {
             a[u] = (a[u] || 0) + 1;
             break;
           }
         }
-    a[x.ID_NONE] = 0;
-    let l = x.ID_NONE;
+    a[v.ID_NONE] = 0;
+    let l = v.ID_NONE;
     for (const c in a)
       Object.prototype.hasOwnProperty.call(a, c) && a[c] > a[l] && (l = c);
     return Number(l);
@@ -2482,27 +2807,27 @@ class T extends bt {
     const e = this._allDrawables[t];
     if (!e) throw new Error(`Could not extract drawable with ID ${t}; it does not exist`);
     this._doExitDrawRegion();
-    const i = this._nativeSize[0] * 0.5, s = this._nativeSize[1] * 0.5, n = e.getFastBounds(), r = this.canvas, a = r.width / this._nativeSize[0], o = new b();
+    const i = this._nativeSize[0] * 0.5, n = this._nativeSize[1] * 0.5, s = e.getFastBounds(), r = this.canvas, a = r.width / this._nativeSize[0], o = new b();
     o.initFromBounds(
-      (n.left + i) * a,
-      (n.right + i) * a,
+      (s.left + i) * a,
+      (s.right + i) * a,
       // in "canvas space", +y is down, but Rectangle methods assume bottom < top, so swap them
-      (s - n.top) * a,
-      (s - n.bottom) * a
-    ), o.snapToInt(), n.initFromBounds(
+      (n - s.top) * a,
+      (n - s.bottom) * a
+    ), o.snapToInt(), s.initFromBounds(
       o.left / a - i,
       o.right / a - i,
-      s - o.top / a,
-      s - o.bottom / a
+      n - o.top / a,
+      n - o.bottom / a
     );
     const l = this._gl, c = l.getParameter(l.MAX_TEXTURE_SIZE), u = Math.min(pt, o.width, c), _ = Math.min(pt, o.height, c), g = f.createFramebufferInfo(l, [{ format: l.RGBA }], u, _);
     try {
       f.bindFramebufferInfo(l, g), l.viewport(0, 0, u, _);
       const d = f.m4.ortho(
-        n.left,
-        n.right,
-        n.top,
-        n.bottom,
+        s.left,
+        s.right,
+        s.top,
+        s.bottom,
         -1,
         1
       );
@@ -2521,13 +2846,13 @@ class T extends bt {
       );
       const p = new Uint8Array(Math.floor(u * _ * 4));
       l.readPixels(0, 0, u, _, l.RGBA, l.UNSIGNED_BYTE, p);
-      const S = new ImageData(new Uint8ClampedArray(p.buffer), u, _), E = r.getBoundingClientRect().width / r.width;
+      const E = new ImageData(new Uint8ClampedArray(p.buffer), u, _), D = r.getBoundingClientRect().width / r.width;
       return {
-        imageData: S,
-        x: o.left * E,
-        y: o.bottom * E,
-        width: o.width * E,
-        height: o.height * E
+        imageData: E,
+        x: o.left * D,
+        y: o.bottom * D,
+        width: o.width * D,
+        height: o.height * D
       };
     } finally {
       l.deleteFramebuffer(g.framebuffer);
@@ -2549,11 +2874,11 @@ class T extends bt {
    */
   extractColor(t, e, i) {
     this._doExitDrawRegion();
-    const s = Math.round(this._nativeSize[0] * (t / this._gl.canvas.clientWidth - 0.5)), n = Math.round(-this._nativeSize[1] * (e / this._gl.canvas.clientHeight - 0.5)), r = this._gl;
+    const n = Math.round(this._nativeSize[0] * (t / this._gl.canvas.clientWidth - 0.5)), s = Math.round(-this._nativeSize[1] * (e / this._gl.canvas.clientHeight - 0.5)), r = this._gl;
     f.bindFramebufferInfo(r, this._queryBufferInfo);
     const a = new b();
-    a.initFromBounds(s - i, s + i, n - i, n + i);
-    const o = s - a.left, l = a.top - n;
+    a.initFromBounds(n - i, n + i, s - i, s + i);
+    const o = n - a.left, l = a.top - s;
     r.viewport(0, 0, a.width, a.height);
     const c = f.m4.ortho(a.left, a.right, a.top, a.bottom, -1, 1);
     r.clearColor(...this._backgroundColor4f), r.clear(r.COLOR_BUFFER_BIT), this._drawThese(this._drawList, m.DRAW_MODE.default, c);
@@ -2596,18 +2921,18 @@ class T extends bt {
    * @return {?Array< {id, drawable, intersection} >} Filtered candidates with useful data.
    */
   _candidatesTouching(t, e) {
-    const i = this._touchingBounds(t), s = [];
+    const i = this._touchingBounds(t), n = [];
     if (i === null)
-      return s;
-    for (let n = e.length - 1; n >= 0; n--) {
-      const r = e[n];
+      return n;
+    for (let s = e.length - 1; s >= 0; s--) {
+      const r = e[s];
       if (r !== t) {
         const a = this._allDrawables[r];
-        if (a.skin instanceof L) continue;
+        if (a.skin instanceof P) continue;
         if (a.skin && a._visible) {
           a.updateCPURenderAttributes();
           const o = a.getFastBounds();
-          o.snapToInt(), i.intersects(o) && s.push({
+          o.snapToInt(), i.intersects(o) && n.push({
             id: r,
             drawable: a,
             intersection: b.intersect(i, o)
@@ -2615,7 +2940,7 @@ class T extends bt {
         }
       }
     }
-    return s;
+    return n;
   }
   /**
    * Helper to get the union bounds from a set of candidates returned from the above method
@@ -2624,7 +2949,7 @@ class T extends bt {
    * @return {Rectangle} the outer bounding box union
    */
   _candidatesBounds(t) {
-    return t.reduce((e, { intersection: i }) => e ? b.union(e, i, ne) : i, null);
+    return t.reduce((e, { intersection: i }) => e ? b.union(e, i, oe) : i, null);
   }
   /**
    * Update a drawable's skin.
@@ -2669,8 +2994,8 @@ class T extends bt {
    * @param {Array.<number>} scale A new scale.
    */
   updateDrawableDirectionScale(t, e, i) {
-    const s = this._allDrawables[t];
-    s && (s.updateDirection(e), s.updateScale(i));
+    const n = this._allDrawables[t];
+    n && (n.updateDirection(e), n.updateScale(i));
   }
   /**
    * Update a drawable's visibility.
@@ -2688,8 +3013,8 @@ class T extends bt {
    * @param {number} value A new effect value.
    */
   updateDrawableEffect(t, e, i) {
-    const s = this._allDrawables[t];
-    s && s.updateEffect(e, i);
+    const n = this._allDrawables[t];
+    n && n.updateEffect(e, i);
   }
   /**
    * Update the position, direction, scale, or effect properties of this Drawable.
@@ -2708,14 +3033,14 @@ class T extends bt {
    * @return {Array.<number, number>} The fenced position as an array [x, y]
    */
   getFencedPositionOfDrawable(t, e) {
-    let i = e[0], s = e[1];
-    const n = this._allDrawables[t];
-    if (!n)
-      return [i, s];
-    const r = i - n._position[0], a = s - n._position[1], o = n._skin.getFenceBounds(n, re), l = Math.floor(Math.min(o.width, o.height) / 2), c = this._xRight - Math.min(wt, l);
-    o.right + r < -c ? i = Math.ceil(n._position[0] - (c + o.right)) : o.left + r > c && (i = Math.floor(n._position[0] + (c - o.left)));
+    let i = e[0], n = e[1];
+    const s = this._allDrawables[t];
+    if (!s)
+      return [i, n];
+    const r = i - s._position[0], a = n - s._position[1], o = s._skin.getFenceBounds(s, ae), l = Math.floor(Math.min(o.width, o.height) / 2), c = this._xRight - Math.min(wt, l);
+    o.right + r < -c ? i = Math.ceil(s._position[0] - (c + o.right)) : o.left + r > c && (i = Math.floor(s._position[0] + (c - o.left)));
     const u = this._yTop - Math.min(wt, l);
-    return o.top + a < -u ? s = Math.ceil(n._position[1] - (u + o.top)) : o.bottom + a > u && (s = Math.floor(n._position[1] + (u - o.bottom))), [i, s];
+    return o.top + a < -u ? n = Math.ceil(s._position[1] - (u + o.top)) : o.bottom + a > u && (n = Math.floor(s._position[1] + (u - o.bottom))), [i, n];
   }
   /**
    * Clear a pen layer.
@@ -2732,9 +3057,9 @@ class T extends bt {
    * @param {number} x - the X coordinate of the point to draw.
    * @param {number} y - the Y coordinate of the point to draw.
    */
-  penPoint(t, e, i, s) {
+  penPoint(t, e, i, n) {
     /** @type {PenSkin} */
-    this._allSkins[t].drawPoint(e, i, s);
+    this._allSkins[t].drawPoint(e, i, n);
   }
   /**
    * Draw a line on a pen layer.
@@ -2745,9 +3070,9 @@ class T extends bt {
    * @param {number} x1 - the X coordinate of the end of the line.
    * @param {number} y1 - the Y coordinate of the end of the line.
    */
-  penLine(t, e, i, s, n, r) {
+  penLine(t, e, i, n, s, r) {
     /** @type {PenSkin} */
-    this._allSkins[t].drawLine(e, i, s, n, r);
+    this._allSkins[t].drawLine(e, i, n, s, r);
   }
   /**
    * Stamp a Drawable onto a pen layer.
@@ -2757,22 +3082,22 @@ class T extends bt {
   penStamp(t, e) {
     if (!this._allDrawables[e])
       return;
-    const s = this._touchingBounds(e);
-    if (!s)
+    const n = this._touchingBounds(e);
+    if (!n)
       return;
     this._doExitDrawRegion();
-    const n = (
+    const s = (
       /** @type {PenSkin} */
       this._allSkins[t]
     ), r = this._gl;
-    f.bindFramebufferInfo(r, n._framebuffer), r.viewport(
-      this._nativeSize[0] * 0.5 + s.left,
-      this._nativeSize[1] * 0.5 - s.top,
-      s.width,
-      s.height
+    f.bindFramebufferInfo(r, s._framebuffer), r.viewport(
+      this._nativeSize[0] * 0.5 + n.left,
+      this._nativeSize[1] * 0.5 - n.top,
+      n.width,
+      n.height
     );
-    const a = f.m4.ortho(s.left, s.right, s.top, s.bottom, -1, 1);
-    this._drawThese([e], m.DRAW_MODE.default, a, { ignoreVisibility: !0 }), n._silhouetteDirty = !0;
+    const a = f.m4.ortho(n.left, n.right, n.top, n.bottom, -1, 1);
+    this._drawThese([e], m.DRAW_MODE.default, a, { ignoreVisibility: !0 }), s._silhouetteDirty = !0;
   }
   /* ******
    * Truly internal functions: these support the functions above.
@@ -2828,11 +3153,11 @@ class T extends bt {
    * @private
    */
   onNativeSizeChanged(t) {
-    const [e, i] = t.newSize, s = this._gl, n = [
-      { format: s.RGBA },
-      { format: s.DEPTH_STENCIL }
+    const [e, i] = t.newSize, n = this._gl, s = [
+      { format: n.RGBA },
+      { format: n.DEPTH_STENCIL }
     ];
-    this._pickBufferInfo || (this._pickBufferInfo = f.createFramebufferInfo(s, n, H[0], H[1])), this._queryBufferInfo ? f.resizeFramebufferInfo(s, this._queryBufferInfo, n, e, i) : this._queryBufferInfo = f.createFramebufferInfo(s, n, e, i);
+    this._pickBufferInfo || (this._pickBufferInfo = f.createFramebufferInfo(n, s, H[0], H[1])), this._queryBufferInfo ? f.resizeFramebufferInfo(n, this._queryBufferInfo, s, e, i) : this._queryBufferInfo = f.createFramebufferInfo(n, s, e, i);
   }
   /**
    * Enter a draw region.
@@ -2873,37 +3198,37 @@ class T extends bt {
    * @param {int} opts.framebufferHeight The height of the framebuffer being drawn onto. Defaults to "native" height
    * @private
    */
-  _drawThese(t, e, i, s = {}) {
-    const n = this._gl;
+  _drawThese(t, e, i, n = {}) {
+    const s = this._gl;
     let r = null;
-    const a = "framebufferWidth" in s && "framebufferHeight" in s && s.framebufferWidth !== this._nativeSize[0] && s.framebufferHeight !== this._nativeSize[1], o = t.length;
+    const a = "framebufferWidth" in n && "framebufferHeight" in n && n.framebufferWidth !== this._nativeSize[0] && n.framebufferHeight !== this._nativeSize[1], o = t.length;
     for (let l = 0; l < o; ++l) {
       const c = t[l];
-      if (s.filter && !s.filter(c)) continue;
+      if (n.filter && !n.filter(c)) continue;
       const u = this._allDrawables[c];
-      if (!u.getVisible() && !s.ignoreVisibility) continue;
+      if (!u.getVisible() && !n.ignoreVisibility) continue;
       const _ = a ? [
-        u.scale[0] * s.framebufferWidth / this._nativeSize[0],
-        u.scale[1] * s.framebufferHeight / this._nativeSize[1]
+        u.scale[0] * n.framebufferWidth / this._nativeSize[0],
+        u.scale[1] * n.framebufferHeight / this._nativeSize[1]
       ] : u.scale;
       if (!u.skin || !u.skin.getTexture(_)) continue;
       const g = {};
       let d = u.enabledEffects;
-      d &= Object.prototype.hasOwnProperty.call(s, "effectMask") ? s.effectMask : d;
+      d &= Object.prototype.hasOwnProperty.call(n, "effectMask") ? n.effectMask : d;
       const p = this._shaderManager.getShader(e, d);
-      this._regionId !== p && (this._doExitDrawRegion(), this._regionId = p, r = p, n.useProgram(r.program), f.setBuffersAndAttributes(n, r, this._bufferInfo), Object.assign(g, {
+      this._regionId !== p && (this._doExitDrawRegion(), this._regionId = p, r = p, s.useProgram(r.program), f.setBuffersAndAttributes(s, r, this._bufferInfo), Object.assign(g, {
         u_projectionMatrix: i
       })), Object.assign(
         g,
         u.skin.getUniforms(_),
         u.getUniforms()
-      ), s.extraUniforms && Object.assign(g, s.extraUniforms), g.u_skin && f.setTextureParameters(
-        n,
+      ), n.extraUniforms && Object.assign(g, n.extraUniforms), g.u_skin && f.setTextureParameters(
+        s,
         g.u_skin,
         {
-          minMag: u.skin.useNearest(_, u) ? n.NEAREST : n.LINEAR
+          minMag: u.skin.useNearest(_, u) ? s.NEAREST : s.LINEAR
         }
-      ), f.setUniforms(r, g), f.drawBufferInfo(n, this._bufferInfo, n.TRIANGLES);
+      ), f.setUniforms(r, g), f.drawBufferInfo(s, this._bufferInfo, s.TRIANGLES);
     }
     this._regionId = null;
   }
@@ -2914,33 +3239,33 @@ class T extends bt {
    * @return {Array<Array<number>>} points Convex hull points, as [[x, y], ...]
    */
   _getConvexHullPointsForDrawable(t) {
-    const e = this._allDrawables[t], [i, s] = e.skin.size;
-    if (!e.getVisible() || i === 0 || s === 0)
+    const e = this._allDrawables[t], [i, n] = e.skin.size;
+    if (!e.getVisible() || i === 0 || n === 0)
       return [];
     e.updateCPURenderAttributes();
-    const n = function(d, p, S) {
-      return (p[0] - d[0]) * (S[1] - d[1]) - (p[1] - d[1]) * (S[0] - d[0]);
+    const s = function(d, p, E) {
+      return (p[0] - d[0]) * (E[1] - d[1]) - (p[1] - d[1]) * (E[0] - d[0]);
     }, r = [], a = [];
     let o = -1, l = -1;
     const c = f.v3.create(), u = f.v3.create();
     let _;
-    for (let d = 0; d < s; d++) {
-      c[1] = d / s;
+    for (let d = 0; d < n; d++) {
+      c[1] = d / n;
       let p = 0;
       for (; p < i; p++)
-        if (c[0] = p / i, W.transformPoint(e, c, u), e.skin.isTouchingLinear(u)) {
+        if (c[0] = p / i, G.transformPoint(e, c, u), e.skin.isTouchingLinear(u)) {
           _ = [p, d];
           break;
         }
       if (!(p >= i)) {
-        for (; o > 0 && !(n(r[o], r[o - 1], _) > 0); )
+        for (; o > 0 && !(s(r[o], r[o - 1], _) > 0); )
           --o;
         for (r[++o] = _, p = i - 1; p >= 0; p--)
-          if (c[0] = p / i, W.transformPoint(e, c, u), e.skin.isTouchingLinear(u)) {
+          if (c[0] = p / i, G.transformPoint(e, c, u), e.skin.isTouchingLinear(u)) {
             _ = [p, d];
             break;
           }
-        for (; l > 0 && !(n(a[l], a[l - 1], _) < 0); )
+        for (; l > 0 && !(s(a[l], a[l - 1], _) < 0); )
           --l;
         a[++l] = _;
       }
@@ -2949,7 +3274,7 @@ class T extends bt {
     g.length = o + 1;
     for (let d = l; d >= 0; --d)
       g.push(a[d]);
-    return yt(g, 1 / 0);
+    return St(g, 1 / 0);
   }
   /**
    * Sample a "final" color from an array of drawables at a given scratch space.
@@ -2962,10 +3287,10 @@ class T extends bt {
    */
   static sampleColor3b(t, e, i) {
     i = i || new Uint8ClampedArray(3), i.fill(0);
-    let s = 1;
-    for (let n = 0; s !== 0 && n < e.length; n++)
-      A.sampleColor4b(t, e[n].drawable, P), i[0] += P[0] * s, i[1] += P[1] * s, i[2] += P[2] * s, s *= 1 - P[3] / 255;
-    return i[0] += s * 255, i[1] += s * 255, i[2] += s * 255, i;
+    let n = 1;
+    for (let s = 0; n !== 0 && s < e.length; s++)
+      F.sampleColor4b(t, e[s].drawable, R), i[0] += R[0] * n, i[1] += R[1] * n, i[2] += R[2] * n, n *= 1 - R[3] / 255;
+    return i[0] += n * 255, i[1] += n * 255, i[2] += n * 255, i;
   }
   /**
    * @callback RenderWebGL#snapshotCallback
@@ -2978,8 +3303,8 @@ class T extends bt {
     this._snapshotCallbacks.push(t);
   }
 }
-T.prototype.canHazPixels = T.prototype.extractDrawableScreenSpace;
-T.UseGpuModes = {
+y.prototype.canHazPixels = y.prototype.extractDrawableScreenSpace;
+y.UseGpuModes = {
   /**
    * Heuristically decide whether to use the GPU path, the CPU path, or a dynamic mixture of the two.
    */
@@ -2994,5 +3319,5 @@ T.UseGpuModes = {
   ForceCPU: "ForceCPU"
 };
 export {
-  T as default
+  y as default
 };

@@ -1,5 +1,8 @@
 import twgl from 'twgl.js';
 
+// Vite의 ?raw 방식으로 shader 파일들 import
+import spriteVert from './shaders/sprite.vert?raw';
+import spriteFrag from './shaders/sprite.frag?raw';
 
 class ShaderManager {
     /**
@@ -63,10 +66,9 @@ class ShaderManager {
 
         const definesText = `${defines.join('\n')}\n`;
 
-        /* eslint-disable global-require */
-        const vsFullText = definesText + require('raw-loader!./shaders/sprite.vert');
-        const fsFullText = definesText + require('raw-loader!./shaders/sprite.frag');
-        /* eslint-enable global-require */
+        // Vite ?raw 방식으로 shader 텍스트 사용
+        const vsFullText = definesText + spriteVert;
+        const fsFullText = definesText + spriteFrag;
 
         return twgl.createProgramInfo(this._gl, [vsFullText, fsFullText]);
     }
