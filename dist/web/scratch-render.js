@@ -1,8 +1,8 @@
-import ae from "events";
-import ye from "hull.js";
-import * as x from "twgl.js";
-import { loadSvgString as Te, serializeSvgToString as Se } from "scratch-svg-renderer";
-const L = {
+import Ti from "events";
+import Ii from "hull.js";
+import * as h from "twgl.js";
+import { loadSvgString as Pi, serializeSvgToString as vi } from "scratch-svg-renderer";
+const I = {
   /**
    * The ID value to use for "no item" or when an object has been disposed.
    * @const {int}
@@ -28,25 +28,25 @@ const L = {
     NativeSizeChanged: "NativeSizeChanged"
   }
 };
-let ft;
-const ot = (a, t) => t ^ (a ^ t) & a - t >> 31, at = (a, t) => a ^ (a ^ t) & a - t >> 31, V = ({ _width: a, _height: t, _colorData: e }, i, s) => i >= a || s >= t || i < 0 || s < 0 ? 0 : e[(s * a + i) * 4 + 3], tt = [
+let Lt;
+const at = (x, t) => t ^ (x ^ t) & x - t >> 31, lt = (x, t) => x ^ (x ^ t) & x - t >> 31, q = ({ _width: x, _height: t, _colorData: e }, r, f) => r >= x || f >= t || r < 0 || f < 0 ? 0 : e[(f * x + r) * 4 + 3], et = [
   new Uint8ClampedArray(4),
   new Uint8ClampedArray(4),
   new Uint8ClampedArray(4),
   new Uint8ClampedArray(4)
-], Rt = ({ _width: a, _height: t, _colorData: e }, i, s, o) => {
-  if (i = at(0, ot(i, a - 1)), s = at(0, ot(s, t - 1)), i >= a || s >= t || i < 0 || s < 0)
-    return o.fill(0);
-  const l = (s * a + i) * 4, u = e[l + 3] / 255;
-  return o[0] = e[l] * u, o[1] = e[l + 1] * u, o[2] = e[l + 2] * u, o[3] = e[l + 3], o;
-}, De = ({ _width: a, _height: t, _colorData: e }, i, s, o) => {
-  i = at(0, ot(i, a - 1)), s = at(0, ot(s, t - 1));
-  const l = (s * a + i) * 4;
-  return o[0] = e[l], o[1] = e[l + 1], o[2] = e[l + 2], o[3] = e[l + 3], o;
+], $t = ({ _width: x, _height: t, _colorData: e }, r, f, E) => {
+  if (r = lt(0, at(r, x - 1)), f = lt(0, at(f, t - 1)), r >= x || f >= t || r < 0 || f < 0)
+    return E.fill(0);
+  const a = (f * x + r) * 4, u = e[a + 3] / 255;
+  return E[0] = e[a] * u, E[1] = e[a + 1] * u, E[2] = e[a + 2] * u, E[3] = e[a + 3], E;
+}, wi = ({ _width: x, _height: t, _colorData: e }, r, f, E) => {
+  r = lt(0, at(r, x - 1)), f = lt(0, at(f, t - 1));
+  const a = (f * x + r) * 4;
+  return E[0] = e[a], E[1] = e[a + 1], E[2] = e[a + 2], E[3] = e[a + 3], E;
 };
-class It {
+class wt {
   constructor() {
-    this._width = 0, this._height = 0, this._colorData = null, this._getColor = Rt, this.colorAtNearest = this.colorAtLinear = (t, e) => e.fill(0);
+    this._width = 0, this._height = 0, this._colorData = null, this._getColor = $t, this.colorAtNearest = this.colorAtLinear = (t, e) => e.fill(0);
   }
   /**
    * Update this silhouette with the bitmapData for a skin.
@@ -55,16 +55,16 @@ class It {
    * rendering can be queried from.
    */
   update(t, e = !1) {
-    let i;
+    let r;
     if (t instanceof ImageData)
-      i = t, this._width = t.width, this._height = t.height;
+      r = t, this._width = t.width, this._height = t.height;
     else {
-      const s = It._updateCanvas(), o = this._width = s.width = t.width, l = this._height = s.height = t.height, u = s.getContext("2d");
-      if (!(o && l))
+      const f = wt._updateCanvas(), E = this._width = f.width = t.width, a = this._height = f.height = t.height, u = f.getContext("2d");
+      if (!(E && a))
         return;
-      u.clearRect(0, 0, o, l), u.drawImage(t, 0, 0, o, l), i = u.getImageData(0, 0, o, l);
+      u.clearRect(0, 0, E, a), u.drawImage(t, 0, 0, E, a), r = u.getImageData(0, 0, E, a);
     }
-    e ? this._getColor = De : this._getColor = Rt, this._colorData = i.data, delete this.colorAtNearest, delete this.colorAtLinear;
+    e ? this._getColor = wi : this._getColor = $t, this._colorData = r.data, delete this.colorAtNearest, delete this.colorAtLinear;
   }
   /**
    * Sample a color from the silhouette at a given local position using
@@ -89,8 +89,8 @@ class It {
    * @returns {Uint8ClampedArray} dst
    */
   colorAtLinear(t, e) {
-    const i = t[0] * (this._width - 1), s = t[1] * (this._height - 1), o = i % 1, l = s % 1, u = 1 - o, c = 1 - l, f = Math.floor(i), d = Math.floor(s), _ = this._getColor(this, f, d, tt[0]), w = this._getColor(this, f + 1, d, tt[1]), E = this._getColor(this, f, d + 1, tt[2]), g = this._getColor(this, f + 1, d + 1, tt[3]);
-    return e[0] = _[0] * u * c + E[0] * u * l + w[0] * o * c + g[0] * o * l, e[1] = _[1] * u * c + E[1] * u * l + w[1] * o * c + g[1] * o * l, e[2] = _[2] * u * c + E[2] * u * l + w[2] * o * c + g[2] * o * l, e[3] = _[3] * u * c + E[3] * u * l + w[3] * o * c + g[3] * o * l, e;
+    const r = t[0] * (this._width - 1), f = t[1] * (this._height - 1), E = r % 1, a = f % 1, u = 1 - E, R = 1 - a, T = Math.floor(r), _ = Math.floor(f), L = this._getColor(this, T, _, et[0]), b = this._getColor(this, T + 1, _, et[1]), S = this._getColor(this, T, _ + 1, et[2]), A = this._getColor(this, T + 1, _ + 1, et[3]);
+    return e[0] = L[0] * u * R + S[0] * u * a + b[0] * E * R + A[0] * E * a, e[1] = L[1] * u * R + S[1] * u * a + b[1] * E * R + A[1] * E * a, e[2] = L[2] * u * R + S[2] * u * a + b[2] * E * R + A[2] * E * a, e[3] = L[3] * u * R + S[3] * u * a + b[3] * E * R + A[3] * E * a, e;
   }
   /**
    * Test if texture coordinate touches the silhouette using nearest neighbor.
@@ -99,7 +99,7 @@ class It {
    */
   isTouchingNearest(t) {
     if (this._colorData)
-      return V(
+      return q(
         this,
         Math.floor(t[0] * (this._width - 1)),
         Math.floor(t[1] * (this._height - 1))
@@ -113,8 +113,8 @@ class It {
    */
   isTouchingLinear(t) {
     if (!this._colorData) return;
-    const e = Math.floor(t[0] * (this._width - 1)), i = Math.floor(t[1] * (this._height - 1));
-    return V(this, e, i) > 0 || V(this, e + 1, i) > 0 || V(this, e, i + 1) > 0 || V(this, e + 1, i + 1) > 0;
+    const e = Math.floor(t[0] * (this._width - 1)), r = Math.floor(t[1] * (this._height - 1));
+    return q(this, e, r) > 0 || q(this, e + 1, r) > 0 || q(this, e, r + 1) > 0 || q(this, e + 1, r + 1) > 0;
   }
   /**
    * Get the canvas element reused by Silhouettes to update their data with.
@@ -122,17 +122,17 @@ class It {
    * @return {CanvasElement} A canvas to draw bitmap data to.
    */
   static _updateCanvas() {
-    return typeof ft == "undefined" && (ft = document.createElement("canvas")), ft;
+    return typeof Lt == "undefined" && (Lt = document.createElement("canvas")), Lt;
   }
 }
-class F extends ae {
+class P extends Ti {
   /**
    * Create a Skin, which stores and/or generates textures for use in rendering.
    * @param {int} id - The unique ID for this Skin.
    * @constructor
    */
   constructor(t) {
-    super(), this._id = t, this._rotationCenter = x.v3.create(0, 0), this._texture = null, this._uniforms = {
+    super(), this._id = t, this._rotationCenter = h.v3.create(0, 0), this._texture = null, this._uniforms = {
       /**
        * The nominal (not necessarily current) size of the current skin.
        * @type {Array<number>}
@@ -143,13 +143,13 @@ class F extends ae {
        * @type {WebGLTexture}
        */
       u_skin: null
-    }, this._silhouette = new It(), this.setMaxListeners(L.SKIN_SHARE_SOFT_LIMIT);
+    }, this._silhouette = new wt(), this.setMaxListeners(I.SKIN_SHARE_SOFT_LIMIT);
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
    */
   dispose() {
-    this._id = L.ID_NONE;
+    this._id = I.ID_NONE;
   }
   /**
    * @return {int} the unique ID for this Skin.
@@ -242,9 +242,9 @@ class F extends ae {
         wrap: t.CLAMP_TO_EDGE,
         src: this._emptyImageData
       };
-      this._emptyImageTexture = x.createTexture(t, e);
+      this._emptyImageTexture = h.createTexture(t, e);
     }
-    this._rotationCenter[0] = 0, this._rotationCenter[1] = 0, this._silhouette.update(this._emptyImageData), this.emit(F.Events.WasAltered);
+    this._rotationCenter[0] = 0, this._rotationCenter[1] = 0, this._silhouette.update(this._emptyImageData), this.emit(P.Events.WasAltered);
   }
   /**
    * Does this point touch an opaque or translucent point on this skin?
@@ -271,14 +271,14 @@ class F extends ae {
     return this._silhouette.isTouchingLinear(t);
   }
 }
-F.Events = {
+P.Events = {
   /**
    * Emitted when anything about the Skin has been altered, such as the appearance or rotation center.
    * @event Skin.event:WasAltered
    */
   WasAltered: "WasAltered"
 };
-class Z extends F {
+class c extends P {
   /**
    * Create a new Bitmap Skin.
    * @extends Skin
@@ -316,21 +316,21 @@ class Z extends F {
    * calculated from the bounding box
    * @fires Skin.event:WasAltered
    */
-  setBitmap(t, e, i) {
+  setBitmap(t, e, r) {
     if (!t.width || !t.height) {
       super.setEmptyImageData();
       return;
     }
-    const s = this._renderer.gl;
-    let o = t;
-    if (t instanceof HTMLCanvasElement && (o = t.getContext("2d").getImageData(0, 0, t.width, t.height)), this._texture === null) {
-      const l = {
+    const f = this._renderer.gl;
+    let E = t;
+    if (t instanceof HTMLCanvasElement && (E = t.getContext("2d").getImageData(0, 0, t.width, t.height)), this._texture === null) {
+      const a = {
         auto: !1,
-        wrap: s.CLAMP_TO_EDGE
+        wrap: f.CLAMP_TO_EDGE
       };
-      this._texture = x.createTexture(s, l);
+      this._texture = h.createTexture(f, a);
     }
-    this._setTexture(o), this._costumeResolution = e || 2, this._textureSize = Z._getBitmapSize(t), typeof i == "undefined" && (i = this.calculateRotationCenter()), this._rotationCenter[0] = i[0], this._rotationCenter[1] = i[1], this.emit(F.Events.WasAltered);
+    this._setTexture(E), this._costumeResolution = e || 2, this._textureSize = c._getBitmapSize(t), typeof r == "undefined" && (r = this.calculateRotationCenter()), this._rotationCenter[0] = r[0], this._rotationCenter[1] = r[1], this.emit(P.Events.WasAltered);
   }
   /**
    * @param {ImageData|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement} bitmapData - bitmap data to inspect.
@@ -341,7 +341,7 @@ class Z extends F {
     return t instanceof HTMLImageElement ? [t.naturalWidth || t.width, t.naturalHeight || t.height] : t instanceof HTMLVideoElement ? [t.videoWidth || t.width, t.videoHeight || t.height] : [t.width, t.height];
   }
 }
-const Ce = `precision mediump float;
+const Xi = `precision mediump float;
 
 #ifdef DRAW_MODE_line
 uniform vec2 u_stageSize;
@@ -416,7 +416,7 @@ void main() {
 	v_texCoord = a_texCoord;
 	#endif
 }
-`, Ae = `precision mediump float;
+`, Mi = `precision mediump float;
 
 #ifdef DRAW_MODE_silhouette
 uniform vec4 u_silhouetteColor;
@@ -666,15 +666,15 @@ void main()
 	#endif
 }
 `;
-class y {
+class B {
   /**
    * @param {WebGLRenderingContext} gl WebGL rendering context to create shaders for
    * @constructor
    */
   constructor(t) {
     this._gl = t, this._shaderCache = {};
-    for (const e in y.DRAW_MODE)
-      Object.prototype.hasOwnProperty.call(y.DRAW_MODE, e) && (this._shaderCache[e] = []);
+    for (const e in B.DRAW_MODE)
+      Object.prototype.hasOwnProperty.call(B.DRAW_MODE, e) && (this._shaderCache[e] = []);
   }
   /**
    * Fetch the shader for a particular set of active effects.
@@ -684,10 +684,10 @@ class y {
    * @returns {ProgramInfo} The shader's program info.
    */
   getShader(t, e) {
-    const i = this._shaderCache[t];
-    t === y.DRAW_MODE.silhouette && (e &= ~(y.EFFECT_INFO.color.mask | y.EFFECT_INFO.brightness.mask));
-    let s = i[e];
-    return s || (s = i[e] = this._buildShader(t, e)), s;
+    const r = this._shaderCache[t];
+    t === B.DRAW_MODE.silhouette && (e &= ~(B.EFFECT_INFO.color.mask | B.EFFECT_INFO.brightness.mask));
+    let f = r[e];
+    return f || (f = r[e] = this._buildShader(t, e)), f;
   }
   /**
    * Build the shader for a particular set of active effects.
@@ -697,70 +697,70 @@ class y {
    * @private
    */
   _buildShader(t, e) {
-    const i = y.EFFECTS.length, s = [
+    const r = B.EFFECTS.length, f = [
       `#define DRAW_MODE_${t}`
     ];
-    for (let c = 0; c < i; ++c)
-      e & 1 << c && s.push(`#define ENABLE_${y.EFFECTS[c]}`);
-    const o = `${s.join(`
+    for (let R = 0; R < r; ++R)
+      e & 1 << R && f.push(`#define ENABLE_${B.EFFECTS[R]}`);
+    const E = `${f.join(`
 `)}
-`, l = o + Ce, u = o + Ae;
-    return x.createProgramInfo(this._gl, [l, u]);
+`, a = E + Xi, u = E + Mi;
+    return h.createProgramInfo(this._gl, [a, u]);
   }
 }
-y.EFFECT_INFO = {
+B.EFFECT_INFO = {
   /** Color effect */
   color: {
     uniformName: "u_color",
     mask: 1,
-    converter: (a) => a / 200 % 1,
+    converter: (x) => x / 200 % 1,
     shapeChanges: !1
   },
   /** Fisheye effect */
   fisheye: {
     uniformName: "u_fisheye",
     mask: 2,
-    converter: (a) => Math.max(0, (a + 100) / 100),
+    converter: (x) => Math.max(0, (x + 100) / 100),
     shapeChanges: !0
   },
   /** Whirl effect */
   whirl: {
     uniformName: "u_whirl",
     mask: 4,
-    converter: (a) => -a * Math.PI / 180,
+    converter: (x) => -x * Math.PI / 180,
     shapeChanges: !0
   },
   /** Pixelate effect */
   pixelate: {
     uniformName: "u_pixelate",
     mask: 8,
-    converter: (a) => Math.abs(a) / 10,
+    converter: (x) => Math.abs(x) / 10,
     shapeChanges: !0
   },
   /** Mosaic effect */
   mosaic: {
     uniformName: "u_mosaic",
     mask: 16,
-    converter: (a) => (a = Math.round((Math.abs(a) + 10) / 10), Math.max(1, Math.min(a, 512))),
+    converter: (x) => (x = Math.round((Math.abs(x) + 10) / 10), Math.max(1, Math.min(x, 512))),
     shapeChanges: !0
   },
   /** Brightness effect */
   brightness: {
     uniformName: "u_brightness",
     mask: 32,
-    converter: (a) => Math.max(-100, Math.min(a, 100)) / 100,
+    converter: (x) => Math.max(-100, Math.min(x, 100)) / 100,
     shapeChanges: !1
   },
   /** Ghost effect */
   ghost: {
     uniformName: "u_ghost",
     mask: 64,
-    converter: (a) => 1 - Math.max(0, Math.min(a, 100)) / 100,
+    converter: (x) => 1 - Math.max(0, Math.min(x, 100)) / 100,
     shapeChanges: !1
   }
 };
-y.EFFECTS = Object.keys(y.EFFECT_INFO);
-y.DRAW_MODE = {
+B.EFFECTS = Object.keys(B.EFFECT_INFO);
+B.DRAW_MODE = {
   /**
    * Draw normally. Its output will use premultiplied alpha.
    */
@@ -786,11 +786,11 @@ y.DRAW_MODE = {
    */
   background: "background"
 };
-const _t = {
+const At = {
   color4f: [0, 0, 1, 1],
   diameter: 1
-}, $ = [0, 0, 0, 0];
-class ke extends F {
+}, Z = [0, 0, 0, 0];
+class yi extends P {
   /**
    * Create a Skin which implements a Scratch pen layer.
    * @param {int} id - The unique ID for this Skin.
@@ -805,7 +805,7 @@ class ke extends F {
     }, this._usePenBufferDrawRegionId = {
       enter: () => this._enterUsePenBuffer(),
       exit: () => this._exitUsePenBuffer()
-    }, this._lineBufferInfo = x.createBufferInfoFromArrays(this._renderer.gl, {
+    }, this._lineBufferInfo = h.createBufferInfoFromArrays(this._renderer.gl, {
       a_position: {
         numComponents: 2,
         data: [
@@ -824,14 +824,14 @@ class ke extends F {
         ]
       }
     });
-    const i = 0;
-    this._lineShader = this._renderer._shaderManager.getShader(y.DRAW_MODE.line, i), this.onNativeSizeChanged = this.onNativeSizeChanged.bind(this), this._renderer.on(L.Events.NativeSizeChanged, this.onNativeSizeChanged), this._setCanvasSize(e.getNativeSize());
+    const r = 0;
+    this._lineShader = this._renderer._shaderManager.getShader(B.DRAW_MODE.line, r), this.onNativeSizeChanged = this.onNativeSizeChanged.bind(this), this._renderer.on(I.Events.NativeSizeChanged, this.onNativeSizeChanged), this._setCanvasSize(e.getNativeSize());
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
    */
   dispose() {
-    this._renderer.removeListener(L.Events.NativeSizeChanged, this.onNativeSizeChanged), this._renderer.gl.deleteTexture(this._texture), this._texture = null, super.dispose();
+    this._renderer.removeListener(I.Events.NativeSizeChanged, this.onNativeSizeChanged), this._renderer.gl.deleteTexture(this._texture), this._texture = null, super.dispose();
   }
   /**
    * @return {Array<number>} the "native" size, in texels, of this skin. [width, height]
@@ -864,8 +864,8 @@ class ke extends F {
    * @param {number} x - the X coordinate of the point to draw.
    * @param {number} y - the Y coordinate of the point to draw.
    */
-  drawPoint(t, e, i) {
-    this.drawLine(t, e, i, e, i);
+  drawPoint(t, e, r) {
+    this.drawLine(t, e, r, e, r);
   }
   /**
    * Draw a line on the pen layer.
@@ -875,14 +875,14 @@ class ke extends F {
    * @param {number} x1 - the X coordinate of the end of the line.
    * @param {number} y1 - the Y coordinate of the end of the line.
    */
-  drawLine(t, e, i, s, o) {
-    const l = t.diameter || _t.diameter, u = l === 1 || l === 3 ? 0.5 : 0;
+  drawLine(t, e, r, f, E) {
+    const a = t.diameter || At.diameter, u = a === 1 || a === 3 ? 0.5 : 0;
     this._drawLineOnBuffer(
       t,
       e + u,
-      i + u,
-      s + u,
-      o + u
+      r + u,
+      f + u,
+      E + u
     ), this._silhouetteDirty = !0;
   }
   /**
@@ -890,33 +890,33 @@ class ke extends F {
    */
   _enterDrawLineOnBuffer() {
     const t = this._renderer.gl;
-    x.bindFramebufferInfo(t, this._framebuffer), t.viewport(0, 0, this._size[0], this._size[1]);
+    h.bindFramebufferInfo(t, this._framebuffer), t.viewport(0, 0, this._size[0], this._size[1]);
     const e = this._lineShader;
-    t.useProgram(e.program), x.setBuffersAndAttributes(t, e, this._lineBufferInfo);
-    const i = {
+    t.useProgram(e.program), h.setBuffersAndAttributes(t, e, this._lineBufferInfo);
+    const r = {
       u_skin: this._texture,
       u_stageSize: this._size
     };
-    x.setUniforms(e, i);
+    h.setUniforms(e, r);
   }
   /**
    * Return to a base state from _lineOnBufferDrawRegionId.
    */
   _exitDrawLineOnBuffer() {
     const t = this._renderer.gl;
-    x.bindFramebufferInfo(t, null);
+    h.bindFramebufferInfo(t, null);
   }
   /**
    * Prepare to do things with this PenSkin's framebuffer
    */
   _enterUsePenBuffer() {
-    x.bindFramebufferInfo(this._renderer.gl, this._framebuffer);
+    h.bindFramebufferInfo(this._renderer.gl, this._framebuffer);
   }
   /**
    * Return to a base state
    */
   _exitUsePenBuffer() {
-    x.bindFramebufferInfo(this._renderer.gl, null);
+    h.bindFramebufferInfo(this._renderer.gl, null);
   }
   /**
    * Draw a line on the framebuffer.
@@ -928,18 +928,18 @@ class ke extends F {
    * @param {number} x1 - the X coordinate of the end of the line.
    * @param {number} y1 - the Y coordinate of the end of the line.
    */
-  _drawLineOnBuffer(t, e, i, s, o) {
-    const l = this._renderer.gl, u = this._lineShader;
+  _drawLineOnBuffer(t, e, r, f, E) {
+    const a = this._renderer.gl, u = this._lineShader;
     this._renderer.enterDrawRegion(this._lineOnBufferDrawRegionId);
-    const c = t.color4f || _t.color4f;
-    $[0] = c[0] * c[3], $[1] = c[1] * c[3], $[2] = c[2] * c[3], $[3] = c[3];
-    const f = s - e, d = o - i, _ = Math.sqrt(f * f + d * d), w = {
-      u_lineColor: $,
-      u_lineThickness: t.diameter || _t.diameter,
-      u_lineLength: _,
-      u_penPoints: [e, -i, f, -d]
+    const R = t.color4f || At.color4f;
+    Z[0] = R[0] * R[3], Z[1] = R[1] * R[3], Z[2] = R[2] * R[3], Z[3] = R[3];
+    const T = f - e, _ = E - r, L = Math.sqrt(T * T + _ * _), b = {
+      u_lineColor: Z,
+      u_lineThickness: t.diameter || At.diameter,
+      u_lineLength: L,
+      u_penPoints: [e, -r, T, -_]
     };
-    x.setUniforms(u, w), x.drawBufferInfo(l, this._lineBufferInfo, l.TRIANGLES), this._silhouetteDirty = !0;
+    h.setUniforms(u, b), h.drawBufferInfo(a, this._lineBufferInfo, a.TRIANGLES), this._silhouetteDirty = !0;
   }
   /**
    * React to a change in the renderer's native size.
@@ -954,26 +954,26 @@ class ke extends F {
    * @private
    */
   _setCanvasSize(t) {
-    const [e, i] = t;
-    this._size = t, this._rotationCenter[0] = e / 2, this._rotationCenter[1] = i / 2;
-    const s = this._renderer.gl;
-    this._texture = x.createTexture(
-      s,
+    const [e, r] = t;
+    this._size = t, this._rotationCenter[0] = e / 2, this._rotationCenter[1] = r / 2;
+    const f = this._renderer.gl;
+    this._texture = h.createTexture(
+      f,
       {
-        mag: s.NEAREST,
-        min: s.NEAREST,
-        wrap: s.CLAMP_TO_EDGE,
+        mag: f.NEAREST,
+        min: f.NEAREST,
+        wrap: f.CLAMP_TO_EDGE,
         width: e,
-        height: i
+        height: r
       }
     );
-    const o = [
+    const E = [
       {
-        format: s.RGBA,
+        format: f.RGBA,
         attachment: this._texture
       }
     ];
-    this._framebuffer ? x.resizeFramebufferInfo(s, this._framebuffer, o, e, i) : this._framebuffer = x.createFramebufferInfo(s, o, e, i), s.clearColor(0, 0, 0, 0), s.clear(s.COLOR_BUFFER_BIT), this._silhouettePixels = new Uint8Array(Math.floor(e * i * 4)), this._silhouetteImageData = new ImageData(e, i), this._silhouetteDirty = !0;
+    this._framebuffer ? h.resizeFramebufferInfo(f, this._framebuffer, E, e, r) : this._framebuffer = h.createFramebufferInfo(f, E, e, r), f.clearColor(0, 0, 0, 0), f.clear(f.COLOR_BUFFER_BIT), this._silhouettePixels = new Uint8Array(Math.floor(e * r * 4)), this._silhouetteImageData = new ImageData(e, r), this._silhouetteDirty = !0;
   }
   /**
    * If there have been pen operations that have dirtied the canvas, update
@@ -999,8 +999,8 @@ class ke extends F {
     }
   }
 }
-const Ie = 2048, zt = 8;
-class dt extends F {
+const Oi = 2048, qt = 8;
+class ht extends P {
   /**
    * Create a new SVG skin.
    * @param {!int} id - The ID for this Skin.
@@ -1024,7 +1024,7 @@ class dt extends F {
     return [this._size[0], this._size[1]];
   }
   useNearest(t, e) {
-    return e.enabledEffects & (y.EFFECT_INFO.fisheye.mask | y.EFFECT_INFO.whirl.mask | y.EFFECT_INFO.pixelate.mask | y.EFFECT_INFO.mosaic.mask) || e._direction % 90 !== 0 ? !1 : Math.abs(t[0]) > 99 && Math.abs(t[0]) < 101 && Math.abs(t[1]) > 99 && Math.abs(t[1]) < 101;
+    return e.enabledEffects & (B.EFFECT_INFO.fisheye.mask | B.EFFECT_INFO.whirl.mask | B.EFFECT_INFO.pixelate.mask | B.EFFECT_INFO.mosaic.mask) || e._direction % 90 !== 0 ? !1 : Math.abs(t[0]) > 99 && Math.abs(t[0]) < 101 && Math.abs(t[1]) > 99 && Math.abs(t[1]) < 101;
   }
   /**
    * Create a MIP for a given scale.
@@ -1032,20 +1032,20 @@ class dt extends F {
    * @return {SVGMIP} An object that handles creating and updating SVG textures.
    */
   createMIP(t) {
-    const [e, i] = this._size;
-    if (this._canvas.width = e * t, this._canvas.height = i * t, this._canvas.width <= 0 || this._canvas.height <= 0 || // Even if the canvas at the current scale has a nonzero size, the image's dimensions are floored
+    const [e, r] = this._size;
+    if (this._canvas.width = e * t, this._canvas.height = r * t, this._canvas.width <= 0 || this._canvas.height <= 0 || // Even if the canvas at the current scale has a nonzero size, the image's dimensions are floored
     // pre-scaling; e.g. if an image has a width of 0.4 and is being rendered at 3x scale, the canvas will have
     // a width of 1, but the image's width will be rounded down to 0 on some browsers (Firefox) prior to being
     // drawn at that scale, resulting in an IndexSizeError if we attempt to draw it.
     this._svgImage.naturalWidth <= 0 || this._svgImage.naturalHeight <= 0) return super.getTexture();
     this._context.clearRect(0, 0, this._canvas.width, this._canvas.height), this._context.setTransform(t, 0, 0, t, 0, 0), this._context.drawImage(this._svgImage, 0, 0);
-    const s = this._context.getImageData(0, 0, this._canvas.width, this._canvas.height), o = {
+    const f = this._context.getImageData(0, 0, this._canvas.width, this._canvas.height), E = {
       auto: !1,
       wrap: this._renderer.gl.CLAMP_TO_EDGE,
-      src: s,
+      src: f,
       premultiplyAlpha: !0
-    }, l = x.createTexture(this._renderer.gl, o);
-    return this._largestMIPScale < t && (this._silhouette.update(s), this._largestMIPScale = t), l;
+    }, a = h.createTexture(this._renderer.gl, E);
+    return this._largestMIPScale < t && (this._silhouette.update(f), this._largestMIPScale = t), a;
   }
   updateSilhouette(t = [100, 100]) {
     this.getTexture(t);
@@ -1055,8 +1055,8 @@ class dt extends F {
    * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
    */
   getTexture(t) {
-    const e = t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100, i = Math.min(e / 100, this._maxTextureScale), s = Math.max(Math.ceil(Math.log2(i)) + zt, 0), o = Math.pow(2, s - zt);
-    return this._svgImageLoaded && !this._scaledMIPs[s] && (this._scaledMIPs[s] = this.createMIP(o)), this._scaledMIPs[s] || super.getTexture();
+    const e = t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100, r = Math.min(e / 100, this._maxTextureScale), f = Math.max(Math.ceil(Math.log2(r)) + qt, 0), E = Math.pow(2, f - qt);
+    return this._svgImageLoaded && !this._scaledMIPs[f] && (this._scaledMIPs[f] = this.createMIP(E)), this._scaledMIPs[f] || super.getTexture();
   }
   /**
    * Do a hard reset of the existing MIPs by deleting them.
@@ -1072,57 +1072,38 @@ class dt extends F {
    * @fires Skin.event:WasAltered
    */
   setSVG(t, e) {
-    const i = Te(t), s = Se(
-      i,
+    const r = Pi(t), f = vi(
+      r,
       !0
       /* shouldInjectFonts */
     );
     this._svgImageLoaded = !1;
-    const { x: o, y: l, width: u, height: c } = i.viewBox.baseVal;
-    this._size[0] = u, this._size[1] = c, this._svgImage.onload = () => {
-      if (u === 0 || c === 0) {
+    const { x: E, y: a, width: u, height: R } = r.viewBox.baseVal;
+    this._size[0] = u, this._size[1] = R, this._svgImage.onload = () => {
+      if (u === 0 || R === 0) {
         super.setEmptyImageData();
         return;
       }
-      const f = Math.ceil(Math.max(u, c));
-      let d = 2;
-      for (d; f * d <= Ie; d *= 2)
-        this._maxTextureScale = d;
-      this.resetMIPs(), typeof e == "undefined" && (e = this.calculateRotationCenter()), this._rotationCenter[0] = e[0] - o, this._rotationCenter[1] = e[1] - l, this._svgImageLoaded = !0, this.emit(F.Events.WasAltered);
-    }, this._svgImage.src = `data:image/svg+xml;utf8,${encodeURIComponent(s)}`;
+      const T = Math.ceil(Math.max(u, R));
+      let _ = 2;
+      for (_; T * _ <= Oi; _ *= 2)
+        this._maxTextureScale = _;
+      this.resetMIPs(), typeof e == "undefined" && (e = this.calculateRotationCenter()), this._rotationCenter[0] = e[0] - E, this._rotationCenter[1] = e[1] - a, this._svgImageLoaded = !0, this.emit(P.Events.WasAltered);
+    }, this._svgImage.src = `data:image/svg+xml;utf8,${encodeURIComponent(f)}`;
   }
 }
-var Me = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : {};
-function ut(a) {
-  return a && a.__esModule && Object.prototype.hasOwnProperty.call(a, "default") ? a.default : a;
+var Rt = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : {};
+function Xt(x) {
+  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x.default : x;
 }
-function Le(a) {
-  if (a.__esModule) return a;
-  var t = a.default;
-  if (typeof t == "function") {
-    var e = function i() {
-      return this instanceof i ? Reflect.construct(t, arguments, this.constructor) : t.apply(this, arguments);
-    };
-    e.prototype = t.prototype;
-  } else e = {};
-  return Object.defineProperty(e, "__esModule", { value: !0 }), Object.keys(a).forEach(function(i) {
-    var s = Object.getOwnPropertyDescriptor(a, i);
-    Object.defineProperty(e, i, s.get ? s : {
-      enumerable: !0,
-      get: function() {
-        return a[i];
-      }
-    });
-  }), e;
-}
-var Mt = 0, le = -3;
-function J() {
+var Mt = 0, _i = -3;
+function d() {
   this.table = new Uint16Array(16), this.trans = new Uint16Array(288);
 }
-function Fe(a, t) {
-  this.source = a, this.sourceIndex = 0, this.tag = 0, this.bitcount = 0, this.dest = t, this.destLen = 0, this.ltree = new J(), this.dtree = new J();
+function Gi(x, t) {
+  this.source = x, this.sourceIndex = 0, this.tag = 0, this.bitcount = 0, this.dest = t, this.destLen = 0, this.ltree = new d(), this.dtree = new d();
 }
-var he = new J(), ce = new J(), Lt = new Uint8Array(30), Ft = new Uint16Array(30), ue = new Uint8Array(30), fe = new Uint16Array(30), Be = new Uint8Array([
+var Li = new d(), Ai = new d(), yt = new Uint8Array(30), Ot = new Uint16Array(30), hi = new Uint8Array(30), Ci = new Uint16Array(30), ki = new Uint8Array([
   16,
   17,
   18,
@@ -1142,538 +1123,502 @@ var he = new J(), ce = new J(), Lt = new Uint8Array(30), Ft = new Uint16Array(30
   14,
   1,
   15
-]), Ht = new J(), N = new Uint8Array(320);
-function _e(a, t, e, i) {
-  var s, o;
-  for (s = 0; s < e; ++s) a[s] = 0;
-  for (s = 0; s < 30 - e; ++s) a[s + e] = s / e | 0;
-  for (o = i, s = 0; s < 30; ++s)
-    t[s] = o, o += 1 << a[s];
+]), Zt = new d(), X = new Uint8Array(320);
+function bi(x, t, e, r) {
+  var f, E;
+  for (f = 0; f < e; ++f) x[f] = 0;
+  for (f = 0; f < 30 - e; ++f) x[f + e] = f / e | 0;
+  for (E = r, f = 0; f < 30; ++f)
+    t[f] = E, E += 1 << x[f];
 }
-function Ne(a, t) {
+function Fi(x, t) {
   var e;
-  for (e = 0; e < 7; ++e) a.table[e] = 0;
-  for (a.table[7] = 24, a.table[8] = 152, a.table[9] = 112, e = 0; e < 24; ++e) a.trans[e] = 256 + e;
-  for (e = 0; e < 144; ++e) a.trans[24 + e] = e;
-  for (e = 0; e < 8; ++e) a.trans[168 + e] = 280 + e;
-  for (e = 0; e < 112; ++e) a.trans[176 + e] = 144 + e;
+  for (e = 0; e < 7; ++e) x.table[e] = 0;
+  for (x.table[7] = 24, x.table[8] = 152, x.table[9] = 112, e = 0; e < 24; ++e) x.trans[e] = 256 + e;
+  for (e = 0; e < 144; ++e) x.trans[24 + e] = e;
+  for (e = 0; e < 8; ++e) x.trans[168 + e] = 280 + e;
+  for (e = 0; e < 112; ++e) x.trans[176 + e] = 144 + e;
   for (e = 0; e < 5; ++e) t.table[e] = 0;
   for (t.table[5] = 32, e = 0; e < 32; ++e) t.trans[e] = e;
 }
-var Ut = new Uint16Array(16);
-function gt(a, t, e, i) {
-  var s, o;
-  for (s = 0; s < 16; ++s) a.table[s] = 0;
-  for (s = 0; s < i; ++s) a.table[t[e + s]]++;
-  for (a.table[0] = 0, o = 0, s = 0; s < 16; ++s)
-    Ut[s] = o, o += a.table[s];
-  for (s = 0; s < i; ++s)
-    t[e + s] && (a.trans[Ut[t[e + s]]++] = s);
+var Jt = new Uint16Array(16);
+function Ct(x, t, e, r) {
+  var f, E;
+  for (f = 0; f < 16; ++f) x.table[f] = 0;
+  for (f = 0; f < r; ++f) x.table[t[e + f]]++;
+  for (x.table[0] = 0, E = 0, f = 0; f < 16; ++f)
+    Jt[f] = E, E += x.table[f];
+  for (f = 0; f < r; ++f)
+    t[e + f] && (x.trans[Jt[t[e + f]]++] = f);
 }
-function Oe(a) {
-  a.bitcount-- || (a.tag = a.source[a.sourceIndex++], a.bitcount = 7);
-  var t = a.tag & 1;
-  return a.tag >>>= 1, t;
+function Hi(x) {
+  x.bitcount-- || (x.tag = x.source[x.sourceIndex++], x.bitcount = 7);
+  var t = x.tag & 1;
+  return x.tag >>>= 1, t;
 }
-function O(a, t, e) {
+function M(x, t, e) {
   if (!t)
     return e;
-  for (; a.bitcount < 24; )
-    a.tag |= a.source[a.sourceIndex++] << a.bitcount, a.bitcount += 8;
-  var i = a.tag & 65535 >>> 16 - t;
-  return a.tag >>>= t, a.bitcount -= t, i + e;
+  for (; x.bitcount < 24; )
+    x.tag |= x.source[x.sourceIndex++] << x.bitcount, x.bitcount += 8;
+  var r = x.tag & 65535 >>> 16 - t;
+  return x.tag >>>= t, x.bitcount -= t, r + e;
 }
-function Dt(a, t) {
-  for (; a.bitcount < 24; )
-    a.tag |= a.source[a.sourceIndex++] << a.bitcount, a.bitcount += 8;
-  var e = 0, i = 0, s = 0, o = a.tag;
+function mt(x, t) {
+  for (; x.bitcount < 24; )
+    x.tag |= x.source[x.sourceIndex++] << x.bitcount, x.bitcount += 8;
+  var e = 0, r = 0, f = 0, E = x.tag;
   do
-    i = 2 * i + (o & 1), o >>>= 1, ++s, e += t.table[s], i -= t.table[s];
-  while (i >= 0);
-  return a.tag = o, a.bitcount -= s, t.trans[e + i];
+    r = 2 * r + (E & 1), E >>>= 1, ++f, e += t.table[f], r -= t.table[f];
+  while (r >= 0);
+  return x.tag = E, x.bitcount -= f, t.trans[e + r];
 }
-function Pe(a, t, e) {
-  var i, s, o, l, u, c;
-  for (i = O(a, 5, 257), s = O(a, 5, 1), o = O(a, 4, 4), l = 0; l < 19; ++l) N[l] = 0;
-  for (l = 0; l < o; ++l) {
-    var f = O(a, 3, 0);
-    N[Be[l]] = f;
+function zi(x, t, e) {
+  var r, f, E, a, u, R;
+  for (r = M(x, 5, 257), f = M(x, 5, 1), E = M(x, 4, 4), a = 0; a < 19; ++a) X[a] = 0;
+  for (a = 0; a < E; ++a) {
+    var T = M(x, 3, 0);
+    X[ki[a]] = T;
   }
-  for (gt(Ht, N, 0, 19), u = 0; u < i + s; ) {
-    var d = Dt(a, Ht);
-    switch (d) {
+  for (Ct(Zt, X, 0, 19), u = 0; u < r + f; ) {
+    var _ = mt(x, Zt);
+    switch (_) {
       case 16:
-        var _ = N[u - 1];
-        for (c = O(a, 2, 3); c; --c)
-          N[u++] = _;
+        var L = X[u - 1];
+        for (R = M(x, 2, 3); R; --R)
+          X[u++] = L;
         break;
       case 17:
-        for (c = O(a, 3, 3); c; --c)
-          N[u++] = 0;
+        for (R = M(x, 3, 3); R; --R)
+          X[u++] = 0;
         break;
       case 18:
-        for (c = O(a, 7, 11); c; --c)
-          N[u++] = 0;
+        for (R = M(x, 7, 11); R; --R)
+          X[u++] = 0;
         break;
       default:
-        N[u++] = d;
+        X[u++] = _;
         break;
     }
   }
-  gt(t, N, 0, i), gt(e, N, i, s);
+  Ct(t, X, 0, r), Ct(e, X, r, f);
 }
-function Wt(a, t, e) {
+function Yt(x, t, e) {
   for (; ; ) {
-    var i = Dt(a, t);
-    if (i === 256)
+    var r = mt(x, t);
+    if (r === 256)
       return Mt;
-    if (i < 256)
-      a.dest[a.destLen++] = i;
+    if (r < 256)
+      x.dest[x.destLen++] = r;
     else {
-      var s, o, l, u;
-      for (i -= 257, s = O(a, Lt[i], Ft[i]), o = Dt(a, e), l = a.destLen - O(a, ue[o], fe[o]), u = l; u < l + s; ++u)
-        a.dest[a.destLen++] = a.dest[u];
+      var f, E, a, u;
+      for (r -= 257, f = M(x, yt[r], Ot[r]), E = mt(x, e), a = x.destLen - M(x, hi[E], Ci[E]), u = a; u < a + f; ++u)
+        x.dest[x.destLen++] = x.dest[u];
     }
   }
 }
-function Re(a) {
-  for (var t, e, i; a.bitcount > 8; )
-    a.sourceIndex--, a.bitcount -= 8;
-  if (t = a.source[a.sourceIndex + 1], t = 256 * t + a.source[a.sourceIndex], e = a.source[a.sourceIndex + 3], e = 256 * e + a.source[a.sourceIndex + 2], t !== (~e & 65535))
-    return le;
-  for (a.sourceIndex += 4, i = t; i; --i)
-    a.dest[a.destLen++] = a.source[a.sourceIndex++];
-  return a.bitcount = 0, Mt;
+function Wi(x) {
+  for (var t, e, r; x.bitcount > 8; )
+    x.sourceIndex--, x.bitcount -= 8;
+  if (t = x.source[x.sourceIndex + 1], t = 256 * t + x.source[x.sourceIndex], e = x.source[x.sourceIndex + 3], e = 256 * e + x.source[x.sourceIndex + 2], t !== (~e & 65535))
+    return _i;
+  for (x.sourceIndex += 4, r = t; r; --r)
+    x.dest[x.destLen++] = x.source[x.sourceIndex++];
+  return x.bitcount = 0, Mt;
 }
-function ze(a, t) {
-  var e = new Fe(a, t), i, s, o;
+function ji(x, t) {
+  var e = new Gi(x, t), r, f, E;
   do {
-    switch (i = Oe(e), s = O(e, 2, 0), s) {
+    switch (r = Hi(e), f = M(e, 2, 0), f) {
       case 0:
-        o = Re(e);
+        E = Wi(e);
         break;
       case 1:
-        o = Wt(e, he, ce);
+        E = Yt(e, Li, Ai);
         break;
       case 2:
-        Pe(e, e.ltree, e.dtree), o = Wt(e, e.ltree, e.dtree);
+        zi(e, e.ltree, e.dtree), E = Yt(e, e.ltree, e.dtree);
         break;
       default:
-        o = le;
+        E = _i;
     }
-    if (o !== Mt)
+    if (E !== Mt)
       throw new Error("Data error");
-  } while (!i);
+  } while (!r);
   return e.destLen < e.dest.length ? typeof e.dest.slice == "function" ? e.dest.slice(0, e.destLen) : e.dest.subarray(0, e.destLen) : e.dest;
 }
-Ne(he, ce);
-_e(Lt, Ft, 4, 3);
-_e(ue, fe, 2, 1);
-Lt[28] = 0;
-Ft[28] = 258;
-var de = ze;
-const He = new Uint8Array(new Uint32Array([305419896]).buffer)[0] === 18, Gt = (a, t, e) => {
-  let i = a[t];
-  a[t] = a[e], a[e] = i;
-}, Ue = (a) => {
-  const t = a.length;
+Fi(Li, Ai);
+bi(yt, Ot, 4, 3);
+bi(hi, Ci, 2, 1);
+yt[28] = 0;
+Ot[28] = 258;
+var $i = ji;
+const qi = new Uint8Array(new Uint32Array([305419896]).buffer)[0] === 18, Qt = (x, t, e) => {
+  let r = x[t];
+  x[t] = x[e], x[e] = r;
+}, Zi = (x) => {
+  const t = x.length;
   for (let e = 0; e < t; e += 4)
-    Gt(a, e, e + 3), Gt(a, e + 1, e + 2);
-}, We = (a) => {
-  He && Ue(a);
+    Qt(x, e, e + 3), Qt(x, e + 1, e + 2);
+}, Ji = (x) => {
+  qi && Zi(x);
 };
-var Ge = {
-  swap32LE: We
+var Yi = {
+  swap32LE: Ji
 };
-const Xt = de, { swap32LE: Xe } = Ge, Bt = 11, W = 5, Ve = Bt - W, $e = 65536 >> Bt, je = 1 << Ve, qe = je - 1, st = 2, Ke = 1 << W, pt = Ke - 1, ge = 65536 >> W, Ze = 1024 >> W, Ye = ge + Ze, Je = Ye, Qe = 32, ti = Je + Qe, ei = 1 << st;
-class ii {
+const ct = $i, { swap32LE: Qi } = Yi, Gt = 11, W = 5, ci = Gt - W, oi = 65536 >> Gt, di = 1 << ci, te = di - 1, Et = 2, ie = 1 << W, bt = ie - 1, Si = 65536 >> W, ee = 1024 >> W, re = Si + ee, ne = re, fe = 32, se = ne + fe, Ee = 1 << Et;
+class xe {
   constructor(t) {
     const e = typeof t.readUInt32BE == "function" && typeof t.slice == "function";
     if (e || t instanceof Uint8Array) {
-      let i;
+      let r;
       if (e)
-        this.highStart = t.readUInt32LE(0), this.errorValue = t.readUInt32LE(4), i = t.readUInt32LE(8), t = t.slice(12);
+        this.highStart = t.readUInt32LE(0), this.errorValue = t.readUInt32LE(4), r = t.readUInt32LE(8), t = t.slice(12);
       else {
-        const s = new DataView(t.buffer);
-        this.highStart = s.getUint32(0, !0), this.errorValue = s.getUint32(4, !0), i = s.getUint32(8, !0), t = t.subarray(12);
+        const f = new DataView(t.buffer);
+        this.highStart = f.getUint32(0, !0), this.errorValue = f.getUint32(4, !0), r = f.getUint32(8, !0), t = t.subarray(12);
       }
-      t = Xt(t, new Uint8Array(i)), t = Xt(t, new Uint8Array(i)), Xe(t), this.data = new Uint32Array(t.buffer);
+      t = ct(t, new Uint8Array(r)), t = ct(t, new Uint8Array(r)), Qi(t), this.data = new Uint32Array(t.buffer);
     } else
       ({ data: this.data, highStart: this.highStart, errorValue: this.errorValue } = t);
   }
   get(t) {
     let e;
-    return t < 0 || t > 1114111 ? this.errorValue : t < 55296 || t > 56319 && t <= 65535 ? (e = (this.data[t >> W] << st) + (t & pt), this.data[e]) : t <= 65535 ? (e = (this.data[ge + (t - 55296 >> W)] << st) + (t & pt), this.data[e]) : t < this.highStart ? (e = this.data[ti - $e + (t >> Bt)], e = this.data[e + (t >> W & qe)], e = (e << st) + (t & pt), this.data[e]) : this.data[this.data.length - ei];
+    return t < 0 || t > 1114111 ? this.errorValue : t < 55296 || t > 56319 && t <= 65535 ? (e = (this.data[t >> W] << Et) + (t & bt), this.data[e]) : t <= 65535 ? (e = (this.data[Si + (t - 55296 >> W)] << Et) + (t & bt), this.data[e]) : t < this.highStart ? (e = this.data[se - oi + (t >> Gt)], e = this.data[e + (t >> W & te)], e = (e << Et) + (t & bt), this.data[e]) : this.data[this.data.length - Ee];
   }
 }
-var ni = ii;
-const si = /* @__PURE__ */ ut(ni);
-var pe = {};
-(function(a) {
+var ae = xe;
+const le = /* @__PURE__ */ Xt(ae);
+var Bi = {};
+(function(x) {
   var t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   (function(e) {
-    var i = typeof Uint8Array != "undefined" ? Uint8Array : Array, s = 43, o = 47, l = 48, u = 97, c = 65, f = 45, d = 95;
-    function _(g) {
-      var m = g.charCodeAt(0);
-      if (m === s || m === f)
+    var r = typeof Uint8Array != "undefined" ? Uint8Array : Array, f = 43, E = 47, a = 48, u = 97, R = 65, T = 45, _ = 95;
+    function L(A) {
+      var C = A.charCodeAt(0);
+      if (C === f || C === T)
         return 62;
-      if (m === o || m === d)
+      if (C === E || C === _)
         return 63;
-      if (m < l)
+      if (C < a)
         return -1;
-      if (m < l + 10)
-        return m - l + 26 + 26;
-      if (m < c + 26)
-        return m - c;
-      if (m < u + 26)
-        return m - u + 26;
+      if (C < a + 10)
+        return C - a + 26 + 26;
+      if (C < R + 26)
+        return C - R;
+      if (C < u + 26)
+        return C - u + 26;
     }
-    function w(g) {
-      var m, k, T, b, p, v;
-      if (g.length % 4 > 0)
+    function b(A) {
+      var C, p, N, D, w, V;
+      if (A.length % 4 > 0)
         throw new Error("Invalid string. Length must be a multiple of 4");
-      var S = g.length;
-      p = g.charAt(S - 2) === "=" ? 2 : g.charAt(S - 1) === "=" ? 1 : 0, v = new i(g.length * 3 / 4 - p), T = p > 0 ? g.length - 4 : g.length;
-      var A = 0;
-      function I(z) {
-        v[A++] = z;
+      var it = A.length;
+      w = A.charAt(it - 2) === "=" ? 2 : A.charAt(it - 1) === "=" ? 1 : 0, V = new r(A.length * 3 / 4 - w), N = w > 0 ? A.length - 4 : A.length;
+      var k = 0;
+      function $(mi) {
+        V[k++] = mi;
       }
-      for (m = 0, k = 0; m < T; m += 4, k += 3)
-        b = _(g.charAt(m)) << 18 | _(g.charAt(m + 1)) << 12 | _(g.charAt(m + 2)) << 6 | _(g.charAt(m + 3)), I((b & 16711680) >> 16), I((b & 65280) >> 8), I(b & 255);
-      return p === 2 ? (b = _(g.charAt(m)) << 2 | _(g.charAt(m + 1)) >> 4, I(b & 255)) : p === 1 && (b = _(g.charAt(m)) << 10 | _(g.charAt(m + 1)) << 4 | _(g.charAt(m + 2)) >> 2, I(b >> 8 & 255), I(b & 255)), v;
+      for (C = 0, p = 0; C < N; C += 4, p += 3)
+        D = L(A.charAt(C)) << 18 | L(A.charAt(C + 1)) << 12 | L(A.charAt(C + 2)) << 6 | L(A.charAt(C + 3)), $((D & 16711680) >> 16), $((D & 65280) >> 8), $(D & 255);
+      return w === 2 ? (D = L(A.charAt(C)) << 2 | L(A.charAt(C + 1)) >> 4, $(D & 255)) : w === 1 && (D = L(A.charAt(C)) << 10 | L(A.charAt(C + 1)) << 4 | L(A.charAt(C + 2)) >> 2, $(D >> 8 & 255), $(D & 255)), V;
     }
-    function E(g) {
-      var m, k = g.length % 3, T = "", b, p;
-      function v(A) {
-        return t.charAt(A);
+    function S(A) {
+      var C, p = A.length % 3, N = "", D, w;
+      function V(k) {
+        return t.charAt(k);
       }
-      function S(A) {
-        return v(A >> 18 & 63) + v(A >> 12 & 63) + v(A >> 6 & 63) + v(A & 63);
+      function it(k) {
+        return V(k >> 18 & 63) + V(k >> 12 & 63) + V(k >> 6 & 63) + V(k & 63);
       }
-      for (m = 0, p = g.length - k; m < p; m += 3)
-        b = (g[m] << 16) + (g[m + 1] << 8) + g[m + 2], T += S(b);
-      switch (k) {
+      for (C = 0, w = A.length - p; C < w; C += 3)
+        D = (A[C] << 16) + (A[C + 1] << 8) + A[C + 2], N += it(D);
+      switch (p) {
         case 1:
-          b = g[g.length - 1], T += v(b >> 2), T += v(b << 4 & 63), T += "==";
+          D = A[A.length - 1], N += V(D >> 2), N += V(D << 4 & 63), N += "==";
           break;
         case 2:
-          b = (g[g.length - 2] << 8) + g[g.length - 1], T += v(b >> 10), T += v(b >> 4 & 63), T += v(b << 2 & 63), T += "=";
+          D = (A[A.length - 2] << 8) + A[A.length - 1], N += V(D >> 10), N += V(D >> 4 & 63), N += V(D << 2 & 63), N += "=";
           break;
       }
-      return T;
+      return N;
     }
-    e.toByteArray = w, e.fromByteArray = E;
-  })(a);
-})(pe);
-const ri = /* @__PURE__ */ ut(pe);
-var me = {};
-const oi = 5, Vt = 12, ai = 13, li = 16, hi = 17, ci = 22, $t = 28, jt = 31, ui = 33, rt = 34, fi = 35, mt = 36, Ct = 37, be = 38, _i = 39, di = 40, q = 41, gi = 42, n = 0, r = 1, D = 2, ve = 3, h = 4, pi = [
+    e.toByteArray = b, e.fromByteArray = S;
+  })(x);
+})(Bi);
+const Re = /* @__PURE__ */ Xt(Bi);
+var Ki = {};
+const ue = 5, ot = 12, Te = 13, _e = 16, Le = 17, Ae = 22, dt = 28, ti = 31, he = 33, xt = 34, Ce = 35, St = 36, It = 37, Ui = 38, be = 39, Se = 40, Y = 41, Be = 42, n = 0, s = 1, U = 2, gi = 3, l = 4, Ke = [
   //OP   , CL    , CP    , QU    , GL    , NS    , EX    , SY    , IS    , PR    , PO    , NU    , AL    , HL    , ID    , IN    , HY    , BA    , BB    , B2    , ZW    , CM    , WJ    , H2    , H3    , JL    , JV    , JT    , RI    , EB    , EM    , ZWJ   , CB
   [
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    ve,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h,
-    h
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    gi,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l,
+    l
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    h,
-    h,
-    h,
-    h,
-    r,
-    r,
+    l,
+    l,
+    s,
+    s,
+    l,
+    l,
+    l,
+    l,
+    s,
+    s,
     n,
     n,
     n,
     n,
-    r,
-    r,
-    r,
+    s,
+    s,
+    s,
     n,
     n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    h,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
+    l,
+    l,
+    s,
+    s,
+    l,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
     n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    s,
+    s,
+    s,
     n,
     n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    s,
     n
   ],
   [
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    h,
-    D,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    l,
+    U,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s
   ],
   [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    h,
-    D,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r
-  ],
-  [
-    n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
-    n
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    l,
+    U,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
-    r,
-    r,
+    s,
+    s,
+    s,
     n,
     n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    n,
-    n,
-    r,
-    n,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
+    s,
+    s,
+    s,
     n,
     n,
-    r,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
-    r,
-    r,
-    r,
+    s,
     n,
-    r,
-    r,
-    r,
+    s,
     n,
+    s,
+    s,
+    s,
     n,
-    h,
-    D,
-    h,
     n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
@@ -1681,392 +1626,428 @@ const oi = 5, Vt = 12, ai = 13, li = 16, hi = 17, ci = 22, $t = 28, jt = 31, ui 
     n,
     n,
     n,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
     n,
-    n,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    n,
-    r,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
     n,
     n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    n,
+    n,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    n,
+    n,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    n,
+    s,
+    n,
+    n,
+    n,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
-    r,
-    r,
     n,
     n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    n,
-    r,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    n,
-    r,
-    h,
-    h,
-    h,
-    n,
-    n,
-    r,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
+    s,
+    s,
+    s,
     n,
     n,
-    r,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
+    l,
+    l,
+    s,
     n,
-    r,
-    h,
-    h,
-    h,
-    n,
-    n,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
+    s,
     n,
     n,
-    r,
-    r,
-    r,
+    n,
+    s,
+    s,
+    s,
     n,
     n,
-    h,
-    D,
-    h,
-    n,
-    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    h,
-    D,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    n,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
-    r,
-    r,
-    n,
-    h,
-    h,
-    D,
-    h,
+    s,
+    s,
+    s,
     n,
     n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    l,
+    U,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n
+  ],
+  [
+    n,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
+    s,
+    s,
+    n,
+    l,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
@@ -2090,7 +2071,7 @@ const oi = 5, Vt = 12, ai = 13, li = 16, hi = 17, ci = 22, $t = 28, jt = 31, ui 
     n,
     n,
     n,
-    h,
+    l,
     n,
     n,
     n,
@@ -2105,379 +2086,309 @@ const oi = 5, Vt = 12, ai = 13, li = 16, hi = 17, ci = 22, $t = 28, jt = 31, ui 
     n
   ],
   [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
     n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    s,
+    s,
+    s,
     n,
     n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    s,
     n
   ],
   [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    h,
-    D,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r,
-    r
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    l,
+    U,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s,
+    s
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
-    r,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    r,
-    r,
-    n,
-    n,
-    n,
-    r,
-    n
-  ],
-  [
-    n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    n,
-    r,
+    s,
     n,
     n,
     n,
     n,
-    r,
-    r,
-    r,
+    s,
+    s,
+    s,
     n,
     n,
-    h,
-    D,
-    h,
-    n,
-    n,
-    n,
-    n,
-    r,
+    l,
+    U,
+    l,
     n,
     n,
     n,
-    r,
+    s,
+    s,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
-    r,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    r,
-    r,
-    r,
-    r,
+    s,
     n,
     n,
     n,
     n,
-    r,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    s,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
-    r,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    s,
     n,
     n,
     n,
-    r,
-    r,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    s,
+    s,
+    s,
+    s,
     n,
     n,
     n,
-    r,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
-    r,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    s,
     n,
     n,
     n,
     n,
-    r,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
-    r,
+    s,
+    s,
+    n,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    n,
+    s,
     n,
     n,
     n,
     n,
+    s,
+    s,
+    s,
     n,
     n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
-    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
-    r,
+    s,
     n,
     n,
-    r,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    n,
-    r,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
+    s,
+    s,
+    s,
     n,
-    r,
-    r,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
+    n,
+    n,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
-    r,
-    n,
-    n,
-    n,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    s,
     n,
     n,
     n,
     n,
+    s,
+    s,
+    s,
     n,
     n,
-    n,
-    n,
-    r,
-    n
-  ],
-  [
-    r,
-    h,
-    h,
-    r,
-    r,
-    r,
-    h,
-    h,
-    h,
-    r,
-    r,
-    r,
-    r,
-    r,
-    n,
-    r,
-    r,
-    r,
-    n,
-    n,
-    h,
-    D,
-    h,
+    l,
+    U,
+    l,
     n,
     n,
     n,
@@ -2485,224 +2396,4697 @@ const oi = 5, Vt = 12, ai = 13, li = 16, hi = 17, ci = 22, $t = 28, jt = 31, ui 
     n,
     n,
     n,
-    n,
-    r,
+    s,
+    s,
     n
   ],
   [
     n,
-    h,
-    h,
-    r,
-    r,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
     n,
-    h,
-    h,
-    h,
-    n,
-    n,
-    n,
-    n,
+    s,
     n,
     n,
     n,
     n,
+    s,
+    s,
+    s,
     n,
     n,
-    n,
-    h,
-    D,
-    h,
-    n,
-    n,
+    l,
+    U,
+    l,
     n,
     n,
     n,
     n,
     n,
     n,
-    r,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    s,
+    l,
+    l,
+    s,
+    s,
+    s,
+    l,
+    l,
+    l,
+    s,
+    s,
+    s,
+    s,
+    s,
+    n,
+    s,
+    s,
+    s,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
+    n
+  ],
+  [
+    n,
+    l,
+    l,
+    s,
+    s,
+    n,
+    l,
+    l,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    l,
+    U,
+    l,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    n,
+    s,
     n
   ]
   // CB
-], mi = ri.toByteArray("AAgOAAAAAAAQ4QAAAQ0P8vDtnQuMXUUZx+eyu7d7797d9m5bHoWltKVUlsjLWE0VJNigQoMVqkStEoNQQUl5GIo1KKmogEgqkKbBRki72lYabZMGKoGAjQRtJJDaCCIRiiigREBQS3z+xzOTnZ3O+3HOhd5NfpkzZx7fN9988zivu2M9hGwB28F94DnwEngd/Asc1EtIs9c/bIPDwCxwLDgezHcodyo4w5C+CCwBS8FnwSXgCnA1uFbI93XwbXAbWAfWgx+CzWAb+An4KfgFeAzsYWWfYuFz4CXwGvgb+Dfo6yNkEEwGh4CZYB44FpwI3g1OY+kfBItZOo2fB84Hy8DF4HJwNbiWpV8PVoO1LH4n2NRXyN+KcAd4kNVP9XsY4aPgcfAbsBfs6SniL4K/sPjfEf6HlanXCRkCw2BGvUh/keWfXS/CY+pFXs7x9XHmM94LTmWIeU2cgbxnS/k/B3kf86jDhU8L9V2E40vAFWAlWFUfb++NOL4F3C7JX4/4GiE+hvgWsF0oS7mXldspnN+F493gyXrh9xTav0cg3EvzgVfBG6wsmVSEkxBOBgdPGpd7JI6PnqRvJ68/xlbHof53gPeA94OzwLngk+ACsAwsByvASrAK3MB0Ws3CtQjvBJvAVrADPMDSHkb4CNijaccTwvnf4fiPEs8Lxy+D18A/QU8/xjgYBjPAbDAKTgYLwOngTHAO+EQ/8wuEF4EvsPiVCFf2+9tsFStzA8LVHuXXBsi6QyqzUYiPMR/7Mc7dAx7oL8bzw/3u/Bw8Bp4Az4AXwCtgHzsmDXP5fiF9iiVvly5d0sHngar16NKlS5cuXbp06fLmYlqHXrcd3ph4P0THUY3iXh49novju4S0tzfs5d+JPKewfAsRntZb3K9ZhOMlrO6lCC8An28U9+OuovcPcPxlVu5rCL/VmHh/iHIrzn3fIPu7SN8Axmg+8AOwEWwCm7tp3bRuWjetm5Y8bSu4B9zbKO6ZVsnORrVU3f4uXTqZ2H3sLoyx3eDXjfDndE9qyj6L838CfwVvgFpzYnof4oNgOhgBc8Fos9DrZIQLmtXPP1MmF6wGj4H+KXoWguvADkXaPil+YpuQy8Am8Ey7ODdtmJDF4HowBp4De6HDTNjhfHAHeBr0DBBy0kDxfPbcgSIusgrcWhtnJ8vL+TPix7UIOQtcBq4C28Cr4KRBnANbwSuDE+s50JgyNNFuXbp06XIgsXjIvPafjvXozKY+fVFz/z0LT1uCtKVSWbrOLWPnztG8e0Xfy7ol8XtZJi7WtG+5od2UFXQ/A12vUeS7jp27yVKHjdsU9lXB869TyNvAzt0lpP2oWbwLdjiO78bx/Sz+EMJHwK9Y/LcIfw+eZ3F67/Hl5vh9xX80J+rwX8SvRDhpgL17iPAQMHNArfPrqHPewLheI+AERV6efwV418B4nOZ/H+IfYHV8GOF5LJ3eAz0fx8sM9S0fUNud39O9CulfGZhY5huI3wzWgNvBelbHZoTbNPVpfYjKQpkHwUNgl0LWblbnk0LbbDxr0OMFpL3iqWdu9nWYPlVAWkXY39LnGdCkDbeqv1YNbfcMQ3t9oe8lzm6NH9N1ZB6Ln4BwfkJZJk7RyFnYKt6b/JDQXx9p5X+eFdqOjzM9P9MB/lUlFzr20aXIdzlY4dmn9F3YqtvoO76/2hp/D/xA5Zue88nNyL8GbFbs075X0tyUig3Qd2MCnf//HjnzpbsR3g9+1kHzzVjdnE71/qVBX9rGPUh/ysNWe1neFzvIDi5zAufV1sT0N0poR22wkFUfTOPfA4N2mbZ5fSrqOHSw+IbkSBbOGSzSRgf91/GTUWYBOB2cIZQ/G8cfBZ8CFwrnL8XxF8FKcA24jqXdiPA7Qr61OF7H4mMItwzuv2/YLth1ISt3Hzu3k4W7EH5JqPdRHD/O4k+z8A8IX5Lq3y7Z4nXE9xn6kX6vQ4bKfy+ok+hH+xf3hq9dnTTHhjKd2GmDuWA242iHMq4cC7A8kJ7i8o1+skSa7Jieo38HCWnoNjKFhdSFBxzpZ7QE6lI8N4S14aASZcryaV/WWHw66f6NHuCoxuQxmvM56GX9QMd8Q4D65ywGP+ZzRJuM+zQvx/MOS2VFeqQ4IXnH26zM9Xe6/E6D+4foAzzuajPZp8Qyw5ayZVDWuH0z0BtYRkeIDqH9KO9VbH1btd/lhNqCzvl8zeLnG0S/hnU6baHfpiuO6yy0rd+DHURo/zYF5H26j03rQsip2ndzz82u1z9N4VjWKWeb68Tedpt95HRVXp7H1R6p+/Wt4FPy/PpWwscOLRJ+PVWF/+W0iVyGzs18TIvXkOJ1Wxm66vSXz+vylenrZcj1ub439W+K8RNCGTJi2p/TJ1K23VaXr35tRpnzmjxequgfcfyk6B/TGBVlyedsNgpdd/h+W1U3P99QyFPNo1X3TwpM/WLTIWYfoBqXrv6iskHZ/RFr79R6hIyHBrH3f1nrUVnjP8SnZZ+rYtzr9Exld5MNbPNErusAPg+77u/eDOPftU9yj39TH7rezxd1LvsZQJlzkWlOirG/79zjMj/mtHUKu7vKy+3/LnXr9okyKedjX5/0He9iP/j63LwOQdarEVlfy8OO/Lqw023j6xcqmwxLiOd6heM2i9cV9LJy8jMJ23yQ+rpbfu7EQ/pXE8KYvUSqvVnb4XzZa6LrHMXHR+zcLvqWbm/Bn0/HzIs6fWPHoat8XfnDKmZGxRxeMbn2UqZ5Q94nmcZRbqqUXbZ8+lcjE+cPX11t814orvvAXNcG8vqj2vvk1MGn3anlj0bIT72v47bvE+Lc98T9b6r7AKn6j+8Duf7D0nnZx/j7Zjn0j9nbpSTndaLr9WNLivP+iN23xF7L+fqv6ZouFyb78jxVXvv5jJ9YUs9/sddO8h7KNg5jrhfaJGztT6G7KF+1d6yCmD5Kdb2fan60rSc552fZr3zeQ9DpnPp+Si5cx5Ktv2QfSzF/mMbWdOm46rFI4XstnU9xeqX4NKb7TKEdcr6pZOK3ID1k/LvFHkVczEuZLEDr499YqvqBym1aEHWgcvoYOtv0M91qQl5TfpO/in6rWx8OVpT1Wedkv3f5xom3T/xeR/6Gx6V86PWAOB4bBpqWdN+yTcVxjIyGRz/FrDGu6w/3d7kPm8StX8RyPu+uuvpNju/vTLJV37GpvoM0oZPnW87VLnL/5pDno1NoW1R6yedU6TyUv3u19a3KFnIbTLYz+ZCLP4T0tU1uivFgso0pnsJ/UtXvarNY28Xq5cvkBDrQP/E5ZaiuQwwfmTlsOiQRU1fMuqrDd/3ISSuwjOwXOfTyGUMpZIXq4GpLn3pUcdfzch2x7XO1u2uZHOPb1G6b3Xg9PH1IIWeEpJlPQtqos2EKW8b0u8rnuP1UeVLoXJb9be0uG9nnbchjU+XTszT5VeNBThPHnc5OKj1U9aj0GTHIVaGy1YhEWT4ixns00DT+XEzWn/7VAsIc63Cov3OdyhwjrnaqQqZvWKXdypRdlq+k8msZ031U+Rm4fA+3TtyeR9hwfW9G9yxDN0fZMN33F+9TE6md4hwoxumfaUzI9fN3PFT3xVV2msrQ3UsnChm6Nulk8TndpS28D3zX9tTIPsF/z7Am5OkTjm1tI1JZW74+4VgsZ0N3L1yXV3WeP5uR7TGHHdvC3JQlxybfpd22tDlk/2eofRK8TzrN/qnar/K/OUTth6I/+jAnEptNbPvFHP2gs40N3+dfMWtwqvVct7/wfd8gtQ7imifial9ZJ9/3IHLYU6eDj3+4PhsNhX+vwvcWLnu6kGfEMe8DuciPfUfGZB8X/7HJy/Gefe5n+VRGFd/wyP2ta7/LO4yh/sbLV/k9lev6kfO9Dt/5U67b1/6u/epqB1U9Me23jfHY9sscAg4tkbLl+e4/U36rJ9ddxfd6sg5vq5ice42Wpk/pb9FOJ36/W9tpv4kbC79nUbZceX8Zu6/qJ+P3WvhvA8v3reh7Jbn2d6rrNC7XNZTLma4Ba0JI9efX2uLzF5scG/w9UNU1ZxW+ymUfzELeTllXlQ1rUuhzjS5fp9c964iFBOqeSz63bU065nZKdU+mDEz3qHIjjifquw0pnb/raRtvrnsYcb46ihT3taoYz6brdNW9l6rWRnE/navdPn1XlR1km7hcz1WlH/elKuSOSvLLuE8U6m8uzwRdfcGl73VyTHuyMvzJ1Sa2cWDTP/Z63Kc94n2B1PYr24dz1JlyHLlcP+S4B6vD1c9EW4q2LWstCvUjeVy63k/LMYdUNd5D1xQfvVTzX1VjkMsUv88N8VH5fReVn/Fjn++/h6X6Q8a6b1/q3g/i/ewi0/Scs8zxXeV6mWIOUPlPzBgdFerW+bZrm2P18dnjuK6HunEp+rHvPMXbr+sHVb/lnL+pTP57jPw9Cvk3PW178JD9qChfzuvTf7Htl38L1QUf/VKu9SFjwWbTWPvFEvu7Uq76y7+31g6QlYPc669pbsm9Xur2LWI9Pu8ypfDXqm3A2z8s1FWGn4ntL9NfQu2oSlftX9uetvTtv7J8Ql4zxfXGZ3zk8PeQ9w59x2uMfqI8/q5eKh/l9cb2rwsu9rSNl06ZP2Pmxtz+rNMx93yno0n2/82rVH7rQ+y9P15H6FyRun9ViH81ATmffI7nJ5r8uXXW6enbP6b/B8/l5OifVHYLnb9S39s2zcc+Ph+rh8+eQgVPS72elzGWY/tUtbbabBpDiI7yN1q6/4th2y+ErAc5+9BVvu/7KamJbWNZeuqI/R4tRf+YyD1HmOZM1bMV3/14Sn10c0Xu+Sj1nOXb5jL73ncdy02uvlXZNde65dOHYl7Vs4KYuS6FzWLn2zJlpZqPXPVPOa5yzKOyn1VhT9lmMfdbfH7D11Wf2PXN5h9y+dD287+qxgSnaYmnIrRtIb8pJe6/Uv9OVer6Whn0zfGO/BEloZI9ojmfAlUflClDd178bTmVHVTpZXOkAlk/lb42UujmI89HH5V+cl7XtowY6vTxLVWok6UrGzoGTHN+bB+6ri05687VNpvfuvRfaP2uMlNQth1D5JjGelm/8yn+9p3p/7qk9gnfeddXZmq/Sm333PJT659Kv1zjNbZ9uv2Oi//67CV8/N1nj1DmviyXDNVeJkaeaX8UsyesYg8cu2+NvdaPfb+lLDu5tvt/"), bi = new si(mi), qt = function(a) {
-  switch (a) {
-    case ui:
-      return Vt;
-    case _i:
-    case di:
-    case gi:
-      return Vt;
-    case fi:
-      return oi;
-    default:
-      return a;
-  }
-}, Kt = function(a) {
-  switch (a) {
-    case Ct:
+], Ue = Re.toByteArray("AAgOAAAAAAAQ4QAAAQ0P8vDtnQuMXUUZx+eyu7d7797d9m5bHoWltKVUlsjLWE0VJNigQoMVqkStEoNQQUl5GIo1KKmogEgqkKbBRki72lYabZMGKoGAjQRtJJDaCCIRiiigREBQS3z+xzOTnZ3O+3HOhd5NfpkzZx7fN9988zivu2M9hGwB28F94DnwEngd/Asc1EtIs9c/bIPDwCxwLDgezHcodyo4w5C+CCwBS8FnwSXgCnA1uFbI93XwbXAbWAfWgx+CzWAb+An4KfgFeAzsYWWfYuFz4CXwGvgb+Dfo6yNkEEwGh4CZYB44FpwI3g1OY+kfBItZOo2fB84Hy8DF4HJwNbiWpV8PVoO1LH4n2NRXyN+KcAd4kNVP9XsY4aPgcfAbsBfs6SniL4K/sPjfEf6HlanXCRkCw2BGvUh/keWfXS/CY+pFXs7x9XHmM94LTmWIeU2cgbxnS/k/B3kf86jDhU8L9V2E40vAFWAlWFUfb++NOL4F3C7JX4/4GiE+hvgWsF0oS7mXldspnN+F493gyXrh9xTav0cg3EvzgVfBG6wsmVSEkxBOBgdPGpd7JI6PnqRvJ68/xlbHof53gPeA94OzwLngk+ACsAwsByvASrAK3MB0Ws3CtQjvBJvAVrADPMDSHkb4CNijaccTwvnf4fiPEs8Lxy+D18A/QU8/xjgYBjPAbDAKTgYLwOngTHAO+EQ/8wuEF4EvsPiVCFf2+9tsFStzA8LVHuXXBsi6QyqzUYiPMR/7Mc7dAx7oL8bzw/3u/Bw8Bp4Az4AXwCtgHzsmDXP5fiF9iiVvly5d0sHngar16NKlS5cuXbp06fLmYlqHXrcd3ph4P0THUY3iXh49novju4S0tzfs5d+JPKewfAsRntZb3K9ZhOMlrO6lCC8An28U9+OuovcPcPxlVu5rCL/VmHh/iHIrzn3fIPu7SN8Axmg+8AOwEWwCm7tp3bRuWjetm5Y8bSu4B9zbKO6ZVsnORrVU3f4uXTqZ2H3sLoyx3eDXjfDndE9qyj6L838CfwVvgFpzYnof4oNgOhgBc8Fos9DrZIQLmtXPP1MmF6wGj4H+KXoWguvADkXaPil+YpuQy8Am8Ey7ODdtmJDF4HowBp4De6HDTNjhfHAHeBr0DBBy0kDxfPbcgSIusgrcWhtnJ8vL+TPix7UIOQtcBq4C28Cr4KRBnANbwSuDE+s50JgyNNFuXbp06XIgsXjIvPafjvXozKY+fVFz/z0LT1uCtKVSWbrOLWPnztG8e0Xfy7ol8XtZJi7WtG+5od2UFXQ/A12vUeS7jp27yVKHjdsU9lXB869TyNvAzt0lpP2oWbwLdjiO78bx/Sz+EMJHwK9Y/LcIfw+eZ3F67/Hl5vh9xX80J+rwX8SvRDhpgL17iPAQMHNArfPrqHPewLheI+AERV6efwV418B4nOZ/H+IfYHV8GOF5LJ3eAz0fx8sM9S0fUNud39O9CulfGZhY5huI3wzWgNvBelbHZoTbNPVpfYjKQpkHwUNgl0LWblbnk0LbbDxr0OMFpL3iqWdu9nWYPlVAWkXY39LnGdCkDbeqv1YNbfcMQ3t9oe8lzm6NH9N1ZB6Ln4BwfkJZJk7RyFnYKt6b/JDQXx9p5X+eFdqOjzM9P9MB/lUlFzr20aXIdzlY4dmn9F3YqtvoO76/2hp/D/xA5Zue88nNyL8GbFbs075X0tyUig3Qd2MCnf//HjnzpbsR3g9+1kHzzVjdnE71/qVBX9rGPUh/ysNWe1neFzvIDi5zAufV1sT0N0poR22wkFUfTOPfA4N2mbZ5fSrqOHSw+IbkSBbOGSzSRgf91/GTUWYBOB2cIZQ/G8cfBZ8CFwrnL8XxF8FKcA24jqXdiPA7Qr61OF7H4mMItwzuv2/YLth1ISt3Hzu3k4W7EH5JqPdRHD/O4k+z8A8IX5Lq3y7Z4nXE9xn6kX6vQ4bKfy+ok+hH+xf3hq9dnTTHhjKd2GmDuWA242iHMq4cC7A8kJ7i8o1+skSa7Jieo38HCWnoNjKFhdSFBxzpZ7QE6lI8N4S14aASZcryaV/WWHw66f6NHuCoxuQxmvM56GX9QMd8Q4D65ywGP+ZzRJuM+zQvx/MOS2VFeqQ4IXnH26zM9Xe6/E6D+4foAzzuajPZp8Qyw5ayZVDWuH0z0BtYRkeIDqH9KO9VbH1btd/lhNqCzvl8zeLnG0S/hnU6baHfpiuO6yy0rd+DHURo/zYF5H26j03rQsip2ndzz82u1z9N4VjWKWeb68Tedpt95HRVXp7H1R6p+/Wt4FPy/PpWwscOLRJ+PVWF/+W0iVyGzs18TIvXkOJ1Wxm66vSXz+vylenrZcj1ub439W+K8RNCGTJi2p/TJ1K23VaXr35tRpnzmjxequgfcfyk6B/TGBVlyedsNgpdd/h+W1U3P99QyFPNo1X3TwpM/WLTIWYfoBqXrv6iskHZ/RFr79R6hIyHBrH3f1nrUVnjP8SnZZ+rYtzr9Exld5MNbPNErusAPg+77u/eDOPftU9yj39TH7rezxd1LvsZQJlzkWlOirG/79zjMj/mtHUKu7vKy+3/LnXr9okyKedjX5/0He9iP/j63LwOQdarEVlfy8OO/Lqw023j6xcqmwxLiOd6heM2i9cV9LJy8jMJ23yQ+rpbfu7EQ/pXE8KYvUSqvVnb4XzZa6LrHMXHR+zcLvqWbm/Bn0/HzIs6fWPHoat8XfnDKmZGxRxeMbn2UqZ5Q94nmcZRbqqUXbZ8+lcjE+cPX11t814orvvAXNcG8vqj2vvk1MGn3anlj0bIT72v47bvE+Lc98T9b6r7AKn6j+8Duf7D0nnZx/j7Zjn0j9nbpSTndaLr9WNLivP+iN23xF7L+fqv6ZouFyb78jxVXvv5jJ9YUs9/sddO8h7KNg5jrhfaJGztT6G7KF+1d6yCmD5Kdb2fan60rSc552fZr3zeQ9DpnPp+Si5cx5Ktv2QfSzF/mMbWdOm46rFI4XstnU9xeqX4NKb7TKEdcr6pZOK3ID1k/LvFHkVczEuZLEDr499YqvqBym1aEHWgcvoYOtv0M91qQl5TfpO/in6rWx8OVpT1Wedkv3f5xom3T/xeR/6Gx6V86PWAOB4bBpqWdN+yTcVxjIyGRz/FrDGu6w/3d7kPm8StX8RyPu+uuvpNju/vTLJV37GpvoM0oZPnW87VLnL/5pDno1NoW1R6yedU6TyUv3u19a3KFnIbTLYz+ZCLP4T0tU1uivFgso0pnsJ/UtXvarNY28Xq5cvkBDrQP/E5ZaiuQwwfmTlsOiQRU1fMuqrDd/3ISSuwjOwXOfTyGUMpZIXq4GpLn3pUcdfzch2x7XO1u2uZHOPb1G6b3Xg9PH1IIWeEpJlPQtqos2EKW8b0u8rnuP1UeVLoXJb9be0uG9nnbchjU+XTszT5VeNBThPHnc5OKj1U9aj0GTHIVaGy1YhEWT4ixns00DT+XEzWn/7VAsIc63Cov3OdyhwjrnaqQqZvWKXdypRdlq+k8msZ031U+Rm4fA+3TtyeR9hwfW9G9yxDN0fZMN33F+9TE6md4hwoxumfaUzI9fN3PFT3xVV2msrQ3UsnChm6Nulk8TndpS28D3zX9tTIPsF/z7Am5OkTjm1tI1JZW74+4VgsZ0N3L1yXV3WeP5uR7TGHHdvC3JQlxybfpd22tDlk/2eofRK8TzrN/qnar/K/OUTth6I/+jAnEptNbPvFHP2gs40N3+dfMWtwqvVct7/wfd8gtQ7imifial9ZJ9/3IHLYU6eDj3+4PhsNhX+vwvcWLnu6kGfEMe8DuciPfUfGZB8X/7HJy/Gefe5n+VRGFd/wyP2ta7/LO4yh/sbLV/k9lev6kfO9Dt/5U67b1/6u/epqB1U9Me23jfHY9sscAg4tkbLl+e4/U36rJ9ddxfd6sg5vq5ice42Wpk/pb9FOJ36/W9tpv4kbC79nUbZceX8Zu6/qJ+P3WvhvA8v3reh7Jbn2d6rrNC7XNZTLma4Ba0JI9efX2uLzF5scG/w9UNU1ZxW+ymUfzELeTllXlQ1rUuhzjS5fp9c964iFBOqeSz63bU065nZKdU+mDEz3qHIjjifquw0pnb/raRtvrnsYcb46ihT3taoYz6brdNW9l6rWRnE/navdPn1XlR1km7hcz1WlH/elKuSOSvLLuE8U6m8uzwRdfcGl73VyTHuyMvzJ1Sa2cWDTP/Z63Kc94n2B1PYr24dz1JlyHLlcP+S4B6vD1c9EW4q2LWstCvUjeVy63k/LMYdUNd5D1xQfvVTzX1VjkMsUv88N8VH5fReVn/Fjn++/h6X6Q8a6b1/q3g/i/ewi0/Scs8zxXeV6mWIOUPlPzBgdFerW+bZrm2P18dnjuK6HunEp+rHvPMXbr+sHVb/lnL+pTP57jPw9Cvk3PW178JD9qChfzuvTf7Htl38L1QUf/VKu9SFjwWbTWPvFEvu7Uq76y7+31g6QlYPc669pbsm9Xur2LWI9Pu8ypfDXqm3A2z8s1FWGn4ntL9NfQu2oSlftX9uetvTtv7J8Ql4zxfXGZ3zk8PeQ9w59x2uMfqI8/q5eKh/l9cb2rwsu9rSNl06ZP2Pmxtz+rNMx93yno0n2/82rVH7rQ+y9P15H6FyRun9ViH81ATmffI7nJ5r8uXXW6enbP6b/B8/l5OifVHYLnb9S39s2zcc+Ph+rh8+eQgVPS72elzGWY/tUtbbabBpDiI7yN1q6/4th2y+ErAc5+9BVvu/7KamJbWNZeuqI/R4tRf+YyD1HmOZM1bMV3/14Sn10c0Xu+Sj1nOXb5jL73ncdy02uvlXZNde65dOHYl7Vs4KYuS6FzWLn2zJlpZqPXPVPOa5yzKOyn1VhT9lmMfdbfH7D11Wf2PXN5h9y+dD287+qxgSnaYmnIrRtIb8pJe6/Uv9OVer6Whn0zfGO/BEloZI9ojmfAlUflClDd178bTmVHVTpZXOkAlk/lb42UujmI89HH5V+cl7XtowY6vTxLVWok6UrGzoGTHN+bB+6ri05687VNpvfuvRfaP2uMlNQth1D5JjGelm/8yn+9p3p/7qk9gnfeddXZmq/Sm333PJT659Kv1zjNbZ9uv2Oi//67CV8/N1nj1DmviyXDNVeJkaeaX8UsyesYg8cu2+NvdaPfb+lLDu5tvt/"), ge = new le(Ue), ii = function(x) {
+  switch (x) {
+    case he:
+      return ot;
     case be:
-      return rt;
-    case q:
-      return ci;
+    case Se:
+    case Be:
+      return ot;
+    case Ce:
+      return ue;
     default:
-      return a;
+      return x;
+  }
+}, ei = function(x) {
+  switch (x) {
+    case It:
+    case Ui:
+      return xt;
+    case Y:
+      return Ae;
+    default:
+      return x;
   }
 };
-class bt {
+class Bt {
   constructor(t, e = !1) {
     this.position = t, this.required = e;
   }
 }
-class vi {
+class Ne {
   nextCodePoint() {
     const t = this.string.charCodeAt(this.pos++), e = this.string.charCodeAt(this.pos);
     return 55296 <= t && t <= 56319 && 56320 <= e && e <= 57343 ? (this.pos++, (t - 55296) * 1024 + (e - 56320) + 65536) : t;
   }
   nextCharClass() {
-    return qt(bi.get(this.nextCodePoint()));
+    return ii(ge.get(this.nextCodePoint()));
   }
   getSimpleBreak() {
     switch (this.nextClass) {
-      case q:
+      case Y:
         return !1;
-      case rt:
-      case Ct:
-      case be:
-        return this.curClass = rt, !1;
-      case mt:
-        return this.curClass = mt, !1;
+      case xt:
+      case It:
+      case Ui:
+        return this.curClass = xt, !1;
+      case St:
+        return this.curClass = St, !1;
     }
     return null;
   }
   getPairTableBreak(t) {
     let e = !1;
-    switch (pi[this.curClass][this.nextClass]) {
+    switch (Ke[this.curClass][this.nextClass]) {
       case n:
         e = !0;
         break;
-      case r:
-        e = t === q;
+      case s:
+        e = t === Y;
         break;
-      case D:
-        if (e = t === q, !e)
+      case U:
+        if (e = t === Y, !e)
           return e = !1, e;
         break;
-      case ve:
-        if (t !== q) return e;
+      case gi:
+        if (t !== Y) return e;
         break;
     }
-    return this.LB8a && (e = !1), this.LB21a && (this.curClass === li || this.curClass === hi) ? (e = !1, this.LB21a = !1) : this.LB21a = this.curClass === ai, this.curClass === $t ? (this.LB30a++, this.LB30a == 2 && this.nextClass === $t && (e = !0, this.LB30a = 0)) : this.LB30a = 0, this.curClass = this.nextClass, e;
+    return this.LB8a && (e = !1), this.LB21a && (this.curClass === _e || this.curClass === Le) ? (e = !1, this.LB21a = !1) : this.LB21a = this.curClass === Te, this.curClass === dt ? (this.LB30a++, this.LB30a == 2 && this.nextClass === dt && (e = !0, this.LB30a = 0)) : this.LB30a = 0, this.curClass = this.nextClass, e;
   }
   nextBreak() {
     if (this.curClass == null) {
       let t = this.nextCharClass();
-      this.curClass = Kt(t), this.nextClass = t, this.LB8a = t === jt, this.LB30a = 0;
+      this.curClass = ei(t), this.nextClass = t, this.LB8a = t === ti, this.LB30a = 0;
     }
     for (; this.pos < this.string.length; ) {
       this.lastPos = this.pos;
       const t = this.nextClass;
-      if (this.nextClass = this.nextCharClass(), this.curClass === rt || this.curClass === mt && this.nextClass !== Ct)
-        return this.curClass = Kt(qt(this.nextClass)), new bt(this.lastPos, !0);
+      if (this.nextClass = this.nextCharClass(), this.curClass === xt || this.curClass === St && this.nextClass !== It)
+        return this.curClass = ei(ii(this.nextClass)), new Bt(this.lastPos, !0);
       let e = this.getSimpleBreak();
-      if (e === null && (e = this.getPairTableBreak(t)), this.LB8a = this.nextClass === jt, e) return new bt(this.lastPos);
+      if (e === null && (e = this.getPairTableBreak(t)), this.LB8a = this.nextClass === ti, e) return new Bt(this.lastPos);
     }
-    return this.lastPos < this.string.length ? (this.lastPos = this.string.length, new bt(this.string.length)) : null;
+    return this.lastPos < this.string.length ? (this.lastPos = this.string.length, new Bt(this.string.length)) : null;
   }
   constructor(t) {
     this.string = t, this.pos = 0, this.lastPos = 0, this.curClass = null, this.nextClass = null, this.LB8a = !1, this.LB21a = !1, this.LB30a = 0;
   }
 }
-me = vi;
-var we = {};
-const wi = 0, xi = 1, Ei = 2, yi = 3, Ti = 4, Si = 5, Di = 6, Ci = 7, Ai = 8, ki = 9, Ii = 10, Mi = 11, Li = {
-  Other: wi,
-  CR: xi,
-  LF: Ei,
-  Control: yi,
-  Extend: Ti,
-  Regional_Indicator: Si,
-  SpacingMark: Di,
-  L: Ci,
-  V: Ai,
-  T: ki,
-  LV: Ii,
-  LVT: Mi
-};
-var vt, Zt;
-function Fi() {
-  if (Zt) return vt;
-  Zt = 1;
-  var a, t;
-  return t = de, a = function() {
-    var e, i, s, o, l, u, c, f, d, _, w, E, g, m, k, T;
-    E = 11, m = 5, g = E - m, w = 65536 >> E, l = 1 << g, c = l - 1, f = 2, e = 1 << m, s = e - 1, _ = 65536 >> m, d = 1024 >> m, u = _ + d, T = u, k = 32, o = T + k, i = 1 << f;
-    function b(p) {
-      var v, S, A;
-      v = typeof p.readUInt32BE == "function" && typeof p.slice == "function", v || p instanceof Uint8Array ? (v ? (this.highStart = p.readUInt32BE(0), this.errorValue = p.readUInt32BE(4), S = p.readUInt32BE(8), p = p.slice(12)) : (A = new DataView(p.buffer), this.highStart = A.getUint32(0), this.errorValue = A.getUint32(4), S = A.getUint32(8), p = p.subarray(12)), p = t(p, new Uint8Array(S)), p = t(p, new Uint8Array(S)), this.data = new Uint32Array(p.buffer)) : (this.data = p.data, this.highStart = p.highStart, this.errorValue = p.errorValue);
+Ki = Ne;
+var Ni = {}, kt = {}, Ft = {};
+(function(x) {
+  Object.defineProperty(x, "__esModule", { value: !0 }), x.EXTENDED_PICTOGRAPHIC = x.CLUSTER_BREAK = void 0, function(t) {
+    t[t.CR = 0] = "CR", t[t.LF = 1] = "LF", t[t.CONTROL = 2] = "CONTROL", t[t.EXTEND = 3] = "EXTEND", t[t.REGIONAL_INDICATOR = 4] = "REGIONAL_INDICATOR", t[t.SPACINGMARK = 5] = "SPACINGMARK", t[t.L = 6] = "L", t[t.V = 7] = "V", t[t.T = 8] = "T", t[t.LV = 9] = "LV", t[t.LVT = 10] = "LVT", t[t.OTHER = 11] = "OTHER", t[t.PREPEND = 12] = "PREPEND", t[t.E_BASE = 13] = "E_BASE", t[t.E_MODIFIER = 14] = "E_MODIFIER", t[t.ZWJ = 15] = "ZWJ", t[t.GLUE_AFTER_ZWJ = 16] = "GLUE_AFTER_ZWJ", t[t.E_BASE_GAZ = 17] = "E_BASE_GAZ";
+  }(x.CLUSTER_BREAK || (x.CLUSTER_BREAK = {})), x.EXTENDED_PICTOGRAPHIC = 101;
+})(Ft);
+var Ht = {};
+Object.defineProperty(Ht, "__esModule", { value: !0 });
+const K = Ft, y = 0, Kt = 1, De = 2, Ve = 3, pe = 4;
+class me {
+  /**
+   * Check if the the character at the position {pos} of the string is surrogate
+   * @param str {string}
+   * @param pos {number}
+   * @returns {boolean}
+   */
+  static isSurrogate(t, e) {
+    return 55296 <= t.charCodeAt(e) && t.charCodeAt(e) <= 56319 && 56320 <= t.charCodeAt(e + 1) && t.charCodeAt(e + 1) <= 57343;
+  }
+  /**
+   * The String.prototype.codePointAt polyfill
+   * Private function, gets a Unicode code point from a JavaScript UTF-16 string
+   * handling surrogate pairs appropriately
+   * @param str {string}
+   * @param idx {number}
+   * @returns {number}
+   */
+  static codePointAt(t, e) {
+    e === void 0 && (e = 0);
+    const r = t.charCodeAt(e);
+    if (55296 <= r && r <= 56319 && e < t.length - 1) {
+      const f = r, E = t.charCodeAt(e + 1);
+      return 56320 <= E && E <= 57343 ? (f - 55296) * 1024 + (E - 56320) + 65536 : f;
     }
-    return b.prototype.get = function(p) {
-      var v;
-      return p < 0 || p > 1114111 ? this.errorValue : p < 55296 || p > 56319 && p <= 65535 ? (v = (this.data[p >> m] << f) + (p & s), this.data[v]) : p <= 65535 ? (v = (this.data[_ + (p - 55296 >> m)] << f) + (p & s), this.data[v]) : p < this.highStart ? (v = this.data[o - w + (p >> E)], v = this.data[v + (p >> m & c)], v = (v << f) + (p & s), this.data[v]) : this.data[this.data.length - i];
-    }, b;
-  }(), vt = a, vt;
+    if (56320 <= r && r <= 57343 && e >= 1) {
+      const f = t.charCodeAt(e - 1), E = r;
+      return 55296 <= f && f <= 56319 ? (f - 55296) * 1024 + (E - 56320) + 65536 : E;
+    }
+    return r;
+  }
+  //
+  /**
+   * Private function, returns whether a break is allowed between the two given grapheme breaking classes
+   * Implemented the UAX #29 3.1.1 Grapheme Cluster Boundary Rules on extended grapheme clusters
+   * @param start {number}
+   * @param mid {Array<number>}
+   * @param end {number}
+   * @param startEmoji {number}
+   * @param midEmoji {Array<number>}
+   * @param endEmoji {number}
+   * @returns {number}
+   */
+  static shouldBreak(t, e, r, f, E, a) {
+    const u = [t].concat(e).concat([r]), R = [f].concat(E).concat([a]), T = u[u.length - 2], _ = r, L = a, b = u.lastIndexOf(K.CLUSTER_BREAK.REGIONAL_INDICATOR);
+    if (b > 0 && u.slice(1, b).every(function(A) {
+      return A === K.CLUSTER_BREAK.REGIONAL_INDICATOR;
+    }) && [K.CLUSTER_BREAK.PREPEND, K.CLUSTER_BREAK.REGIONAL_INDICATOR].indexOf(T) === -1)
+      return u.filter(function(A) {
+        return A === K.CLUSTER_BREAK.REGIONAL_INDICATOR;
+      }).length % 2 === 1 ? Ve : pe;
+    if (T === K.CLUSTER_BREAK.CR && _ === K.CLUSTER_BREAK.LF)
+      return y;
+    if (T === K.CLUSTER_BREAK.CONTROL || T === K.CLUSTER_BREAK.CR || T === K.CLUSTER_BREAK.LF)
+      return Kt;
+    if (_ === K.CLUSTER_BREAK.CONTROL || _ === K.CLUSTER_BREAK.CR || _ === K.CLUSTER_BREAK.LF)
+      return Kt;
+    if (T === K.CLUSTER_BREAK.L && (_ === K.CLUSTER_BREAK.L || _ === K.CLUSTER_BREAK.V || _ === K.CLUSTER_BREAK.LV || _ === K.CLUSTER_BREAK.LVT))
+      return y;
+    if ((T === K.CLUSTER_BREAK.LV || T === K.CLUSTER_BREAK.V) && (_ === K.CLUSTER_BREAK.V || _ === K.CLUSTER_BREAK.T))
+      return y;
+    if ((T === K.CLUSTER_BREAK.LVT || T === K.CLUSTER_BREAK.T) && _ === K.CLUSTER_BREAK.T)
+      return y;
+    if (_ === K.CLUSTER_BREAK.EXTEND || _ === K.CLUSTER_BREAK.ZWJ)
+      return y;
+    if (_ === K.CLUSTER_BREAK.SPACINGMARK)
+      return y;
+    if (T === K.CLUSTER_BREAK.PREPEND)
+      return y;
+    const S = R.slice(0, -1).lastIndexOf(K.EXTENDED_PICTOGRAPHIC);
+    return S !== -1 && R[S] === K.EXTENDED_PICTOGRAPHIC && u.slice(S + 1, -2).every(function(A) {
+      return A === K.CLUSTER_BREAK.EXTEND;
+    }) && T === K.CLUSTER_BREAK.ZWJ && L === K.EXTENDED_PICTOGRAPHIC ? y : e.indexOf(K.CLUSTER_BREAK.REGIONAL_INDICATOR) !== -1 ? De : T === K.CLUSTER_BREAK.REGIONAL_INDICATOR && _ === K.CLUSTER_BREAK.REGIONAL_INDICATOR ? y : Kt;
+  }
 }
-const Bi = {}, Ni = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({ __proto__: null, default: Bi }, Symbol.toStringTag, { value: "Module" })), Oi = /* @__PURE__ */ Le(Ni);
-(function(a) {
-  (function() {
-    var t, e, i, s, o, l, u, c, f, d, _, w, E, g, m, k, T;
-    T = Li, t = T.CR, o = T.LF, e = T.Control, i = T.Extend, c = T.Regional_Indicator, f = T.SpacingMark, s = T.L, w = T.V, d = T.T, l = T.LV, u = T.LVT, _ = Fi(), m = Oi, E = new _(m.readFileSync(__dirname + "/classes.trie")), g = function(b, p) {
-      var v, S, A;
-      return p = p || 0, v = b.charCodeAt(p), 55296 <= v && v <= 56319 ? (S = v, A = b.charCodeAt(p + 1), 56320 <= A && A <= 57343 ? (S - 55296) * 1024 + (A - 56320) + 65536 : S) : 56320 <= v && v <= 57343 ? (S = b.charCodeAt(p - 1), A = v, 55296 <= S && S <= 56319 ? (S - 55296) * 1024 + (A - 56320) + 65536 : A) : v;
-    }, k = function(b, p) {
-      return b === t && p === o ? !1 : b === e || b === t || b === o || p === e || p === t || p === o ? !0 : b === s && (p === s || p === w || p === l || p === u) || (b === l || b === w) && (p === w || p === d) || (b === u || b === d) && p === d || b === c && p === c || p === i ? !1 : p !== f;
-    }, a.nextBreak = function(b, p) {
-      var v, S, A, I, z, X, Pt;
-      if (p == null && (p = 0), p < 0)
-        return 0;
-      if (p >= b.length - 1)
-        return b.length;
-      for (A = E.get(g(b, p)), v = I = p + 1, z = b.length; I < z; v = I += 1)
-        if (!(55296 <= (X = b.charCodeAt(v - 1)) && X <= 56319 && 56320 <= (Pt = b.charCodeAt(v)) && Pt <= 57343)) {
-          if (S = E.get(g(b, v)), k(A, S))
-            return v;
-          A = S;
-        }
-      return b.length;
-    }, a.previousBreak = function(b, p) {
-      var v, S, A, I, z, X;
-      if (p == null && (p = b.length), p > b.length)
-        return b.length;
-      if (p <= 1)
-        return 0;
-      for (p--, S = E.get(g(b, p)), v = I = p - 1; I >= 0; v = I += -1)
-        if (!(55296 <= (z = b.charCodeAt(v)) && z <= 56319 && 56320 <= (X = b.charCodeAt(v + 1)) && X <= 57343)) {
-          if (A = E.get(g(b, v)), k(A, S))
-            return v + 1;
-          S = A;
-        }
+Ht.default = me;
+var zt = {};
+Object.defineProperty(zt, "__esModule", { value: !0 });
+class Ie {
+  constructor(t, e) {
+    this._index = 0, this._str = t, this._nextBreak = e;
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+  next() {
+    let t;
+    if ((t = this._nextBreak(this._str, this._index)) < this._str.length) {
+      const e = this._str.slice(this._index, t);
+      return this._index = t, { value: e, done: !1 };
+    }
+    if (this._index < this._str.length) {
+      const e = this._str.slice(this._index);
+      return this._index = this._str.length, { value: e, done: !1 };
+    }
+    return { value: void 0, done: !0 };
+  }
+}
+zt.default = Ie;
+var Di = Rt && Rt.__importDefault || function(x) {
+  return x && x.__esModule ? x : { default: x };
+};
+Object.defineProperty(kt, "__esModule", { value: !0 });
+const i = Ft, rt = Di(Ht), Pe = Di(zt);
+class O {
+  /**
+   * Returns the next grapheme break in the string after the given index
+   * @param string {string}
+   * @param index {number}
+   * @returns {number}
+   */
+  static nextBreak(t, e) {
+    if (e === void 0 && (e = 0), e < 0)
       return 0;
-    }, a.break = function(b) {
-      var p, v, S;
-      for (S = [], v = 0; (p = a.nextBreak(b, v)) < b.length; )
-        S.push(b.slice(v, p)), v = p;
-      return v < b.length && S.push(b.slice(v)), S;
-    }, a.countBreaks = function(b) {
-      var p, v, S;
-      for (v = 0, S = 0; (p = a.nextBreak(b, S)) < b.length; )
-        S = p, v++;
-      return S < b.length && v++, v;
-    };
-  }).call(Me);
-})(we);
-const Pi = /* @__PURE__ */ ut(we);
-class Ri {
+    if (e >= t.length - 1)
+      return t.length;
+    const r = rt.default.codePointAt(t, e), f = O.getGraphemeBreakProperty(r), E = O.getEmojiProperty(r), a = [], u = [];
+    for (let R = e + 1; R < t.length; R++) {
+      if (rt.default.isSurrogate(t, R - 1))
+        continue;
+      const T = rt.default.codePointAt(t, R), _ = O.getGraphemeBreakProperty(T), L = O.getEmojiProperty(T);
+      if (rt.default.shouldBreak(f, a, _, E, u, L))
+        return R;
+      a.push(_), u.push(L);
+    }
+    return t.length;
+  }
+  /**
+   * Breaks the given string into an array of grapheme clusters
+   * @param str {string}
+   * @returns {string[]}
+   */
+  splitGraphemes(t) {
+    const e = [];
+    let r = 0, f;
+    for (; (f = O.nextBreak(t, r)) < t.length; )
+      e.push(t.slice(r, f)), r = f;
+    return r < t.length && e.push(t.slice(r)), e;
+  }
+  /**
+   * Returns an iterator of grapheme clusters in the given string
+   * @param str {string}
+   * @returns {GraphemerIterator}
+   */
+  iterateGraphemes(t) {
+    return new Pe.default(t, O.nextBreak);
+  }
+  /**
+   * Returns the number of grapheme clusters in the given string
+   * @param str {string}
+   * @returns {number}
+   */
+  countGraphemes(t) {
+    let e = 0, r = 0, f;
+    for (; (f = O.nextBreak(t, r)) < t.length; )
+      r = f, e++;
+    return r < t.length && e++, e;
+  }
+  /**
+   * Given a Unicode code point, determines this symbol's grapheme break property
+   * @param code {number} Unicode code point
+   * @returns {number}
+   */
+  static getGraphemeBreakProperty(t) {
+    if (t < 48905) {
+      if (t < 44116) {
+        if (t < 4141) {
+          if (t < 2818) {
+            if (t < 2363)
+              if (t < 1759) {
+                if (t < 1471) {
+                  if (t < 127) {
+                    if (t < 11) {
+                      if (t < 10) {
+                        if (0 <= t && t <= 9)
+                          return i.CLUSTER_BREAK.CONTROL;
+                      } else if (t === 10)
+                        return i.CLUSTER_BREAK.LF;
+                    } else if (t < 13) {
+                      if (11 <= t && t <= 12)
+                        return i.CLUSTER_BREAK.CONTROL;
+                    } else if (t < 14) {
+                      if (t === 13)
+                        return i.CLUSTER_BREAK.CR;
+                    } else if (14 <= t && t <= 31)
+                      return i.CLUSTER_BREAK.CONTROL;
+                  } else if (t < 768) {
+                    if (t < 173) {
+                      if (127 <= t && t <= 159)
+                        return i.CLUSTER_BREAK.CONTROL;
+                    } else if (t === 173)
+                      return i.CLUSTER_BREAK.CONTROL;
+                  } else if (t < 1155) {
+                    if (768 <= t && t <= 879)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 1425) {
+                    if (1155 <= t && t <= 1161)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (1425 <= t && t <= 1469)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 1552) {
+                  if (t < 1476) {
+                    if (t < 1473) {
+                      if (t === 1471)
+                        return i.CLUSTER_BREAK.EXTEND;
+                    } else if (1473 <= t && t <= 1474)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 1479) {
+                    if (1476 <= t && t <= 1477)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 1536) {
+                    if (t === 1479)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (1536 <= t && t <= 1541)
+                    return i.CLUSTER_BREAK.PREPEND;
+                } else if (t < 1648) {
+                  if (t < 1564) {
+                    if (1552 <= t && t <= 1562)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 1611) {
+                    if (t === 1564)
+                      return i.CLUSTER_BREAK.CONTROL;
+                  } else if (1611 <= t && t <= 1631)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 1750) {
+                  if (t === 1648)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 1757) {
+                  if (1750 <= t && t <= 1756)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 1757)
+                  return i.CLUSTER_BREAK.PREPEND;
+              } else if (t < 2075) {
+                if (t < 1840)
+                  if (t < 1770) {
+                    if (t < 1767) {
+                      if (1759 <= t && t <= 1764)
+                        return i.CLUSTER_BREAK.EXTEND;
+                    } else if (1767 <= t && t <= 1768)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 1807) {
+                    if (1770 <= t && t <= 1773)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else {
+                    if (t === 1807)
+                      return i.CLUSTER_BREAK.PREPEND;
+                    if (t === 1809)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  }
+                else if (t < 2027) {
+                  if (t < 1958) {
+                    if (1840 <= t && t <= 1866)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (1958 <= t && t <= 1968)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2045) {
+                  if (2027 <= t && t <= 2035)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2070) {
+                  if (t === 2045)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (2070 <= t && t <= 2073)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2200) {
+                if (t < 2089) {
+                  if (t < 2085) {
+                    if (2075 <= t && t <= 2083)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (2085 <= t && t <= 2087)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2137) {
+                  if (2089 <= t && t <= 2093)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2192) {
+                  if (2137 <= t && t <= 2139)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (2192 <= t && t <= 2193)
+                  return i.CLUSTER_BREAK.PREPEND;
+              } else if (t < 2275) {
+                if (t < 2250) {
+                  if (2200 <= t && t <= 2207)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2274) {
+                  if (2250 <= t && t <= 2273)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 2274)
+                  return i.CLUSTER_BREAK.PREPEND;
+              } else if (t < 2307) {
+                if (2275 <= t && t <= 2306)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else {
+                if (t === 2307)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+                if (t === 2362)
+                  return i.CLUSTER_BREAK.EXTEND;
+              }
+            else if (t < 2561) {
+              if (t < 2434) {
+                if (t < 2381) {
+                  if (t < 2366) {
+                    if (t === 2363)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                    if (t === 2364)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 2369) {
+                    if (2366 <= t && t <= 2368)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (t < 2377) {
+                    if (2369 <= t && t <= 2376)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (2377 <= t && t <= 2380)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 2385) {
+                  if (t < 2382) {
+                    if (t === 2381)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (2382 <= t && t <= 2383)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 2402) {
+                  if (2385 <= t && t <= 2391)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2433) {
+                  if (2402 <= t && t <= 2403)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 2433)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2503) {
+                if (t < 2494) {
+                  if (t < 2492) {
+                    if (2434 <= t && t <= 2435)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (t === 2492)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2495) {
+                  if (t === 2494)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2497) {
+                  if (2495 <= t && t <= 2496)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (2497 <= t && t <= 2500)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2519) {
+                if (t < 2507) {
+                  if (2503 <= t && t <= 2504)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 2509) {
+                  if (2507 <= t && t <= 2508)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t === 2509)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2530) {
+                if (t === 2519)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2558) {
+                if (2530 <= t && t <= 2531)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t === 2558)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 2691) {
+              if (t < 2631) {
+                if (t < 2620) {
+                  if (t < 2563) {
+                    if (2561 <= t && t <= 2562)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t === 2563)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 2622) {
+                  if (t === 2620)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2625) {
+                  if (2622 <= t && t <= 2624)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (2625 <= t && t <= 2626)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2672) {
+                if (t < 2635) {
+                  if (2631 <= t && t <= 2632)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2641) {
+                  if (2635 <= t && t <= 2637)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 2641)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2677) {
+                if (2672 <= t && t <= 2673)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2689) {
+                if (t === 2677)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (2689 <= t && t <= 2690)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 2761) {
+              if (t < 2750) {
+                if (t === 2691)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+                if (t === 2748)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 2753) {
+                if (2750 <= t && t <= 2752)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 2759) {
+                if (2753 <= t && t <= 2757)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (2759 <= t && t <= 2760)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 2786) {
+              if (t < 2763) {
+                if (t === 2761)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 2765) {
+                if (2763 <= t && t <= 2764)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t === 2765)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 2810) {
+              if (2786 <= t && t <= 2787)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 2817) {
+              if (2810 <= t && t <= 2815)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t === 2817)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 3315) {
+            if (t < 3076) {
+              if (t < 2946) {
+                if (t < 2887) {
+                  if (t < 2878) {
+                    if (t < 2876) {
+                      if (2818 <= t && t <= 2819)
+                        return i.CLUSTER_BREAK.SPACINGMARK;
+                    } else if (t === 2876)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 2880) {
+                    if (2878 <= t && t <= 2879)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 2881) {
+                    if (t === 2880)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (2881 <= t && t <= 2884)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2893) {
+                  if (t < 2891) {
+                    if (2887 <= t && t <= 2888)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (2891 <= t && t <= 2892)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 2901) {
+                  if (t === 2893)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 2914) {
+                  if (2901 <= t && t <= 2903)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (2914 <= t && t <= 2915)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3014) {
+                if (t < 3007) {
+                  if (t === 2946 || t === 3006)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 3008) {
+                  if (t === 3007)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 3009) {
+                  if (t === 3008)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (3009 <= t && t <= 3010)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 3031) {
+                if (t < 3018) {
+                  if (3014 <= t && t <= 3016)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 3021) {
+                  if (3018 <= t && t <= 3020)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t === 3021)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3072) {
+                if (t === 3031)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3073) {
+                if (t === 3072)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (3073 <= t && t <= 3075)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 3262) {
+              if (t < 3146) {
+                if (t < 3134) {
+                  if (t === 3076 || t === 3132)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 3137) {
+                  if (3134 <= t && t <= 3136)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 3142) {
+                  if (3137 <= t && t <= 3140)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (3142 <= t && t <= 3144)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3201) {
+                if (t < 3157) {
+                  if (3146 <= t && t <= 3149)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 3170) {
+                  if (3157 <= t && t <= 3158)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (3170 <= t && t <= 3171)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3202) {
+                if (t === 3201)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3260) {
+                if (3202 <= t && t <= 3203)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t === 3260)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3270) {
+              if (t < 3264) {
+                if (t === 3262)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+                if (t === 3263)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3266) {
+                if (3264 <= t && t <= 3265)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 3267) {
+                if (t === 3266)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (3267 <= t && t <= 3268)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 3276) {
+              if (t < 3271) {
+                if (t === 3270)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3274) {
+                if (3271 <= t && t <= 3272)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (3274 <= t && t <= 3275)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 3285) {
+              if (3276 <= t && t <= 3277)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3298) {
+              if (3285 <= t && t <= 3286)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (3298 <= t && t <= 3299)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 3551) {
+            if (t < 3406) {
+              if (t < 3391) {
+                if (t < 3330) {
+                  if (t < 3328) {
+                    if (t === 3315)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (3328 <= t && t <= 3329)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 3387) {
+                  if (3330 <= t && t <= 3331)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 3390) {
+                  if (3387 <= t && t <= 3388)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 3390)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3398) {
+                if (t < 3393) {
+                  if (3391 <= t && t <= 3392)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (3393 <= t && t <= 3396)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3402) {
+                if (3398 <= t && t <= 3400)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 3405) {
+                if (3402 <= t && t <= 3404)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t === 3405)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3530) {
+              if (t < 3426) {
+                if (t === 3406)
+                  return i.CLUSTER_BREAK.PREPEND;
+                if (t === 3415)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3457) {
+                if (3426 <= t && t <= 3427)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3458) {
+                if (t === 3457)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (3458 <= t && t <= 3459)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 3538) {
+              if (t < 3535) {
+                if (t === 3530)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3536) {
+                if (t === 3535)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (3536 <= t && t <= 3537)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 3542) {
+              if (3538 <= t && t <= 3540)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3544) {
+              if (t === 3542)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (3544 <= t && t <= 3550)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 3893) {
+            if (t < 3655) {
+              if (t < 3633) {
+                if (t < 3570) {
+                  if (t === 3551)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (3570 <= t && t <= 3571)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 3635) {
+                if (t === 3633)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 3636) {
+                if (t === 3635)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (3636 <= t && t <= 3642)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3764)
+              if (t < 3761) {
+                if (3655 <= t && t <= 3662)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else {
+                if (t === 3761)
+                  return i.CLUSTER_BREAK.EXTEND;
+                if (t === 3763)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              }
+            else if (t < 3784) {
+              if (3764 <= t && t <= 3772)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3864) {
+              if (3784 <= t && t <= 3790)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (3864 <= t && t <= 3865)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 3967) {
+            if (t < 3897) {
+              if (t === 3893 || t === 3895)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3902) {
+              if (t === 3897)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 3953) {
+              if (3902 <= t && t <= 3903)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (3953 <= t && t <= 3966)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 3981) {
+            if (t < 3968) {
+              if (t === 3967)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 3974) {
+              if (3968 <= t && t <= 3972)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (3974 <= t && t <= 3975)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 3993) {
+            if (3981 <= t && t <= 3991)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 4038) {
+            if (3993 <= t && t <= 4028)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t === 4038)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 7204) {
+          if (t < 6448) {
+            if (t < 5938) {
+              if (t < 4226) {
+                if (t < 4157) {
+                  if (t < 4146) {
+                    if (t < 4145) {
+                      if (4141 <= t && t <= 4144)
+                        return i.CLUSTER_BREAK.EXTEND;
+                    } else if (t === 4145)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (t < 4153) {
+                    if (4146 <= t && t <= 4151)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t < 4155) {
+                    if (4153 <= t && t <= 4154)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (4155 <= t && t <= 4156)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 4184) {
+                  if (t < 4182) {
+                    if (4157 <= t && t <= 4158)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (4182 <= t && t <= 4183)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 4190) {
+                  if (4184 <= t && t <= 4185)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 4209) {
+                  if (4190 <= t && t <= 4192)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (4209 <= t && t <= 4212)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 4352) {
+                if (t < 4229) {
+                  if (t === 4226)
+                    return i.CLUSTER_BREAK.EXTEND;
+                  if (t === 4228)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 4237) {
+                  if (4229 <= t && t <= 4230)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 4237 || t === 4253)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 4957) {
+                if (t < 4448) {
+                  if (4352 <= t && t <= 4447)
+                    return i.CLUSTER_BREAK.L;
+                } else if (t < 4520) {
+                  if (4448 <= t && t <= 4519)
+                    return i.CLUSTER_BREAK.V;
+                } else if (4520 <= t && t <= 4607)
+                  return i.CLUSTER_BREAK.T;
+              } else if (t < 5906) {
+                if (4957 <= t && t <= 4959)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 5909) {
+                if (5906 <= t && t <= 5908)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t === 5909)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 6089) {
+              if (t < 6070) {
+                if (t < 5970) {
+                  if (t < 5940) {
+                    if (5938 <= t && t <= 5939)
+                      return i.CLUSTER_BREAK.EXTEND;
+                  } else if (t === 5940)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 6002) {
+                  if (5970 <= t && t <= 5971)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 6068) {
+                  if (6002 <= t && t <= 6003)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (6068 <= t && t <= 6069)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6078) {
+                if (t < 6071) {
+                  if (t === 6070)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (6071 <= t && t <= 6077)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6086) {
+                if (6078 <= t && t <= 6085)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 6087) {
+                if (t === 6086)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (6087 <= t && t <= 6088)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 6277)
+              if (t < 6155) {
+                if (t < 6109) {
+                  if (6089 <= t && t <= 6099)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 6109)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6158) {
+                if (6155 <= t && t <= 6157)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else {
+                if (t === 6158)
+                  return i.CLUSTER_BREAK.CONTROL;
+                if (t === 6159)
+                  return i.CLUSTER_BREAK.EXTEND;
+              }
+            else if (t < 6435) {
+              if (t < 6313) {
+                if (6277 <= t && t <= 6278)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6432) {
+                if (t === 6313)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (6432 <= t && t <= 6434)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 6439) {
+              if (6435 <= t && t <= 6438)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 6441) {
+              if (6439 <= t && t <= 6440)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (6441 <= t && t <= 6443)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 6971) {
+            if (t < 6744)
+              if (t < 6681) {
+                if (t < 6451) {
+                  if (t < 6450) {
+                    if (6448 <= t && t <= 6449)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (t === 6450)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 6457) {
+                  if (6451 <= t && t <= 6456)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 6679) {
+                  if (6457 <= t && t <= 6459)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (6679 <= t && t <= 6680)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6741) {
+                if (t < 6683) {
+                  if (6681 <= t && t <= 6682)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t === 6683)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6742) {
+                if (t === 6741)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else {
+                if (t === 6742)
+                  return i.CLUSTER_BREAK.EXTEND;
+                if (t === 6743)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              }
+            else if (t < 6771) {
+              if (t < 6754) {
+                if (t < 6752) {
+                  if (6744 <= t && t <= 6750)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 6752)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6757) {
+                if (t === 6754)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6765) {
+                if (6757 <= t && t <= 6764)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (6765 <= t && t <= 6770)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 6912) {
+              if (t < 6783) {
+                if (6771 <= t && t <= 6780)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6832) {
+                if (t === 6783)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (6832 <= t && t <= 6862)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 6916) {
+              if (6912 <= t && t <= 6915)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 6964) {
+              if (t === 6916)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (6964 <= t && t <= 6970)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 7080) {
+            if (t < 7019) {
+              if (t < 6973) {
+                if (t === 6971)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+                if (t === 6972)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 6978) {
+                if (6973 <= t && t <= 6977)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 6979) {
+                if (t === 6978)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (6979 <= t && t <= 6980)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 7073) {
+              if (t < 7040) {
+                if (7019 <= t && t <= 7027)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 7042) {
+                if (7040 <= t && t <= 7041)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t === 7042)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 7074) {
+              if (t === 7073)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 7078) {
+              if (7074 <= t && t <= 7077)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (7078 <= t && t <= 7079)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 7144)
+            if (t < 7083) {
+              if (t < 7082) {
+                if (7080 <= t && t <= 7081)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t === 7082)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 7142) {
+              if (7083 <= t && t <= 7085)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else {
+              if (t === 7142)
+                return i.CLUSTER_BREAK.EXTEND;
+              if (t === 7143)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            }
+          else if (t < 7150) {
+            if (t < 7146) {
+              if (7144 <= t && t <= 7145)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 7149) {
+              if (7146 <= t && t <= 7148)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t === 7149)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 7151) {
+            if (t === 7150)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 7154) {
+            if (7151 <= t && t <= 7153)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (7154 <= t && t <= 7155)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 43346) {
+          if (t < 11647) {
+            if (t < 7415) {
+              if (t < 7380) {
+                if (t < 7220) {
+                  if (t < 7212) {
+                    if (7204 <= t && t <= 7211)
+                      return i.CLUSTER_BREAK.SPACINGMARK;
+                  } else if (7212 <= t && t <= 7219)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t < 7222) {
+                  if (7220 <= t && t <= 7221)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (t < 7376) {
+                  if (7222 <= t && t <= 7223)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (7376 <= t && t <= 7378)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 7394) {
+                if (t < 7393) {
+                  if (7380 <= t && t <= 7392)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 7393)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 7405) {
+                if (7394 <= t && t <= 7400)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t === 7405 || t === 7412)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 8205)
+              if (t < 7616) {
+                if (t < 7416) {
+                  if (t === 7415)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (7416 <= t && t <= 7417)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 8203) {
+                if (7616 <= t && t <= 7679)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else {
+                if (t === 8203)
+                  return i.CLUSTER_BREAK.CONTROL;
+                if (t === 8204)
+                  return i.CLUSTER_BREAK.EXTEND;
+              }
+            else if (t < 8288) {
+              if (t < 8206) {
+                if (t === 8205)
+                  return i.CLUSTER_BREAK.ZWJ;
+              } else if (t < 8232) {
+                if (8206 <= t && t <= 8207)
+                  return i.CLUSTER_BREAK.CONTROL;
+              } else if (8232 <= t && t <= 8238)
+                return i.CLUSTER_BREAK.CONTROL;
+            } else if (t < 8400) {
+              if (8288 <= t && t <= 8303)
+                return i.CLUSTER_BREAK.CONTROL;
+            } else if (t < 11503) {
+              if (8400 <= t && t <= 8432)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (11503 <= t && t <= 11505)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 43043) {
+            if (t < 42612) {
+              if (t < 12330) {
+                if (t < 11744) {
+                  if (t === 11647)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (11744 <= t && t <= 11775)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 12441) {
+                if (12330 <= t && t <= 12335)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 42607) {
+                if (12441 <= t && t <= 12442)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (42607 <= t && t <= 42610)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43010) {
+              if (t < 42654) {
+                if (42612 <= t && t <= 42621)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 42736) {
+                if (42654 <= t && t <= 42655)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (42736 <= t && t <= 42737)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43014) {
+              if (t === 43010)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t === 43014 || t === 43019)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 43188) {
+            if (t < 43047) {
+              if (t < 43045) {
+                if (43043 <= t && t <= 43044)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (43045 <= t && t <= 43046)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43052) {
+              if (t === 43047)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 43136) {
+              if (t === 43052)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (43136 <= t && t <= 43137)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 43263) {
+            if (t < 43204) {
+              if (43188 <= t && t <= 43203)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 43232) {
+              if (43204 <= t && t <= 43205)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (43232 <= t && t <= 43249)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 43302) {
+            if (t === 43263)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 43335) {
+            if (43302 <= t && t <= 43309)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (43335 <= t && t <= 43345)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 43698) {
+          if (t < 43493) {
+            if (t < 43444)
+              if (t < 43392) {
+                if (t < 43360) {
+                  if (43346 <= t && t <= 43347)
+                    return i.CLUSTER_BREAK.SPACINGMARK;
+                } else if (43360 <= t && t <= 43388)
+                  return i.CLUSTER_BREAK.L;
+              } else if (t < 43395) {
+                if (43392 <= t && t <= 43394)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else {
+                if (t === 43395)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+                if (t === 43443)
+                  return i.CLUSTER_BREAK.EXTEND;
+              }
+            else if (t < 43450) {
+              if (t < 43446) {
+                if (43444 <= t && t <= 43445)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (43446 <= t && t <= 43449)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43452) {
+              if (43450 <= t && t <= 43451)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 43454) {
+              if (43452 <= t && t <= 43453)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (43454 <= t && t <= 43456)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 43573) {
+            if (t < 43567) {
+              if (t < 43561) {
+                if (t === 43493)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (43561 <= t && t <= 43566)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43569) {
+              if (43567 <= t && t <= 43568)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 43571) {
+              if (43569 <= t && t <= 43570)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (43571 <= t && t <= 43572)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 43597) {
+            if (t < 43587) {
+              if (43573 <= t && t <= 43574)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t === 43587 || t === 43596)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 43644) {
+            if (t === 43597)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t === 43644 || t === 43696)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 44006) {
+          if (t < 43756)
+            if (t < 43710) {
+              if (t < 43703) {
+                if (43698 <= t && t <= 43700)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (43703 <= t && t <= 43704)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43713) {
+              if (43710 <= t && t <= 43711)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else {
+              if (t === 43713)
+                return i.CLUSTER_BREAK.EXTEND;
+              if (t === 43755)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            }
+          else if (t < 43766) {
+            if (t < 43758) {
+              if (43756 <= t && t <= 43757)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 43765) {
+              if (43758 <= t && t <= 43759)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t === 43765)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 44003) {
+            if (t === 43766)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 44005) {
+            if (44003 <= t && t <= 44004)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t === 44005)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 44032)
+          if (t < 44009) {
+            if (t < 44008) {
+              if (44006 <= t && t <= 44007)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t === 44008)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 44012) {
+            if (44009 <= t && t <= 44010)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else {
+            if (t === 44012)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+            if (t === 44013)
+              return i.CLUSTER_BREAK.EXTEND;
+          }
+        else if (t < 44061) {
+          if (t < 44033) {
+            if (t === 44032)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 44060) {
+            if (44033 <= t && t <= 44059)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 44060)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 44088) {
+          if (44061 <= t && t <= 44087)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 44089) {
+          if (t === 44088)
+            return i.CLUSTER_BREAK.LV;
+        } else if (44089 <= t && t <= 44115)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 46497) {
+        if (t < 45293) {
+          if (t < 44704) {
+            if (t < 44397) {
+              if (t < 44256) {
+                if (t < 44173) {
+                  if (t < 44144) {
+                    if (t < 44117) {
+                      if (t === 44116)
+                        return i.CLUSTER_BREAK.LV;
+                    } else if (44117 <= t && t <= 44143)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t < 44145) {
+                    if (t === 44144)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (t < 44172) {
+                    if (44145 <= t && t <= 44171)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 44172)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 44201) {
+                  if (t < 44200) {
+                    if (44173 <= t && t <= 44199)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 44200)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 44228) {
+                  if (44201 <= t && t <= 44227)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 44229) {
+                  if (t === 44228)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (44229 <= t && t <= 44255)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44313) {
+                if (t < 44284) {
+                  if (t < 44257) {
+                    if (t === 44256)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (44257 <= t && t <= 44283)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 44285) {
+                  if (t === 44284)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 44312) {
+                  if (44285 <= t && t <= 44311)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 44312)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44368) {
+                if (t < 44340) {
+                  if (44313 <= t && t <= 44339)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 44341) {
+                  if (t === 44340)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (44341 <= t && t <= 44367)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44369) {
+                if (t === 44368)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44396) {
+                if (44369 <= t && t <= 44395)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 44396)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 44537) {
+              if (t < 44480) {
+                if (t < 44425) {
+                  if (t < 44424) {
+                    if (44397 <= t && t <= 44423)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 44424)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 44452) {
+                  if (44425 <= t && t <= 44451)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 44453) {
+                  if (t === 44452)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (44453 <= t && t <= 44479)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44508) {
+                if (t < 44481) {
+                  if (t === 44480)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (44481 <= t && t <= 44507)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44509) {
+                if (t === 44508)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44536) {
+                if (44509 <= t && t <= 44535)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 44536)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 44620) {
+              if (t < 44565) {
+                if (t < 44564) {
+                  if (44537 <= t && t <= 44563)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 44564)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44592) {
+                if (44565 <= t && t <= 44591)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44593) {
+                if (t === 44592)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (44593 <= t && t <= 44619)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 44649) {
+              if (t < 44621) {
+                if (t === 44620)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44648) {
+                if (44621 <= t && t <= 44647)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 44648)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 44676) {
+              if (44649 <= t && t <= 44675)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 44677) {
+              if (t === 44676)
+                return i.CLUSTER_BREAK.LV;
+            } else if (44677 <= t && t <= 44703)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 44985) {
+            if (t < 44844) {
+              if (t < 44761) {
+                if (t < 44732) {
+                  if (t < 44705) {
+                    if (t === 44704)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (44705 <= t && t <= 44731)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 44733) {
+                  if (t === 44732)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 44760) {
+                  if (44733 <= t && t <= 44759)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 44760)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44789) {
+                if (t < 44788) {
+                  if (44761 <= t && t <= 44787)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 44788)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44816) {
+                if (44789 <= t && t <= 44815)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44817) {
+                if (t === 44816)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (44817 <= t && t <= 44843)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 44901) {
+              if (t < 44872) {
+                if (t < 44845) {
+                  if (t === 44844)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (44845 <= t && t <= 44871)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44873) {
+                if (t === 44872)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 44900) {
+                if (44873 <= t && t <= 44899)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 44900)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 44956) {
+              if (t < 44928) {
+                if (44901 <= t && t <= 44927)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 44929) {
+                if (t === 44928)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (44929 <= t && t <= 44955)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 44957) {
+              if (t === 44956)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 44984) {
+              if (44957 <= t && t <= 44983)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 44984)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 45152) {
+            if (t < 45068) {
+              if (t < 45013) {
+                if (t < 45012) {
+                  if (44985 <= t && t <= 45011)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 45012)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45040) {
+                if (45013 <= t && t <= 45039)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45041) {
+                if (t === 45040)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (45041 <= t && t <= 45067)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45097) {
+              if (t < 45069) {
+                if (t === 45068)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45096) {
+                if (45069 <= t && t <= 45095)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45096)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45124) {
+              if (45097 <= t && t <= 45123)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45125) {
+              if (t === 45124)
+                return i.CLUSTER_BREAK.LV;
+            } else if (45125 <= t && t <= 45151)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 45209) {
+            if (t < 45180) {
+              if (t < 45153) {
+                if (t === 45152)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (45153 <= t && t <= 45179)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45181) {
+              if (t === 45180)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45208) {
+              if (45181 <= t && t <= 45207)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 45208)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 45264) {
+            if (t < 45236) {
+              if (45209 <= t && t <= 45235)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45237) {
+              if (t === 45236)
+                return i.CLUSTER_BREAK.LV;
+            } else if (45237 <= t && t <= 45263)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 45265) {
+            if (t === 45264)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 45292) {
+            if (45265 <= t && t <= 45291)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 45292)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 45908) {
+          if (t < 45600) {
+            if (t < 45433) {
+              if (t < 45376) {
+                if (t < 45321) {
+                  if (t < 45320) {
+                    if (45293 <= t && t <= 45319)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 45320)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 45348) {
+                  if (45321 <= t && t <= 45347)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 45349) {
+                  if (t === 45348)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (45349 <= t && t <= 45375)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45404) {
+                if (t < 45377) {
+                  if (t === 45376)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (45377 <= t && t <= 45403)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45405) {
+                if (t === 45404)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45432) {
+                if (45405 <= t && t <= 45431)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45432)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45516) {
+              if (t < 45461) {
+                if (t < 45460) {
+                  if (45433 <= t && t <= 45459)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 45460)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45488) {
+                if (45461 <= t && t <= 45487)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45489) {
+                if (t === 45488)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (45489 <= t && t <= 45515)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45545) {
+              if (t < 45517) {
+                if (t === 45516)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45544) {
+                if (45517 <= t && t <= 45543)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45544)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45572) {
+              if (45545 <= t && t <= 45571)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45573) {
+              if (t === 45572)
+                return i.CLUSTER_BREAK.LV;
+            } else if (45573 <= t && t <= 45599)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 45741) {
+            if (t < 45657) {
+              if (t < 45628) {
+                if (t < 45601) {
+                  if (t === 45600)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (45601 <= t && t <= 45627)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45629) {
+                if (t === 45628)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45656) {
+                if (45629 <= t && t <= 45655)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45656)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45712) {
+              if (t < 45684) {
+                if (45657 <= t && t <= 45683)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45685) {
+                if (t === 45684)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (45685 <= t && t <= 45711)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45713) {
+              if (t === 45712)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45740) {
+              if (45713 <= t && t <= 45739)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 45740)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 45824) {
+            if (t < 45769) {
+              if (t < 45768) {
+                if (45741 <= t && t <= 45767)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45768)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45796) {
+              if (45769 <= t && t <= 45795)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 45797) {
+              if (t === 45796)
+                return i.CLUSTER_BREAK.LV;
+            } else if (45797 <= t && t <= 45823)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 45853) {
+            if (t < 45825) {
+              if (t === 45824)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45852) {
+              if (45825 <= t && t <= 45851)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 45852)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 45880) {
+            if (45853 <= t && t <= 45879)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 45881) {
+            if (t === 45880)
+              return i.CLUSTER_BREAK.LV;
+          } else if (45881 <= t && t <= 45907)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 46189) {
+          if (t < 46048) {
+            if (t < 45965) {
+              if (t < 45936) {
+                if (t < 45909) {
+                  if (t === 45908)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (45909 <= t && t <= 45935)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 45937) {
+                if (t === 45936)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 45964) {
+                if (45937 <= t && t <= 45963)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45964)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 45993) {
+              if (t < 45992) {
+                if (45965 <= t && t <= 45991)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 45992)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46020) {
+              if (45993 <= t && t <= 46019)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46021) {
+              if (t === 46020)
+                return i.CLUSTER_BREAK.LV;
+            } else if (46021 <= t && t <= 46047)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46105) {
+            if (t < 46076) {
+              if (t < 46049) {
+                if (t === 46048)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (46049 <= t && t <= 46075)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46077) {
+              if (t === 46076)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46104) {
+              if (46077 <= t && t <= 46103)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 46104)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 46160) {
+            if (t < 46132) {
+              if (46105 <= t && t <= 46131)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46133) {
+              if (t === 46132)
+                return i.CLUSTER_BREAK.LV;
+            } else if (46133 <= t && t <= 46159)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46161) {
+            if (t === 46160)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 46188) {
+            if (46161 <= t && t <= 46187)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 46188)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 46356) {
+          if (t < 46272) {
+            if (t < 46217) {
+              if (t < 46216) {
+                if (46189 <= t && t <= 46215)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 46216)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46244) {
+              if (46217 <= t && t <= 46243)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46245) {
+              if (t === 46244)
+                return i.CLUSTER_BREAK.LV;
+            } else if (46245 <= t && t <= 46271)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46301) {
+            if (t < 46273) {
+              if (t === 46272)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46300) {
+              if (46273 <= t && t <= 46299)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 46300)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 46328) {
+            if (46301 <= t && t <= 46327)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46329) {
+            if (t === 46328)
+              return i.CLUSTER_BREAK.LV;
+          } else if (46329 <= t && t <= 46355)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 46413) {
+          if (t < 46384) {
+            if (t < 46357) {
+              if (t === 46356)
+                return i.CLUSTER_BREAK.LV;
+            } else if (46357 <= t && t <= 46383)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46385) {
+            if (t === 46384)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 46412) {
+            if (46385 <= t && t <= 46411)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 46412)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 46468) {
+          if (t < 46440) {
+            if (46413 <= t && t <= 46439)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46441) {
+            if (t === 46440)
+              return i.CLUSTER_BREAK.LV;
+          } else if (46441 <= t && t <= 46467)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 46469) {
+          if (t === 46468)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 46496) {
+          if (46469 <= t && t <= 46495)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 46496)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 47701) {
+        if (t < 47112) {
+          if (t < 46804) {
+            if (t < 46637) {
+              if (t < 46580) {
+                if (t < 46525) {
+                  if (t < 46524) {
+                    if (46497 <= t && t <= 46523)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 46524)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 46552) {
+                  if (46525 <= t && t <= 46551)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 46553) {
+                  if (t === 46552)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (46553 <= t && t <= 46579)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 46608) {
+                if (t < 46581) {
+                  if (t === 46580)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (46581 <= t && t <= 46607)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 46609) {
+                if (t === 46608)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 46636) {
+                if (46609 <= t && t <= 46635)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 46636)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46720) {
+              if (t < 46665) {
+                if (t < 46664) {
+                  if (46637 <= t && t <= 46663)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 46664)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 46692) {
+                if (46665 <= t && t <= 46691)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 46693) {
+                if (t === 46692)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (46693 <= t && t <= 46719)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46749) {
+              if (t < 46721) {
+                if (t === 46720)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 46748) {
+                if (46721 <= t && t <= 46747)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 46748)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46776) {
+              if (46749 <= t && t <= 46775)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46777) {
+              if (t === 46776)
+                return i.CLUSTER_BREAK.LV;
+            } else if (46777 <= t && t <= 46803)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 46945) {
+            if (t < 46861) {
+              if (t < 46832) {
+                if (t < 46805) {
+                  if (t === 46804)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (46805 <= t && t <= 46831)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 46833) {
+                if (t === 46832)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 46860) {
+                if (46833 <= t && t <= 46859)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 46860)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46916) {
+              if (t < 46888) {
+                if (46861 <= t && t <= 46887)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 46889) {
+                if (t === 46888)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (46889 <= t && t <= 46915)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 46917) {
+              if (t === 46916)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 46944) {
+              if (46917 <= t && t <= 46943)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 46944)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47028) {
+            if (t < 46973) {
+              if (t < 46972) {
+                if (46945 <= t && t <= 46971)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 46972)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47e3) {
+              if (46973 <= t && t <= 46999)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47001) {
+              if (t === 47e3)
+                return i.CLUSTER_BREAK.LV;
+            } else if (47001 <= t && t <= 47027)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47057) {
+            if (t < 47029) {
+              if (t === 47028)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47056) {
+              if (47029 <= t && t <= 47055)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 47056)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47084) {
+            if (47057 <= t && t <= 47083)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47085) {
+            if (t === 47084)
+              return i.CLUSTER_BREAK.LV;
+          } else if (47085 <= t && t <= 47111)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 47393) {
+          if (t < 47252) {
+            if (t < 47169) {
+              if (t < 47140) {
+                if (t < 47113) {
+                  if (t === 47112)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (47113 <= t && t <= 47139)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 47141) {
+                if (t === 47140)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 47168) {
+                if (47141 <= t && t <= 47167)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 47168)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47197) {
+              if (t < 47196) {
+                if (47169 <= t && t <= 47195)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 47196)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47224) {
+              if (47197 <= t && t <= 47223)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47225) {
+              if (t === 47224)
+                return i.CLUSTER_BREAK.LV;
+            } else if (47225 <= t && t <= 47251)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47309) {
+            if (t < 47280) {
+              if (t < 47253) {
+                if (t === 47252)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (47253 <= t && t <= 47279)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47281) {
+              if (t === 47280)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47308) {
+              if (47281 <= t && t <= 47307)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 47308)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47364) {
+            if (t < 47336) {
+              if (47309 <= t && t <= 47335)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47337) {
+              if (t === 47336)
+                return i.CLUSTER_BREAK.LV;
+            } else if (47337 <= t && t <= 47363)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47365) {
+            if (t === 47364)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47392) {
+            if (47365 <= t && t <= 47391)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 47392)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 47560) {
+          if (t < 47476) {
+            if (t < 47421) {
+              if (t < 47420) {
+                if (47393 <= t && t <= 47419)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 47420)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47448) {
+              if (47421 <= t && t <= 47447)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47449) {
+              if (t === 47448)
+                return i.CLUSTER_BREAK.LV;
+            } else if (47449 <= t && t <= 47475)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47505) {
+            if (t < 47477) {
+              if (t === 47476)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47504) {
+              if (47477 <= t && t <= 47503)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 47504)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47532) {
+            if (47505 <= t && t <= 47531)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47533) {
+            if (t === 47532)
+              return i.CLUSTER_BREAK.LV;
+          } else if (47533 <= t && t <= 47559)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 47617) {
+          if (t < 47588) {
+            if (t < 47561) {
+              if (t === 47560)
+                return i.CLUSTER_BREAK.LV;
+            } else if (47561 <= t && t <= 47587)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47589) {
+            if (t === 47588)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47616) {
+            if (47589 <= t && t <= 47615)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 47616)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 47672) {
+          if (t < 47644) {
+            if (47617 <= t && t <= 47643)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47645) {
+            if (t === 47644)
+              return i.CLUSTER_BREAK.LV;
+          } else if (47645 <= t && t <= 47671)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 47673) {
+          if (t === 47672)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 47700) {
+          if (47673 <= t && t <= 47699)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 47700)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 48316) {
+        if (t < 48008) {
+          if (t < 47841) {
+            if (t < 47784) {
+              if (t < 47729) {
+                if (t < 47728) {
+                  if (47701 <= t && t <= 47727)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 47728)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 47756) {
+                if (47729 <= t && t <= 47755)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 47757) {
+                if (t === 47756)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (47757 <= t && t <= 47783)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47812) {
+              if (t < 47785) {
+                if (t === 47784)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (47785 <= t && t <= 47811)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47813) {
+              if (t === 47812)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47840) {
+              if (47813 <= t && t <= 47839)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 47840)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47924) {
+            if (t < 47869) {
+              if (t < 47868) {
+                if (47841 <= t && t <= 47867)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 47868)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47896) {
+              if (47869 <= t && t <= 47895)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 47897) {
+              if (t === 47896)
+                return i.CLUSTER_BREAK.LV;
+            } else if (47897 <= t && t <= 47923)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47953) {
+            if (t < 47925) {
+              if (t === 47924)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 47952) {
+              if (47925 <= t && t <= 47951)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 47952)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 47980) {
+            if (47953 <= t && t <= 47979)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 47981) {
+            if (t === 47980)
+              return i.CLUSTER_BREAK.LV;
+          } else if (47981 <= t && t <= 48007)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48149) {
+          if (t < 48065) {
+            if (t < 48036) {
+              if (t < 48009) {
+                if (t === 48008)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (48009 <= t && t <= 48035)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 48037) {
+              if (t === 48036)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 48064) {
+              if (48037 <= t && t <= 48063)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 48064)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48120) {
+            if (t < 48092) {
+              if (48065 <= t && t <= 48091)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 48093) {
+              if (t === 48092)
+                return i.CLUSTER_BREAK.LV;
+            } else if (48093 <= t && t <= 48119)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 48121) {
+            if (t === 48120)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48148) {
+            if (48121 <= t && t <= 48147)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 48148)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 48232) {
+          if (t < 48177) {
+            if (t < 48176) {
+              if (48149 <= t && t <= 48175)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 48176)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48204) {
+            if (48177 <= t && t <= 48203)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 48205) {
+            if (t === 48204)
+              return i.CLUSTER_BREAK.LV;
+          } else if (48205 <= t && t <= 48231)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48261) {
+          if (t < 48233) {
+            if (t === 48232)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48260) {
+            if (48233 <= t && t <= 48259)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 48260)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 48288) {
+          if (48261 <= t && t <= 48287)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48289) {
+          if (t === 48288)
+            return i.CLUSTER_BREAK.LV;
+        } else if (48289 <= t && t <= 48315)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 48597) {
+        if (t < 48456) {
+          if (t < 48373) {
+            if (t < 48344) {
+              if (t < 48317) {
+                if (t === 48316)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (48317 <= t && t <= 48343)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 48345) {
+              if (t === 48344)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 48372) {
+              if (48345 <= t && t <= 48371)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 48372)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48401) {
+            if (t < 48400) {
+              if (48373 <= t && t <= 48399)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 48400)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48428) {
+            if (48401 <= t && t <= 48427)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 48429) {
+            if (t === 48428)
+              return i.CLUSTER_BREAK.LV;
+          } else if (48429 <= t && t <= 48455)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48513) {
+          if (t < 48484) {
+            if (t < 48457) {
+              if (t === 48456)
+                return i.CLUSTER_BREAK.LV;
+            } else if (48457 <= t && t <= 48483)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 48485) {
+            if (t === 48484)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48512) {
+            if (48485 <= t && t <= 48511)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 48512)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 48568) {
+          if (t < 48540) {
+            if (48513 <= t && t <= 48539)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 48541) {
+            if (t === 48540)
+              return i.CLUSTER_BREAK.LV;
+          } else if (48541 <= t && t <= 48567)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48569) {
+          if (t === 48568)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 48596) {
+          if (48569 <= t && t <= 48595)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 48596)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 48764) {
+        if (t < 48680) {
+          if (t < 48625) {
+            if (t < 48624) {
+              if (48597 <= t && t <= 48623)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 48624)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48652) {
+            if (48625 <= t && t <= 48651)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 48653) {
+            if (t === 48652)
+              return i.CLUSTER_BREAK.LV;
+          } else if (48653 <= t && t <= 48679)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48709) {
+          if (t < 48681) {
+            if (t === 48680)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 48708) {
+            if (48681 <= t && t <= 48707)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 48708)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 48736) {
+          if (48709 <= t && t <= 48735)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48737) {
+          if (t === 48736)
+            return i.CLUSTER_BREAK.LV;
+        } else if (48737 <= t && t <= 48763)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 48821) {
+        if (t < 48792) {
+          if (t < 48765) {
+            if (t === 48764)
+              return i.CLUSTER_BREAK.LV;
+          } else if (48765 <= t && t <= 48791)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48793) {
+          if (t === 48792)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 48820) {
+          if (48793 <= t && t <= 48819)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 48820)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 48876) {
+        if (t < 48848) {
+          if (48821 <= t && t <= 48847)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 48849) {
+          if (t === 48848)
+            return i.CLUSTER_BREAK.LV;
+        } else if (48849 <= t && t <= 48875)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 48877) {
+        if (t === 48876)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 48904) {
+        if (48877 <= t && t <= 48903)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t === 48904)
+        return i.CLUSTER_BREAK.LV;
+    } else if (t < 53720) {
+      if (t < 51312) {
+        if (t < 50108) {
+          if (t < 49493) {
+            if (t < 49212) {
+              if (t < 49045) {
+                if (t < 48988) {
+                  if (t < 48933) {
+                    if (t < 48932) {
+                      if (48905 <= t && t <= 48931)
+                        return i.CLUSTER_BREAK.LVT;
+                    } else if (t === 48932)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (t < 48960) {
+                    if (48933 <= t && t <= 48959)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t < 48961) {
+                    if (t === 48960)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (48961 <= t && t <= 48987)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 49016) {
+                  if (t < 48989) {
+                    if (t === 48988)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (48989 <= t && t <= 49015)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 49017) {
+                  if (t === 49016)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 49044) {
+                  if (49017 <= t && t <= 49043)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 49044)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49128) {
+                if (t < 49073) {
+                  if (t < 49072) {
+                    if (49045 <= t && t <= 49071)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 49072)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 49100) {
+                  if (49073 <= t && t <= 49099)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 49101) {
+                  if (t === 49100)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (49101 <= t && t <= 49127)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49157) {
+                if (t < 49129) {
+                  if (t === 49128)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 49156) {
+                  if (49129 <= t && t <= 49155)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 49156)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49184) {
+                if (49157 <= t && t <= 49183)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49185) {
+                if (t === 49184)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (49185 <= t && t <= 49211)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49352) {
+              if (t < 49269) {
+                if (t < 49240) {
+                  if (t < 49213) {
+                    if (t === 49212)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (49213 <= t && t <= 49239)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 49241) {
+                  if (t === 49240)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 49268) {
+                  if (49241 <= t && t <= 49267)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 49268)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49297) {
+                if (t < 49296) {
+                  if (49269 <= t && t <= 49295)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 49296)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49324) {
+                if (49297 <= t && t <= 49323)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49325) {
+                if (t === 49324)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (49325 <= t && t <= 49351)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49409) {
+              if (t < 49380) {
+                if (t < 49353) {
+                  if (t === 49352)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (49353 <= t && t <= 49379)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49381) {
+                if (t === 49380)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49408) {
+                if (49381 <= t && t <= 49407)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 49408)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49464) {
+              if (t < 49436) {
+                if (49409 <= t && t <= 49435)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49437) {
+                if (t === 49436)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (49437 <= t && t <= 49463)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49465) {
+              if (t === 49464)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49492) {
+              if (49465 <= t && t <= 49491)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 49492)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 49800) {
+            if (t < 49633) {
+              if (t < 49576) {
+                if (t < 49521) {
+                  if (t < 49520) {
+                    if (49493 <= t && t <= 49519)
+                      return i.CLUSTER_BREAK.LVT;
+                  } else if (t === 49520)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 49548) {
+                  if (49521 <= t && t <= 49547)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 49549) {
+                  if (t === 49548)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (49549 <= t && t <= 49575)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49604) {
+                if (t < 49577) {
+                  if (t === 49576)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (49577 <= t && t <= 49603)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49605) {
+                if (t === 49604)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49632) {
+                if (49605 <= t && t <= 49631)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 49632)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49716) {
+              if (t < 49661) {
+                if (t < 49660) {
+                  if (49633 <= t && t <= 49659)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 49660)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49688) {
+                if (49661 <= t && t <= 49687)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49689) {
+                if (t === 49688)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (49689 <= t && t <= 49715)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49745) {
+              if (t < 49717) {
+                if (t === 49716)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49744) {
+                if (49717 <= t && t <= 49743)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 49744)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49772) {
+              if (49745 <= t && t <= 49771)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49773) {
+              if (t === 49772)
+                return i.CLUSTER_BREAK.LV;
+            } else if (49773 <= t && t <= 49799)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 49941) {
+            if (t < 49857) {
+              if (t < 49828) {
+                if (t < 49801) {
+                  if (t === 49800)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (49801 <= t && t <= 49827)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49829) {
+                if (t === 49828)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 49856) {
+                if (49829 <= t && t <= 49855)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 49856)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49912) {
+              if (t < 49884) {
+                if (49857 <= t && t <= 49883)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 49885) {
+                if (t === 49884)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (49885 <= t && t <= 49911)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49913) {
+              if (t === 49912)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49940) {
+              if (49913 <= t && t <= 49939)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 49940)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50024) {
+            if (t < 49969) {
+              if (t < 49968) {
+                if (49941 <= t && t <= 49967)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 49968)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 49996) {
+              if (49969 <= t && t <= 49995)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 49997) {
+              if (t === 49996)
+                return i.CLUSTER_BREAK.LV;
+            } else if (49997 <= t && t <= 50023)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 50053) {
+            if (t < 50025) {
+              if (t === 50024)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50052) {
+              if (50025 <= t && t <= 50051)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 50052)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50080) {
+            if (50053 <= t && t <= 50079)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 50081) {
+            if (t === 50080)
+              return i.CLUSTER_BREAK.LV;
+          } else if (50081 <= t && t <= 50107)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 50697) {
+          if (t < 50389) {
+            if (t < 50248) {
+              if (t < 50165) {
+                if (t < 50136) {
+                  if (t < 50109) {
+                    if (t === 50108)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (50109 <= t && t <= 50135)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 50137) {
+                  if (t === 50136)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 50164) {
+                  if (50137 <= t && t <= 50163)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 50164)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 50193) {
+                if (t < 50192) {
+                  if (50165 <= t && t <= 50191)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 50192)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 50220) {
+                if (50193 <= t && t <= 50219)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 50221) {
+                if (t === 50220)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (50221 <= t && t <= 50247)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50305) {
+              if (t < 50276) {
+                if (t < 50249) {
+                  if (t === 50248)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (50249 <= t && t <= 50275)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 50277) {
+                if (t === 50276)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 50304) {
+                if (50277 <= t && t <= 50303)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 50304)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50360) {
+              if (t < 50332) {
+                if (50305 <= t && t <= 50331)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 50333) {
+                if (t === 50332)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (50333 <= t && t <= 50359)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50361) {
+              if (t === 50360)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50388) {
+              if (50361 <= t && t <= 50387)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 50388)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50556) {
+            if (t < 50472) {
+              if (t < 50417) {
+                if (t < 50416) {
+                  if (50389 <= t && t <= 50415)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 50416)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 50444) {
+                if (50417 <= t && t <= 50443)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 50445) {
+                if (t === 50444)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (50445 <= t && t <= 50471)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50501) {
+              if (t < 50473) {
+                if (t === 50472)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 50500) {
+                if (50473 <= t && t <= 50499)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 50500)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50528) {
+              if (50501 <= t && t <= 50527)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50529) {
+              if (t === 50528)
+                return i.CLUSTER_BREAK.LV;
+            } else if (50529 <= t && t <= 50555)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 50613) {
+            if (t < 50584) {
+              if (t < 50557) {
+                if (t === 50556)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (50557 <= t && t <= 50583)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50585) {
+              if (t === 50584)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50612) {
+              if (50585 <= t && t <= 50611)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 50612)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50668) {
+            if (t < 50640) {
+              if (50613 <= t && t <= 50639)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50641) {
+              if (t === 50640)
+                return i.CLUSTER_BREAK.LV;
+            } else if (50641 <= t && t <= 50667)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 50669) {
+            if (t === 50668)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50696) {
+            if (50669 <= t && t <= 50695)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 50696)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 51004) {
+          if (t < 50837) {
+            if (t < 50780) {
+              if (t < 50725) {
+                if (t < 50724) {
+                  if (50697 <= t && t <= 50723)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 50724)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 50752) {
+                if (50725 <= t && t <= 50751)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 50753) {
+                if (t === 50752)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (50753 <= t && t <= 50779)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50808) {
+              if (t < 50781) {
+                if (t === 50780)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (50781 <= t && t <= 50807)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50809) {
+              if (t === 50808)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50836) {
+              if (50809 <= t && t <= 50835)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 50836)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50920) {
+            if (t < 50865) {
+              if (t < 50864) {
+                if (50837 <= t && t <= 50863)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 50864)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50892) {
+              if (50865 <= t && t <= 50891)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 50893) {
+              if (t === 50892)
+                return i.CLUSTER_BREAK.LV;
+            } else if (50893 <= t && t <= 50919)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 50949) {
+            if (t < 50921) {
+              if (t === 50920)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 50948) {
+              if (50921 <= t && t <= 50947)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 50948)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 50976) {
+            if (50949 <= t && t <= 50975)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 50977) {
+            if (t === 50976)
+              return i.CLUSTER_BREAK.LV;
+          } else if (50977 <= t && t <= 51003)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 51145) {
+          if (t < 51061) {
+            if (t < 51032) {
+              if (t < 51005) {
+                if (t === 51004)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51005 <= t && t <= 51031)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51033) {
+              if (t === 51032)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 51060) {
+              if (51033 <= t && t <= 51059)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 51060)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51116) {
+            if (t < 51088) {
+              if (51061 <= t && t <= 51087)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51089) {
+              if (t === 51088)
+                return i.CLUSTER_BREAK.LV;
+            } else if (51089 <= t && t <= 51115)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 51117) {
+            if (t === 51116)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51144) {
+            if (51117 <= t && t <= 51143)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 51144)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 51228) {
+          if (t < 51173) {
+            if (t < 51172) {
+              if (51145 <= t && t <= 51171)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 51172)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51200) {
+            if (51173 <= t && t <= 51199)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 51201) {
+            if (t === 51200)
+              return i.CLUSTER_BREAK.LV;
+          } else if (51201 <= t && t <= 51227)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 51257) {
+          if (t < 51229) {
+            if (t === 51228)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51256) {
+            if (51229 <= t && t <= 51255)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 51256)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 51284) {
+          if (51257 <= t && t <= 51283)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 51285) {
+          if (t === 51284)
+            return i.CLUSTER_BREAK.LV;
+        } else if (51285 <= t && t <= 51311)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 52516) {
+        if (t < 51901) {
+          if (t < 51593) {
+            if (t < 51452) {
+              if (t < 51369) {
+                if (t < 51340) {
+                  if (t < 51313) {
+                    if (t === 51312)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (51313 <= t && t <= 51339)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 51341) {
+                  if (t === 51340)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 51368) {
+                  if (51341 <= t && t <= 51367)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 51368)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 51397) {
+                if (t < 51396) {
+                  if (51369 <= t && t <= 51395)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 51396)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 51424) {
+                if (51397 <= t && t <= 51423)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 51425) {
+                if (t === 51424)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51425 <= t && t <= 51451)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51509) {
+              if (t < 51480) {
+                if (t < 51453) {
+                  if (t === 51452)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (51453 <= t && t <= 51479)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 51481) {
+                if (t === 51480)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 51508) {
+                if (51481 <= t && t <= 51507)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 51508)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 51564) {
+              if (t < 51536) {
+                if (51509 <= t && t <= 51535)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 51537) {
+                if (t === 51536)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51537 <= t && t <= 51563)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51565) {
+              if (t === 51564)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 51592) {
+              if (51565 <= t && t <= 51591)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 51592)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51760) {
+            if (t < 51676) {
+              if (t < 51621) {
+                if (t < 51620) {
+                  if (51593 <= t && t <= 51619)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 51620)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 51648) {
+                if (51621 <= t && t <= 51647)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 51649) {
+                if (t === 51648)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51649 <= t && t <= 51675)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51705) {
+              if (t < 51677) {
+                if (t === 51676)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 51704) {
+                if (51677 <= t && t <= 51703)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 51704)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 51732) {
+              if (51705 <= t && t <= 51731)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51733) {
+              if (t === 51732)
+                return i.CLUSTER_BREAK.LV;
+            } else if (51733 <= t && t <= 51759)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 51817) {
+            if (t < 51788) {
+              if (t < 51761) {
+                if (t === 51760)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51761 <= t && t <= 51787)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51789) {
+              if (t === 51788)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 51816) {
+              if (51789 <= t && t <= 51815)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 51816)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51872) {
+            if (t < 51844) {
+              if (51817 <= t && t <= 51843)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 51845) {
+              if (t === 51844)
+                return i.CLUSTER_BREAK.LV;
+            } else if (51845 <= t && t <= 51871)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 51873) {
+            if (t === 51872)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 51900) {
+            if (51873 <= t && t <= 51899)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 51900)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 52208) {
+          if (t < 52041) {
+            if (t < 51984) {
+              if (t < 51929) {
+                if (t < 51928) {
+                  if (51901 <= t && t <= 51927)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 51928)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 51956) {
+                if (51929 <= t && t <= 51955)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 51957) {
+                if (t === 51956)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51957 <= t && t <= 51983)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52012) {
+              if (t < 51985) {
+                if (t === 51984)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (51985 <= t && t <= 52011)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52013) {
+              if (t === 52012)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52040) {
+              if (52013 <= t && t <= 52039)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 52040)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52124) {
+            if (t < 52069) {
+              if (t < 52068) {
+                if (52041 <= t && t <= 52067)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 52068)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52096) {
+              if (52069 <= t && t <= 52095)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52097) {
+              if (t === 52096)
+                return i.CLUSTER_BREAK.LV;
+            } else if (52097 <= t && t <= 52123)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52153) {
+            if (t < 52125) {
+              if (t === 52124)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52152) {
+              if (52125 <= t && t <= 52151)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 52152)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52180) {
+            if (52153 <= t && t <= 52179)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52181) {
+            if (t === 52180)
+              return i.CLUSTER_BREAK.LV;
+          } else if (52181 <= t && t <= 52207)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 52349) {
+          if (t < 52265) {
+            if (t < 52236) {
+              if (t < 52209) {
+                if (t === 52208)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (52209 <= t && t <= 52235)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52237) {
+              if (t === 52236)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52264) {
+              if (52237 <= t && t <= 52263)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 52264)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52320) {
+            if (t < 52292) {
+              if (52265 <= t && t <= 52291)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52293) {
+              if (t === 52292)
+                return i.CLUSTER_BREAK.LV;
+            } else if (52293 <= t && t <= 52319)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52321) {
+            if (t === 52320)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52348) {
+            if (52321 <= t && t <= 52347)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 52348)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 52432) {
+          if (t < 52377) {
+            if (t < 52376) {
+              if (52349 <= t && t <= 52375)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 52376)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52404) {
+            if (52377 <= t && t <= 52403)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52405) {
+            if (t === 52404)
+              return i.CLUSTER_BREAK.LV;
+          } else if (52405 <= t && t <= 52431)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 52461) {
+          if (t < 52433) {
+            if (t === 52432)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52460) {
+            if (52433 <= t && t <= 52459)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 52460)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 52488) {
+          if (52461 <= t && t <= 52487)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 52489) {
+          if (t === 52488)
+            return i.CLUSTER_BREAK.LV;
+        } else if (52489 <= t && t <= 52515)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 53105) {
+        if (t < 52797) {
+          if (t < 52656) {
+            if (t < 52573) {
+              if (t < 52544) {
+                if (t < 52517) {
+                  if (t === 52516)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (52517 <= t && t <= 52543)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 52545) {
+                if (t === 52544)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 52572) {
+                if (52545 <= t && t <= 52571)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 52572)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52601) {
+              if (t < 52600) {
+                if (52573 <= t && t <= 52599)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 52600)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52628) {
+              if (52601 <= t && t <= 52627)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52629) {
+              if (t === 52628)
+                return i.CLUSTER_BREAK.LV;
+            } else if (52629 <= t && t <= 52655)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52713) {
+            if (t < 52684) {
+              if (t < 52657) {
+                if (t === 52656)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (52657 <= t && t <= 52683)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52685) {
+              if (t === 52684)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52712) {
+              if (52685 <= t && t <= 52711)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 52712)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52768) {
+            if (t < 52740) {
+              if (52713 <= t && t <= 52739)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52741) {
+              if (t === 52740)
+                return i.CLUSTER_BREAK.LV;
+            } else if (52741 <= t && t <= 52767)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52769) {
+            if (t === 52768)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52796) {
+            if (52769 <= t && t <= 52795)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 52796)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 52964) {
+          if (t < 52880) {
+            if (t < 52825) {
+              if (t < 52824) {
+                if (52797 <= t && t <= 52823)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 52824)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52852) {
+              if (52825 <= t && t <= 52851)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 52853) {
+              if (t === 52852)
+                return i.CLUSTER_BREAK.LV;
+            } else if (52853 <= t && t <= 52879)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52909) {
+            if (t < 52881) {
+              if (t === 52880)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 52908) {
+              if (52881 <= t && t <= 52907)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 52908)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 52936) {
+            if (52909 <= t && t <= 52935)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52937) {
+            if (t === 52936)
+              return i.CLUSTER_BREAK.LV;
+          } else if (52937 <= t && t <= 52963)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 53021) {
+          if (t < 52992) {
+            if (t < 52965) {
+              if (t === 52964)
+                return i.CLUSTER_BREAK.LV;
+            } else if (52965 <= t && t <= 52991)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 52993) {
+            if (t === 52992)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 53020) {
+            if (52993 <= t && t <= 53019)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 53020)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53076) {
+          if (t < 53048) {
+            if (53021 <= t && t <= 53047)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 53049) {
+            if (t === 53048)
+              return i.CLUSTER_BREAK.LV;
+          } else if (53049 <= t && t <= 53075)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 53077) {
+          if (t === 53076)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53104) {
+          if (53077 <= t && t <= 53103)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 53104)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 53412) {
+        if (t < 53245) {
+          if (t < 53188) {
+            if (t < 53133) {
+              if (t < 53132) {
+                if (53105 <= t && t <= 53131)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 53132)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 53160) {
+              if (53133 <= t && t <= 53159)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 53161) {
+              if (t === 53160)
+                return i.CLUSTER_BREAK.LV;
+            } else if (53161 <= t && t <= 53187)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 53216) {
+            if (t < 53189) {
+              if (t === 53188)
+                return i.CLUSTER_BREAK.LV;
+            } else if (53189 <= t && t <= 53215)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 53217) {
+            if (t === 53216)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 53244) {
+            if (53217 <= t && t <= 53243)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 53244)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53328) {
+          if (t < 53273) {
+            if (t < 53272) {
+              if (53245 <= t && t <= 53271)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 53272)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 53300) {
+            if (53273 <= t && t <= 53299)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 53301) {
+            if (t === 53300)
+              return i.CLUSTER_BREAK.LV;
+          } else if (53301 <= t && t <= 53327)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 53357) {
+          if (t < 53329) {
+            if (t === 53328)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 53356) {
+            if (53329 <= t && t <= 53355)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 53356)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53384) {
+          if (53357 <= t && t <= 53383)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 53385) {
+          if (t === 53384)
+            return i.CLUSTER_BREAK.LV;
+        } else if (53385 <= t && t <= 53411)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 53553) {
+        if (t < 53469) {
+          if (t < 53440) {
+            if (t < 53413) {
+              if (t === 53412)
+                return i.CLUSTER_BREAK.LV;
+            } else if (53413 <= t && t <= 53439)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 53441) {
+            if (t === 53440)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 53468) {
+            if (53441 <= t && t <= 53467)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 53468)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53524) {
+          if (t < 53496) {
+            if (53469 <= t && t <= 53495)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 53497) {
+            if (t === 53496)
+              return i.CLUSTER_BREAK.LV;
+          } else if (53497 <= t && t <= 53523)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 53525) {
+          if (t === 53524)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53552) {
+          if (53525 <= t && t <= 53551)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 53552)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 53636) {
+        if (t < 53581) {
+          if (t < 53580) {
+            if (53553 <= t && t <= 53579)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 53580)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53608) {
+          if (53581 <= t && t <= 53607)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 53609) {
+          if (t === 53608)
+            return i.CLUSTER_BREAK.LV;
+        } else if (53609 <= t && t <= 53635)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 53665) {
+        if (t < 53637) {
+          if (t === 53636)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 53664) {
+          if (53637 <= t && t <= 53663)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 53664)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 53692) {
+        if (53665 <= t && t <= 53691)
+          return i.CLUSTER_BREAK.LVT;
+      } else if (t < 53693) {
+        if (t === 53692)
+          return i.CLUSTER_BREAK.LV;
+      } else if (53693 <= t && t <= 53719)
+        return i.CLUSTER_BREAK.LVT;
+    } else if (t < 70459) {
+      if (t < 54897) {
+        if (t < 54308) {
+          if (t < 54001) {
+            if (t < 53860) {
+              if (t < 53777) {
+                if (t < 53748) {
+                  if (t < 53721) {
+                    if (t === 53720)
+                      return i.CLUSTER_BREAK.LV;
+                  } else if (53721 <= t && t <= 53747)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t < 53749) {
+                  if (t === 53748)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (t < 53776) {
+                  if (53749 <= t && t <= 53775)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 53776)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 53805) {
+                if (t < 53804) {
+                  if (53777 <= t && t <= 53803)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 53804)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 53832) {
+                if (53805 <= t && t <= 53831)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 53833) {
+                if (t === 53832)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (53833 <= t && t <= 53859)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 53917) {
+              if (t < 53888) {
+                if (t < 53861) {
+                  if (t === 53860)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (53861 <= t && t <= 53887)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 53889) {
+                if (t === 53888)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 53916) {
+                if (53889 <= t && t <= 53915)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 53916)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 53972) {
+              if (t < 53944) {
+                if (53917 <= t && t <= 53943)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 53945) {
+                if (t === 53944)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (53945 <= t && t <= 53971)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 53973) {
+              if (t === 53972)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54e3) {
+              if (53973 <= t && t <= 53999)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 54e3)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54141) {
+            if (t < 54084) {
+              if (t < 54029) {
+                if (t < 54028) {
+                  if (54001 <= t && t <= 54027)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 54028)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 54056) {
+                if (54029 <= t && t <= 54055)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 54057) {
+                if (t === 54056)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (54057 <= t && t <= 54083)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54112) {
+              if (t < 54085) {
+                if (t === 54084)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (54085 <= t && t <= 54111)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54113) {
+              if (t === 54112)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54140) {
+              if (54113 <= t && t <= 54139)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 54140)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54224) {
+            if (t < 54169) {
+              if (t < 54168) {
+                if (54141 <= t && t <= 54167)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 54168)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54196) {
+              if (54169 <= t && t <= 54195)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54197) {
+              if (t === 54196)
+                return i.CLUSTER_BREAK.LV;
+            } else if (54197 <= t && t <= 54223)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54253) {
+            if (t < 54225) {
+              if (t === 54224)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54252) {
+              if (54225 <= t && t <= 54251)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 54252)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54280) {
+            if (54253 <= t && t <= 54279)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54281) {
+            if (t === 54280)
+              return i.CLUSTER_BREAK.LV;
+          } else if (54281 <= t && t <= 54307)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 54589) {
+          if (t < 54448) {
+            if (t < 54365) {
+              if (t < 54336) {
+                if (t < 54309) {
+                  if (t === 54308)
+                    return i.CLUSTER_BREAK.LV;
+                } else if (54309 <= t && t <= 54335)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 54337) {
+                if (t === 54336)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 54364) {
+                if (54337 <= t && t <= 54363)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 54364)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54393) {
+              if (t < 54392) {
+                if (54365 <= t && t <= 54391)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 54392)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54420) {
+              if (54393 <= t && t <= 54419)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54421) {
+              if (t === 54420)
+                return i.CLUSTER_BREAK.LV;
+            } else if (54421 <= t && t <= 54447)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54505) {
+            if (t < 54476) {
+              if (t < 54449) {
+                if (t === 54448)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (54449 <= t && t <= 54475)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54477) {
+              if (t === 54476)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54504) {
+              if (54477 <= t && t <= 54503)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 54504)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54560) {
+            if (t < 54532) {
+              if (54505 <= t && t <= 54531)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54533) {
+              if (t === 54532)
+                return i.CLUSTER_BREAK.LV;
+            } else if (54533 <= t && t <= 54559)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54561) {
+            if (t === 54560)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54588) {
+            if (54561 <= t && t <= 54587)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 54588)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 54756) {
+          if (t < 54672) {
+            if (t < 54617) {
+              if (t < 54616) {
+                if (54589 <= t && t <= 54615)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 54616)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54644) {
+              if (54617 <= t && t <= 54643)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 54645) {
+              if (t === 54644)
+                return i.CLUSTER_BREAK.LV;
+            } else if (54645 <= t && t <= 54671)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54701) {
+            if (t < 54673) {
+              if (t === 54672)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 54700) {
+              if (54673 <= t && t <= 54699)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 54700)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54728) {
+            if (54701 <= t && t <= 54727)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54729) {
+            if (t === 54728)
+              return i.CLUSTER_BREAK.LV;
+          } else if (54729 <= t && t <= 54755)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 54813) {
+          if (t < 54784) {
+            if (t < 54757) {
+              if (t === 54756)
+                return i.CLUSTER_BREAK.LV;
+            } else if (54757 <= t && t <= 54783)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54785) {
+            if (t === 54784)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 54812) {
+            if (54785 <= t && t <= 54811)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t === 54812)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 54868) {
+          if (t < 54840) {
+            if (54813 <= t && t <= 54839)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 54841) {
+            if (t === 54840)
+              return i.CLUSTER_BREAK.LV;
+          } else if (54841 <= t && t <= 54867)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 54869) {
+          if (t === 54868)
+            return i.CLUSTER_BREAK.LV;
+        } else if (t < 54896) {
+          if (54869 <= t && t <= 54895)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t === 54896)
+          return i.CLUSTER_BREAK.LV;
+      } else if (t < 69632) {
+        if (t < 55216) {
+          if (t < 55037) {
+            if (t < 54980) {
+              if (t < 54925) {
+                if (t < 54924) {
+                  if (54897 <= t && t <= 54923)
+                    return i.CLUSTER_BREAK.LVT;
+                } else if (t === 54924)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (t < 54952) {
+                if (54925 <= t && t <= 54951)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t < 54953) {
+                if (t === 54952)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (54953 <= t && t <= 54979)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 55008) {
+              if (t < 54981) {
+                if (t === 54980)
+                  return i.CLUSTER_BREAK.LV;
+              } else if (54981 <= t && t <= 55007)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 55009) {
+              if (t === 55008)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 55036) {
+              if (55009 <= t && t <= 55035)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 55036)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 55120) {
+            if (t < 55065) {
+              if (t < 55064) {
+                if (55037 <= t && t <= 55063)
+                  return i.CLUSTER_BREAK.LVT;
+              } else if (t === 55064)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 55092) {
+              if (55065 <= t && t <= 55091)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t < 55093) {
+              if (t === 55092)
+                return i.CLUSTER_BREAK.LV;
+            } else if (55093 <= t && t <= 55119)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 55149) {
+            if (t < 55121) {
+              if (t === 55120)
+                return i.CLUSTER_BREAK.LV;
+            } else if (t < 55148) {
+              if (55121 <= t && t <= 55147)
+                return i.CLUSTER_BREAK.LVT;
+            } else if (t === 55148)
+              return i.CLUSTER_BREAK.LV;
+          } else if (t < 55176) {
+            if (55149 <= t && t <= 55175)
+              return i.CLUSTER_BREAK.LVT;
+          } else if (t < 55177) {
+            if (t === 55176)
+              return i.CLUSTER_BREAK.LV;
+          } else if (55177 <= t && t <= 55203)
+            return i.CLUSTER_BREAK.LVT;
+        } else if (t < 68097) {
+          if (t < 65279) {
+            if (t < 64286) {
+              if (t < 55243) {
+                if (55216 <= t && t <= 55238)
+                  return i.CLUSTER_BREAK.V;
+              } else if (55243 <= t && t <= 55291)
+                return i.CLUSTER_BREAK.T;
+            } else if (t < 65024) {
+              if (t === 64286)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 65056) {
+              if (65024 <= t && t <= 65039)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (65056 <= t && t <= 65071)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 66045) {
+            if (t < 65438) {
+              if (t === 65279)
+                return i.CLUSTER_BREAK.CONTROL;
+            } else if (t < 65520) {
+              if (65438 <= t && t <= 65439)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (65520 <= t && t <= 65531)
+              return i.CLUSTER_BREAK.CONTROL;
+          } else if (t < 66272) {
+            if (t === 66045)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 66422) {
+            if (t === 66272)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (66422 <= t && t <= 66426)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 68325) {
+          if (t < 68108) {
+            if (t < 68101) {
+              if (68097 <= t && t <= 68099)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (68101 <= t && t <= 68102)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 68152) {
+            if (68108 <= t && t <= 68111)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 68159) {
+            if (68152 <= t && t <= 68154)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t === 68159)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 69373) {
+          if (t < 68900) {
+            if (68325 <= t && t <= 68326)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 69291) {
+            if (68900 <= t && t <= 68903)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (69291 <= t && t <= 69292)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 69446) {
+          if (69373 <= t && t <= 69375)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 69506) {
+          if (69446 <= t && t <= 69456)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (69506 <= t && t <= 69509)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 70016) {
+        if (t < 69815) {
+          if (t < 69747) {
+            if (t < 69634) {
+              if (t === 69632)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+              if (t === 69633)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 69688) {
+              if (t === 69634)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 69744) {
+              if (69688 <= t && t <= 69702)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t === 69744)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 69762) {
+            if (t < 69759) {
+              if (69747 <= t && t <= 69748)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (69759 <= t && t <= 69761)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 69808) {
+            if (t === 69762)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 69811) {
+            if (69808 <= t && t <= 69810)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (69811 <= t && t <= 69814)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 69888)
+          if (t < 69821) {
+            if (t < 69817) {
+              if (69815 <= t && t <= 69816)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (69817 <= t && t <= 69818)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 69826) {
+            if (t === 69821)
+              return i.CLUSTER_BREAK.PREPEND;
+          } else {
+            if (t === 69826)
+              return i.CLUSTER_BREAK.EXTEND;
+            if (t === 69837)
+              return i.CLUSTER_BREAK.PREPEND;
+          }
+        else if (t < 69933) {
+          if (t < 69927) {
+            if (69888 <= t && t <= 69890)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 69932) {
+            if (69927 <= t && t <= 69931)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t === 69932)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 69957) {
+          if (69933 <= t && t <= 69940)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 70003) {
+          if (69957 <= t && t <= 69958)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t === 70003)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 70194) {
+        if (t < 70082) {
+          if (t < 70067) {
+            if (t < 70018) {
+              if (70016 <= t && t <= 70017)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t === 70018)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 70070) {
+            if (70067 <= t && t <= 70069)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 70079) {
+            if (70070 <= t && t <= 70078)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (70079 <= t && t <= 70080)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 70095) {
+          if (t < 70089) {
+            if (70082 <= t && t <= 70083)
+              return i.CLUSTER_BREAK.PREPEND;
+          } else if (t < 70094) {
+            if (70089 <= t && t <= 70092)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t === 70094)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 70188) {
+          if (t === 70095)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 70191) {
+          if (70188 <= t && t <= 70190)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (70191 <= t && t <= 70193)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 70209) {
+        if (t < 70197) {
+          if (t < 70196) {
+            if (70194 <= t && t <= 70195)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t === 70196)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 70198) {
+          if (t === 70197)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 70206) {
+          if (70198 <= t && t <= 70199)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t === 70206)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 70371) {
+        if (t < 70367) {
+          if (t === 70209)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 70368) {
+          if (t === 70367)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (70368 <= t && t <= 70370)
+          return i.CLUSTER_BREAK.SPACINGMARK;
+      } else if (t < 70400) {
+        if (70371 <= t && t <= 70378)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 70402) {
+        if (70400 <= t && t <= 70401)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (70402 <= t && t <= 70403)
+        return i.CLUSTER_BREAK.SPACINGMARK;
+    } else if (t < 72343) {
+      if (t < 71339) {
+        if (t < 70841) {
+          if (t < 70512) {
+            if (t < 70471) {
+              if (t < 70463) {
+                if (t < 70462) {
+                  if (70459 <= t && t <= 70460)
+                    return i.CLUSTER_BREAK.EXTEND;
+                } else if (t === 70462)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (t < 70464) {
+                if (t === 70463)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (t < 70465) {
+                if (t === 70464)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (70465 <= t && t <= 70468)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 70487) {
+              if (t < 70475) {
+                if (70471 <= t && t <= 70472)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (70475 <= t && t <= 70477)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 70498) {
+              if (t === 70487)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 70502) {
+              if (70498 <= t && t <= 70499)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (70502 <= t && t <= 70508)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 70725) {
+            if (t < 70712) {
+              if (t < 70709) {
+                if (70512 <= t && t <= 70516)
+                  return i.CLUSTER_BREAK.EXTEND;
+              } else if (70709 <= t && t <= 70711)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 70720) {
+              if (70712 <= t && t <= 70719)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 70722) {
+              if (70720 <= t && t <= 70721)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (70722 <= t && t <= 70724)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 70832) {
+            if (t < 70726) {
+              if (t === 70725)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t === 70726 || t === 70750)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 70833) {
+            if (t === 70832)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 70835) {
+            if (70833 <= t && t <= 70834)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (70835 <= t && t <= 70840)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 71096) {
+          if (t < 70847)
+            if (t < 70843) {
+              if (t === 70841)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+              if (t === 70842)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 70845) {
+              if (70843 <= t && t <= 70844)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else {
+              if (t === 70845)
+                return i.CLUSTER_BREAK.EXTEND;
+              if (t === 70846)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            }
+          else if (t < 71087) {
+            if (t < 70849) {
+              if (70847 <= t && t <= 70848)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 70850) {
+              if (t === 70849)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (70850 <= t && t <= 70851)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71088) {
+            if (t === 71087)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71090) {
+            if (71088 <= t && t <= 71089)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (71090 <= t && t <= 71093)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 71216) {
+          if (t < 71102) {
+            if (t < 71100) {
+              if (71096 <= t && t <= 71099)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (71100 <= t && t <= 71101)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71103) {
+            if (t === 71102)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 71132) {
+            if (71103 <= t && t <= 71104)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (71132 <= t && t <= 71133)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 71229) {
+          if (t < 71219) {
+            if (71216 <= t && t <= 71218)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 71227) {
+            if (71219 <= t && t <= 71226)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (71227 <= t && t <= 71228)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 71230) {
+          if (t === 71229)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 71231) {
+          if (t === 71230)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (71231 <= t && t <= 71232)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 71999)
+        if (t < 71463) {
+          if (t < 71350) {
+            if (t < 71341) {
+              if (t === 71339)
+                return i.CLUSTER_BREAK.EXTEND;
+              if (t === 71340)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 71342) {
+              if (t === 71341)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 71344) {
+              if (71342 <= t && t <= 71343)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (71344 <= t && t <= 71349)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71453) {
+            if (t === 71350)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+            if (t === 71351)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71458) {
+            if (71453 <= t && t <= 71455)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71462) {
+            if (71458 <= t && t <= 71461)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t === 71462)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 71984) {
+          if (t < 71727) {
+            if (t < 71724) {
+              if (71463 <= t && t <= 71467)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (71724 <= t && t <= 71726)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 71736) {
+            if (71727 <= t && t <= 71735)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71737) {
+            if (t === 71736)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (71737 <= t && t <= 71738)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 71995) {
+          if (t < 71985) {
+            if (t === 71984)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 71991) {
+            if (71985 <= t && t <= 71989)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (71991 <= t && t <= 71992)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 71997) {
+          if (71995 <= t && t <= 71996)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else {
+          if (t === 71997)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+          if (t === 71998)
+            return i.CLUSTER_BREAK.EXTEND;
+        }
+      else if (t < 72193)
+        if (t < 72145)
+          if (t < 72001) {
+            if (t === 71999)
+              return i.CLUSTER_BREAK.PREPEND;
+            if (t === 72e3)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 72002) {
+            if (t === 72001)
+              return i.CLUSTER_BREAK.PREPEND;
+          } else {
+            if (t === 72002)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+            if (t === 72003)
+              return i.CLUSTER_BREAK.EXTEND;
+          }
+        else if (t < 72156) {
+          if (t < 72148) {
+            if (72145 <= t && t <= 72147)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 72154) {
+            if (72148 <= t && t <= 72151)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (72154 <= t && t <= 72155)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 72160) {
+          if (72156 <= t && t <= 72159)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else {
+          if (t === 72160)
+            return i.CLUSTER_BREAK.EXTEND;
+          if (t === 72164)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        }
+      else if (t < 72263) {
+        if (t < 72249) {
+          if (t < 72243) {
+            if (72193 <= t && t <= 72202)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (72243 <= t && t <= 72248)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 72250) {
+          if (t === 72249)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 72251) {
+          if (t === 72250)
+            return i.CLUSTER_BREAK.PREPEND;
+        } else if (72251 <= t && t <= 72254)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 72281) {
+        if (t < 72273) {
+          if (t === 72263)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 72279) {
+          if (72273 <= t && t <= 72278)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (72279 <= t && t <= 72280)
+          return i.CLUSTER_BREAK.SPACINGMARK;
+      } else if (t < 72324) {
+        if (72281 <= t && t <= 72283)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 72330) {
+        if (72324 <= t && t <= 72329)
+          return i.CLUSTER_BREAK.PREPEND;
+      } else if (72330 <= t && t <= 72342)
+        return i.CLUSTER_BREAK.EXTEND;
+    } else if (t < 94033) {
+      if (t < 73104) {
+        if (t < 72881) {
+          if (t < 72766) {
+            if (t < 72751) {
+              if (t < 72344) {
+                if (t === 72343)
+                  return i.CLUSTER_BREAK.SPACINGMARK;
+              } else if (72344 <= t && t <= 72345)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (t < 72752) {
+              if (t === 72751)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (t < 72760) {
+              if (72752 <= t && t <= 72758)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (72760 <= t && t <= 72765)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 72850) {
+            if (t === 72766)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+            if (t === 72767)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 72873) {
+            if (72850 <= t && t <= 72871)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 72874) {
+            if (t === 72873)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (72874 <= t && t <= 72880)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 73018) {
+          if (t < 72884) {
+            if (t < 72882) {
+              if (t === 72881)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (72882 <= t && t <= 72883)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 72885) {
+            if (t === 72884)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 73009) {
+            if (72885 <= t && t <= 72886)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (73009 <= t && t <= 73014)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 73030) {
+          if (t < 73020) {
+            if (t === 73018)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 73023) {
+            if (73020 <= t && t <= 73021)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (73023 <= t && t <= 73029)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 73031) {
+          if (t === 73030)
+            return i.CLUSTER_BREAK.PREPEND;
+        } else if (t < 73098) {
+          if (t === 73031)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (73098 <= t && t <= 73102)
+          return i.CLUSTER_BREAK.SPACINGMARK;
+      } else if (t < 73526) {
+        if (t < 73459)
+          if (t < 73109) {
+            if (t < 73107) {
+              if (73104 <= t && t <= 73105)
+                return i.CLUSTER_BREAK.EXTEND;
+            } else if (73107 <= t && t <= 73108)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (t < 73110) {
+            if (t === 73109)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else {
+            if (t === 73110)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+            if (t === 73111)
+              return i.CLUSTER_BREAK.EXTEND;
+          }
+        else if (t < 73474) {
+          if (t < 73461) {
+            if (73459 <= t && t <= 73460)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 73472) {
+            if (73461 <= t && t <= 73462)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (73472 <= t && t <= 73473)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 73475) {
+          if (t === 73474)
+            return i.CLUSTER_BREAK.PREPEND;
+        } else if (t < 73524) {
+          if (t === 73475)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (73524 <= t && t <= 73525)
+          return i.CLUSTER_BREAK.SPACINGMARK;
+      } else if (t < 78896)
+        if (t < 73536) {
+          if (t < 73534) {
+            if (73526 <= t && t <= 73530)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (73534 <= t && t <= 73535)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 73537) {
+          if (t === 73536)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else {
+          if (t === 73537)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+          if (t === 73538)
+            return i.CLUSTER_BREAK.EXTEND;
+        }
+      else if (t < 92912) {
+        if (t < 78912) {
+          if (78896 <= t && t <= 78911)
+            return i.CLUSTER_BREAK.CONTROL;
+        } else if (t < 78919) {
+          if (t === 78912)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (78919 <= t && t <= 78933)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 92976) {
+        if (92912 <= t && t <= 92916)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 94031) {
+        if (92976 <= t && t <= 92982)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t === 94031)
+        return i.CLUSTER_BREAK.EXTEND;
+    } else if (t < 121476) {
+      if (t < 119143)
+        if (t < 113824) {
+          if (t < 94180) {
+            if (t < 94095) {
+              if (94033 <= t && t <= 94087)
+                return i.CLUSTER_BREAK.SPACINGMARK;
+            } else if (94095 <= t && t <= 94098)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 94192) {
+            if (t === 94180)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t < 113821) {
+            if (94192 <= t && t <= 94193)
+              return i.CLUSTER_BREAK.SPACINGMARK;
+          } else if (113821 <= t && t <= 113822)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 118576) {
+          if (t < 118528) {
+            if (113824 <= t && t <= 113827)
+              return i.CLUSTER_BREAK.CONTROL;
+          } else if (118528 <= t && t <= 118573)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 119141) {
+          if (118576 <= t && t <= 118598)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else {
+          if (t === 119141)
+            return i.CLUSTER_BREAK.EXTEND;
+          if (t === 119142)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        }
+      else if (t < 119173) {
+        if (t < 119150) {
+          if (t < 119149) {
+            if (119143 <= t && t <= 119145)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (t === 119149)
+            return i.CLUSTER_BREAK.SPACINGMARK;
+        } else if (t < 119155) {
+          if (119150 <= t && t <= 119154)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 119163) {
+          if (119155 <= t && t <= 119162)
+            return i.CLUSTER_BREAK.CONTROL;
+        } else if (119163 <= t && t <= 119170)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 121344) {
+        if (t < 119210) {
+          if (119173 <= t && t <= 119179)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 119362) {
+          if (119210 <= t && t <= 119213)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (119362 <= t && t <= 119364)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 121403) {
+        if (121344 <= t && t <= 121398)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 121461) {
+        if (121403 <= t && t <= 121452)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t === 121461)
+        return i.CLUSTER_BREAK.EXTEND;
+    } else if (t < 123628) {
+      if (t < 122907) {
+        if (t < 121505) {
+          if (t < 121499) {
+            if (t === 121476)
+              return i.CLUSTER_BREAK.EXTEND;
+          } else if (121499 <= t && t <= 121503)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 122880) {
+          if (121505 <= t && t <= 121519)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 122888) {
+          if (122880 <= t && t <= 122886)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (122888 <= t && t <= 122904)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 123023) {
+        if (t < 122915) {
+          if (122907 <= t && t <= 122913)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (t < 122918) {
+          if (122915 <= t && t <= 122916)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (122918 <= t && t <= 122922)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 123184) {
+        if (t === 123023)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 123566) {
+        if (123184 <= t && t <= 123190)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t === 123566)
+        return i.CLUSTER_BREAK.EXTEND;
+    } else if (t < 127995) {
+      if (t < 125136) {
+        if (t < 124140) {
+          if (123628 <= t && t <= 123631)
+            return i.CLUSTER_BREAK.EXTEND;
+        } else if (124140 <= t && t <= 124143)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 125252) {
+        if (125136 <= t && t <= 125142)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 127462) {
+        if (125252 <= t && t <= 125258)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (127462 <= t && t <= 127487)
+        return i.CLUSTER_BREAK.REGIONAL_INDICATOR;
+    } else if (t < 917632) {
+      if (t < 917504) {
+        if (127995 <= t && t <= 127999)
+          return i.CLUSTER_BREAK.EXTEND;
+      } else if (t < 917536) {
+        if (917504 <= t && t <= 917535)
+          return i.CLUSTER_BREAK.CONTROL;
+      } else if (917536 <= t && t <= 917631)
+        return i.CLUSTER_BREAK.EXTEND;
+    } else if (t < 917760) {
+      if (917632 <= t && t <= 917759)
+        return i.CLUSTER_BREAK.CONTROL;
+    } else if (t < 918e3) {
+      if (917760 <= t && t <= 917999)
+        return i.CLUSTER_BREAK.EXTEND;
+    } else if (918e3 <= t && t <= 921599)
+      return i.CLUSTER_BREAK.CONTROL;
+    return i.CLUSTER_BREAK.OTHER;
+  }
+  /**
+   * Given a Unicode code point, returns if symbol is an extended pictographic or some other break
+   * @param code {number} Unicode code point
+   * @returns {number}
+   */
+  static getEmojiProperty(t) {
+    if (t < 10160) {
+      if (t < 9728) {
+        if (t < 9e3) {
+          if (t < 8482) {
+            if (t < 8252) {
+              if (t === 169 || t === 174)
+                return i.EXTENDED_PICTOGRAPHIC;
+            } else if (t === 8252 || t === 8265)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 8596) {
+            if (t === 8482 || t === 8505)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 8617) {
+            if (8596 <= t && t <= 8601)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 8986) {
+            if (8617 <= t && t <= 8618)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (8986 <= t && t <= 8987)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 9410) {
+          if (t < 9167) {
+            if (t === 9e3 || t === 9096)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 9193) {
+            if (t === 9167)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 9208) {
+            if (9193 <= t && t <= 9203)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (9208 <= t && t <= 9210)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 9654) {
+          if (t < 9642) {
+            if (t === 9410)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (9642 <= t && t <= 9643)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 9664) {
+          if (t === 9654)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 9723) {
+          if (t === 9664)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (9723 <= t && t <= 9726)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 10035) {
+        if (t < 10004) {
+          if (t < 9748) {
+            if (t < 9735) {
+              if (9728 <= t && t <= 9733)
+                return i.EXTENDED_PICTOGRAPHIC;
+            } else if (9735 <= t && t <= 9746)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 9872) {
+            if (9748 <= t && t <= 9861)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 9992) {
+            if (9872 <= t && t <= 9989)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (9992 <= t && t <= 10002)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 10013) {
+          if (t === 10004 || t === 10006)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 10017) {
+          if (t === 10013)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t === 10017 || t === 10024)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 10067) {
+        if (t < 10055) {
+          if (t < 10052) {
+            if (10035 <= t && t <= 10036)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t === 10052)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 10060) {
+          if (t === 10055)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t === 10060 || t === 10062)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 10083) {
+        if (t < 10071) {
+          if (10067 <= t && t <= 10069)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t === 10071)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 10133) {
+        if (10083 <= t && t <= 10087)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 10145) {
+        if (10133 <= t && t <= 10135)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t === 10145)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (t < 127489) {
+      if (t < 12951) {
+        if (t < 11035) {
+          if (t < 10548) {
+            if (t === 10160 || t === 10175)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t < 11013) {
+            if (10548 <= t && t <= 10549)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (11013 <= t && t <= 11015)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 11093) {
+          if (t < 11088) {
+            if (11035 <= t && t <= 11036)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t === 11088)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 12336) {
+          if (t === 11093)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t === 12336 || t === 12349)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 127340) {
+        if (t < 126976) {
+          if (t === 12951 || t === 12953)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 127245) {
+          if (126976 <= t && t <= 127231)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 127279) {
+          if (127245 <= t && t <= 127247)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t === 127279)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 127374) {
+        if (t < 127358) {
+          if (127340 <= t && t <= 127345)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (127358 <= t && t <= 127359)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 127377) {
+        if (t === 127374)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 127405) {
+        if (127377 <= t && t <= 127386)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (127405 <= t && t <= 127461)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (t < 128981) {
+      if (t < 127561) {
+        if (t < 127535) {
+          if (t < 127514) {
+            if (127489 <= t && t <= 127503)
+              return i.EXTENDED_PICTOGRAPHIC;
+          } else if (t === 127514)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 127538) {
+          if (t === 127535)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (t < 127548) {
+          if (127538 <= t && t <= 127546)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (127548 <= t && t <= 127551)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 128326) {
+        if (t < 128e3) {
+          if (127561 <= t && t <= 127994)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (128e3 <= t && t <= 128317)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 128640) {
+        if (128326 <= t && t <= 128591)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 128884) {
+        if (128640 <= t && t <= 128767)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (128884 <= t && t <= 128895)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (t < 129198) {
+      if (t < 129096) {
+        if (t < 129036) {
+          if (128981 <= t && t <= 129023)
+            return i.EXTENDED_PICTOGRAPHIC;
+        } else if (129036 <= t && t <= 129039)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 129114) {
+        if (129096 <= t && t <= 129103)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (t < 129160) {
+        if (129114 <= t && t <= 129119)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (129160 <= t && t <= 129167)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (t < 129340) {
+      if (t < 129292) {
+        if (129198 <= t && t <= 129279)
+          return i.EXTENDED_PICTOGRAPHIC;
+      } else if (129292 <= t && t <= 129338)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (t < 129351) {
+      if (129340 <= t && t <= 129349)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (t < 130048) {
+      if (129351 <= t && t <= 129791)
+        return i.EXTENDED_PICTOGRAPHIC;
+    } else if (130048 <= t && t <= 131069)
+      return i.EXTENDED_PICTOGRAPHIC;
+    return i.CLUSTER_BREAK.OTHER;
+  }
+}
+kt.default = O;
+var ve = Rt && Rt.__importDefault || function(x) {
+  return x && x.__esModule ? x : { default: x };
+};
+Object.defineProperty(Ni, "__esModule", { value: !0 });
+const we = ve(kt);
+var Xe = Ni.default = we.default;
+class Me {
   /**
    * Construct a text wrapper which will measure text using the specified measurement provider.
    * @param {MeasurementProvider} measurementProvider - a helper object to provide text measurement services.
    */
   constructor(t) {
-    this._measurementProvider = t, this._cache = {};
+    this._measurementProvider = t, this._cache = {}, this._graphemer = new Xe();
   }
   /**
    * Wrap the provided text into lines restricted to a maximum width. See Unicode Standard Annex (UAX) #14.
@@ -2712,33 +7096,31 @@ class Ri {
    */
   wrapText(t, e) {
     e = e.normalize();
-    const i = `${t}-${e}`;
-    if (this._cache[i])
-      return this._cache[i];
-    const s = this._measurementProvider.beginMeasurementSession(), o = new me(e);
-    let l = 0, u, c = null;
-    const f = [];
+    const r = `${t}-${e}`;
+    if (this._cache[r])
+      return this._cache[r];
+    const f = this._measurementProvider.beginMeasurementSession(), E = new Ki(e);
+    let a = 0, u, R = null;
+    const T = [];
     try {
-      for (; u = o.nextBreak(); ) {
-        const d = e.slice(l, u.position).replace(/\n+$/, "");
-        let _ = (c || "").concat(d), w = this._measurementProvider.measureText(_);
-        if (w > t)
-          if (this._measurementProvider.measureText(d) > t) {
-            let g = 0, m;
-            for (; g !== (m = Pi.nextBreak(d, g)); ) {
-              const k = d.substring(g, m);
-              _ = (c || "").concat(k), w = this._measurementProvider.measureText(_), c === null || w <= t ? c = _ : (f.push(c), c = k), g = m;
-            }
+      for (; u = E.nextBreak(); ) {
+        const _ = e.slice(a, u.position).replace(/\n+$/, "");
+        let L = (R || "").concat(_), b = this._measurementProvider.measureText(L);
+        if (b > t)
+          if (this._measurementProvider.measureText(_) > t) {
+            const A = this._graphemer.splitGraphemes(_);
+            for (const C of A)
+              L = (R || "").concat(C), b = this._measurementProvider.measureText(L), R === null || b <= t ? R = L : (T.push(R), R = C);
           } else
-            c !== null && f.push(c), c = d;
+            R !== null && T.push(R), R = _;
         else
-          c = _;
-        u.required && (c !== null && f.push(c), c = null), l = u.position;
+          R = L;
+        u.required && (R !== null && T.push(R), R = null), a = u.position;
       }
-    } catch (d) {
-      return console.warn("LineBreaker failed, using simple word wrapping:", d), this._fallbackWrapText(t, e, s);
+    } catch (_) {
+      return console.warn("LineBreaker failed, using simple word wrapping:", _), this._fallbackWrapText(t, e, f);
     }
-    return c = c || "", (c.length > 0 || f.length === 0) && f.push(c), this._cache[i] = f, this._measurementProvider.endMeasurementSession(s), f;
+    return R = R || "", (R.length > 0 || T.length === 0) && T.push(R), this._cache[r] = T, this._measurementProvider.endMeasurementSession(f), T;
   }
   /**
    * Fallback text wrapping method for when LineBreaker fails
@@ -2747,17 +7129,17 @@ class Ri {
    * @param {*} measurementSession - the current measurement session.
    * @returns {Array.<string>} wrapped lines of text.
    */
-  _fallbackWrapText(t, e, i) {
-    const s = e.split(/\s+/), o = [];
-    let l = "";
-    for (const u of s) {
-      const c = l ? `${l} ${u}` : u;
-      this._measurementProvider.measureText(c) <= t || l === "" ? l = c : (o.push(l), l = u);
+  _fallbackWrapText(t, e, r) {
+    const f = e.split(/\s+/), E = [];
+    let a = "";
+    for (const u of f) {
+      const R = a ? `${a} ${u}` : u;
+      this._measurementProvider.measureText(R) <= t || a === "" ? a = R : (E.push(a), a = u);
     }
-    return l && o.push(l), this._measurementProvider.endMeasurementSession(i), o.length > 0 ? o : [""];
+    return a && E.push(a), this._measurementProvider.endMeasurementSession(r), E.length > 0 ? E : [""];
   }
 }
-class zi {
+class ye {
   /**
    * @param {CanvasRenderingContext2D} ctx - provides a canvas rendering context
    * with 'font' set to the text style of the text to be wrapped.
@@ -2785,7 +7167,7 @@ class zi {
     return this._cache[t] || (this._cache[t] = this._ctx.measureText(t).width), this._cache[t];
   }
 }
-const C = {
+const g = {
   MAX_LINE_WIDTH: 170,
   // Maximum width, in Scratch pixels, of a single line of text
   MIN_WIDTH: 50,
@@ -2812,7 +7194,7 @@ const C = {
     TEXT_FILL: "#575E75"
   }
 };
-class et extends F {
+class nt extends P {
   /**
    * Create a new text bubble skin.
    * @param {!int} id - The ID for this Skin.
@@ -2821,7 +7203,7 @@ class et extends F {
    * @extends Skin
    */
   constructor(t, e) {
-    super(t), this._renderer = e, this._canvas = document.createElement("canvas"), this._size = [0, 0], this._renderedScale = 0, this._lines = [], this._textAreaSize = { width: 0, height: 0 }, this._bubbleType = "", this._pointsLeft = !1, this._textDirty = !0, this._textureDirty = !0, this.measurementProvider = new zi(this._canvas.getContext("2d")), this.textWrapper = new Ri(this.measurementProvider), this._restyleCanvas();
+    super(t), this._renderer = e, this._canvas = document.createElement("canvas"), this._size = [0, 0], this._renderedScale = 0, this._lines = [], this._textAreaSize = { width: 0, height: 0 }, this._bubbleType = "", this._pointsLeft = !1, this._textDirty = !0, this._textureDirty = !0, this.measurementProvider = new ye(this._canvas.getContext("2d")), this.textWrapper = new Me(this.measurementProvider), this._restyleCanvas();
   }
   /**
    * Dispose of this object. Do not use it after calling this method.
@@ -2841,25 +7223,25 @@ class et extends F {
    * @param {!string} text - the text for the bubble.
    * @param {!boolean} pointsLeft - which side the bubble is pointing.
    */
-  setTextBubble(t, e, i) {
-    this._text = e, this._bubbleType = t, this._pointsLeft = i, this._textDirty = !0, this._textureDirty = !0, this.emit(F.Events.WasAltered);
+  setTextBubble(t, e, r) {
+    this._text = e, this._bubbleType = t, this._pointsLeft = r, this._textDirty = !0, this._textureDirty = !0, this.emit(P.Events.WasAltered);
   }
   /**
    * Re-style the canvas after resizing it. This is necessary to ensure proper text measurement.
    */
   _restyleCanvas() {
-    this._canvas.getContext("2d").font = `${C.FONT_SIZE}px ${C.FONT}, sans-serif`;
+    this._canvas.getContext("2d").font = `${g.FONT_SIZE}px ${g.FONT}, sans-serif`;
   }
   /**
    * Update the array of wrapped lines and the text dimensions.
    */
   _reflowLines() {
-    this._lines = this.textWrapper.wrapText(C.MAX_LINE_WIDTH, this._text);
+    this._lines = this.textWrapper.wrapText(g.MAX_LINE_WIDTH, this._text);
     let t = 0;
-    for (const s of this._lines)
-      t = Math.max(t, this.measurementProvider.measureText(s));
-    const e = Math.max(t, C.MIN_WIDTH) + C.PADDING * 2, i = C.LINE_HEIGHT * this._lines.length + C.PADDING * 2;
-    this._textAreaSize.width = e, this._textAreaSize.height = i, this._size[0] = e + C.STROKE_WIDTH, this._size[1] = i + C.STROKE_WIDTH + C.TAIL_HEIGHT, this._textDirty = !1;
+    for (const f of this._lines)
+      t = Math.max(t, this.measurementProvider.measureText(f));
+    const e = Math.max(t, g.MIN_WIDTH) + g.PADDING * 2, r = g.LINE_HEIGHT * this._lines.length + g.PADDING * 2;
+    this._textAreaSize.width = e, this._textAreaSize.height = r, this._size[0] = e + g.STROKE_WIDTH, this._size[1] = r + g.STROKE_WIDTH + g.TAIL_HEIGHT, this._textDirty = !1;
   }
   /**
    * Render this text bubble at a certain scale, using the current parameters, to the canvas.
@@ -2868,21 +7250,21 @@ class et extends F {
   _renderTextBubble(t) {
     const e = this._canvas.getContext("2d");
     this._textDirty && this._reflowLines();
-    const i = this._textAreaSize.width, s = this._textAreaSize.height;
-    this._canvas.width = Math.ceil(this._size[0] * t), this._canvas.height = Math.ceil(this._size[1] * t), this._restyleCanvas(), e.setTransform(1, 0, 0, 1, 0, 0), e.clearRect(0, 0, this._canvas.width, this._canvas.height), e.scale(t, t), e.translate(C.STROKE_WIDTH * 0.5, C.STROKE_WIDTH * 0.5), e.save(), this._pointsLeft && (e.scale(-1, 1), e.translate(-i, 0)), e.beginPath(), e.moveTo(C.CORNER_RADIUS, s), e.arcTo(0, s, 0, s - C.CORNER_RADIUS, C.CORNER_RADIUS), e.arcTo(0, 0, i, 0, C.CORNER_RADIUS), e.arcTo(i, 0, i, s, C.CORNER_RADIUS), e.arcTo(
-      i,
-      s,
-      i - C.CORNER_RADIUS,
-      s,
-      C.CORNER_RADIUS
-    ), e.save(), e.translate(i - C.CORNER_RADIUS, s), this._bubbleType === "say" ? (e.bezierCurveTo(0, 4, 4, 8, 4, 10), e.arcTo(4, 12, 2, 12, 2), e.bezierCurveTo(-1, 12, -11, 8, -16, 0), e.closePath()) : (e.arc(-16, 0, 4, 0, Math.PI), e.closePath(), e.moveTo(-7, 7.25), e.arc(-9.25, 7.25, 2.25, 0, Math.PI * 2), e.moveTo(0, 9.5), e.arc(-1.5, 9.5, 1.5, 0, Math.PI * 2)), e.restore(), e.fillStyle = C.COLORS.BUBBLE_FILL, e.strokeStyle = C.COLORS.BUBBLE_STROKE, e.lineWidth = C.STROKE_WIDTH, e.stroke(), e.fill(), e.restore(), e.fillStyle = C.COLORS.TEXT_FILL, e.font = `${C.FONT_SIZE}px ${C.FONT}, sans-serif`;
-    const o = this._lines;
-    for (let l = 0; l < o.length; l++) {
-      const u = o[l];
+    const r = this._textAreaSize.width, f = this._textAreaSize.height;
+    this._canvas.width = Math.ceil(this._size[0] * t), this._canvas.height = Math.ceil(this._size[1] * t), this._restyleCanvas(), e.setTransform(1, 0, 0, 1, 0, 0), e.clearRect(0, 0, this._canvas.width, this._canvas.height), e.scale(t, t), e.translate(g.STROKE_WIDTH * 0.5, g.STROKE_WIDTH * 0.5), e.save(), this._pointsLeft && (e.scale(-1, 1), e.translate(-r, 0)), e.beginPath(), e.moveTo(g.CORNER_RADIUS, f), e.arcTo(0, f, 0, f - g.CORNER_RADIUS, g.CORNER_RADIUS), e.arcTo(0, 0, r, 0, g.CORNER_RADIUS), e.arcTo(r, 0, r, f, g.CORNER_RADIUS), e.arcTo(
+      r,
+      f,
+      r - g.CORNER_RADIUS,
+      f,
+      g.CORNER_RADIUS
+    ), e.save(), e.translate(r - g.CORNER_RADIUS, f), this._bubbleType === "say" ? (e.bezierCurveTo(0, 4, 4, 8, 4, 10), e.arcTo(4, 12, 2, 12, 2), e.bezierCurveTo(-1, 12, -11, 8, -16, 0), e.closePath()) : (e.arc(-16, 0, 4, 0, Math.PI), e.closePath(), e.moveTo(-7, 7.25), e.arc(-9.25, 7.25, 2.25, 0, Math.PI * 2), e.moveTo(0, 9.5), e.arc(-1.5, 9.5, 1.5, 0, Math.PI * 2)), e.restore(), e.fillStyle = g.COLORS.BUBBLE_FILL, e.strokeStyle = g.COLORS.BUBBLE_STROKE, e.lineWidth = g.STROKE_WIDTH, e.stroke(), e.fill(), e.restore(), e.fillStyle = g.COLORS.TEXT_FILL, e.font = `${g.FONT_SIZE}px ${g.FONT}, sans-serif`;
+    const E = this._lines;
+    for (let a = 0; a < E.length; a++) {
+      const u = E[a];
       e.fillText(
         u,
-        C.PADDING,
-        C.PADDING + C.LINE_HEIGHT * l + C.FONT_HEIGHT_RATIO * C.FONT_SIZE
+        g.PADDING,
+        g.PADDING + g.LINE_HEIGHT * a + g.FONT_HEIGHT_RATIO * g.FONT_SIZE
       );
     }
     this._renderedScale = t;
@@ -2895,23 +7277,23 @@ class et extends F {
    * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
    */
   getTexture(t) {
-    const i = (t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100) / 100;
-    if (this._textureDirty || this._renderedScale !== i) {
-      this._renderTextBubble(i), this._textureDirty = !1;
-      const o = this._canvas.getContext("2d").getImageData(0, 0, this._canvas.width, this._canvas.height), l = this._renderer.gl;
+    const r = (t ? Math.max(Math.abs(t[0]), Math.abs(t[1])) : 100) / 100;
+    if (this._textureDirty || this._renderedScale !== r) {
+      this._renderTextBubble(r), this._textureDirty = !1;
+      const E = this._canvas.getContext("2d").getImageData(0, 0, this._canvas.width, this._canvas.height), a = this._renderer.gl;
       if (this._texture === null) {
         const u = {
           auto: !1,
-          wrap: l.CLAMP_TO_EDGE
+          wrap: a.CLAMP_TO_EDGE
         };
-        this._texture = x.createTexture(l, u);
+        this._texture = h.createTexture(a, u);
       }
-      this._setTexture(o);
+      this._setTexture(E);
     }
     return this._texture;
   }
 }
-class M {
+class m {
   /**
    * A utility for creating and comparing axis-aligned rectangles.
    * Rectangles are always initialized to the "largest possible rectangle";
@@ -2928,8 +7310,8 @@ class M {
    * @param {number} bottom Bottom bound of the rectangle.
    * @param {number} top Top bound of the rectangle.
    */
-  initFromBounds(t, e, i, s) {
-    this.left = t, this.right = e, this.bottom = i, this.top = s;
+  initFromBounds(t, e, r, f) {
+    this.left = t, this.right = e, this.bottom = r, this.top = f;
   }
   /**
    * Initialize a Rectangle to the minimum AABB around a set of points.
@@ -2938,8 +7320,8 @@ class M {
   initFromPointsAABB(t) {
     this.left = 1 / 0, this.right = -1 / 0, this.top = -1 / 0, this.bottom = 1 / 0;
     for (let e = 0; e < t.length; e++) {
-      const i = t[e][0], s = t[e][1];
-      i < this.left && (this.left = i), i > this.right && (this.right = i), s > this.top && (this.top = s), s < this.bottom && (this.bottom = s);
+      const r = t[e][0], f = t[e][1];
+      r < this.left && (this.left = r), r > this.right && (this.right = r), f > this.top && (this.top = f), f < this.bottom && (this.bottom = f);
     }
   }
   /**
@@ -2949,8 +7331,8 @@ class M {
    * @tutorial Rectangle-AABB-Matrix
    */
   initFromModelMatrix(t) {
-    const e = t[12], i = t[3 * 4 + 1], s = Math.abs(0.5 * t[0 * 4 + 0]) + Math.abs(0.5 * t[1 * 4 + 0]), o = Math.abs(0.5 * t[0 * 4 + 1]) + Math.abs(0.5 * t[1 * 4 + 1]);
-    this.left = -s + e, this.right = s + e, this.top = o + i, this.bottom = -o + i;
+    const e = t[12], r = t[3 * 4 + 1], f = Math.abs(0.5 * t[0 * 4 + 0]) + Math.abs(0.5 * t[1 * 4 + 0]), E = Math.abs(0.5 * t[0 * 4 + 1]) + Math.abs(0.5 * t[1 * 4 + 1]);
+    this.left = -f + e, this.right = f + e, this.top = E + r, this.bottom = -E + r;
   }
   /**
    * Determine if this Rectangle intersects some other.
@@ -2979,8 +7361,8 @@ class M {
    * @param {number} bottom Bottom clamp.
    * @param {number} top Top clamp.
    */
-  clamp(t, e, i, s) {
-    this.left = Math.max(this.left, t), this.right = Math.min(this.right, e), this.bottom = Math.max(this.bottom, i), this.top = Math.min(this.top, s), this.left = Math.min(this.left, e), this.right = Math.max(this.right, t), this.bottom = Math.min(this.bottom, s), this.top = Math.max(this.top, i);
+  clamp(t, e, r, f) {
+    this.left = Math.max(this.left, t), this.right = Math.min(this.right, e), this.bottom = Math.max(this.bottom, r), this.top = Math.min(this.top, f), this.left = Math.min(this.left, e), this.right = Math.max(this.right, t), this.bottom = Math.min(this.bottom, f), this.top = Math.max(this.top, r);
   }
   /**
    * Push out the Rectangle to integer bounds.
@@ -2997,8 +7379,8 @@ class M {
    *                            a or b if you want to overwrite one)
    * @returns {Rectangle} resulting rectangle
    */
-  static intersect(t, e, i = new M()) {
-    return i.left = Math.max(t.left, e.left), i.right = Math.min(t.right, e.right), i.top = Math.min(t.top, e.top), i.bottom = Math.max(t.bottom, e.bottom), i;
+  static intersect(t, e, r = new m()) {
+    return r.left = Math.max(t.left, e.left), r.right = Math.min(t.right, e.right), r.top = Math.min(t.top, e.top), r.bottom = Math.max(t.bottom, e.bottom), r;
   }
   /**
    * Compute the union of two bounding Rectangles.
@@ -3008,8 +7390,8 @@ class M {
    *                            a or b if you want to overwrite one)
    * @returns {Rectangle} resulting rectangle
    */
-  static union(t, e, i = new M()) {
-    return i.left = Math.min(t.left, e.left), i.right = Math.max(t.right, e.right), i.top = Math.max(t.top, e.top), i.bottom = Math.min(t.bottom, e.bottom), i;
+  static union(t, e, r = new m()) {
+    return r.left = Math.min(t.left, e.left), r.right = Math.max(t.right, e.right), r.top = Math.max(t.top, e.top), r.bottom = Math.min(t.bottom, e.bottom), r;
   }
   /**
    * Width of the Rectangle.
@@ -3026,42 +7408,42 @@ class M {
     return Math.abs(this.top - this.bottom);
   }
 }
-const Hi = ([a, t, e], i) => {
-  let s = 0;
-  a /= 255, t /= 255, e /= 255;
-  let o = 0;
-  t < e && (o = t, t = e, e = o, s = -1), a < t && (o = a, a = t, t = o, s = -2 / 6 - s);
-  const l = a - Math.min(t, e), u = Math.abs(s + (t - e) / (6 * l + Number.EPSILON)), c = l / (a + Number.EPSILON), f = a;
-  return i[0] = u, i[1] = c, i[2] = f, i;
-}, Ui = ([a, t, e], i) => {
+const Oe = ([x, t, e], r) => {
+  let f = 0;
+  x /= 255, t /= 255, e /= 255;
+  let E = 0;
+  t < e && (E = t, t = e, e = E, f = -1), x < t && (E = x, x = t, t = E, f = -2 / 6 - f);
+  const a = x - Math.min(t, e), u = Math.abs(f + (t - e) / (6 * a + Number.EPSILON)), R = a / (x + Number.EPSILON), T = x;
+  return r[0] = u, r[1] = R, r[2] = T, r;
+}, Ge = ([x, t, e], r) => {
   if (t === 0)
-    return i[0] = i[1] = i[2] = e * 255 + 0.5, i;
-  a %= 1;
-  const s = a * 6 | 0, o = a * 6 - s, l = e * (1 - t), u = e * (1 - t * o), c = e * (1 - t * (1 - o));
-  let f = 0, d = 0, _ = 0;
-  switch (s) {
+    return r[0] = r[1] = r[2] = e * 255 + 0.5, r;
+  x %= 1;
+  const f = x * 6 | 0, E = x * 6 - f, a = e * (1 - t), u = e * (1 - t * E), R = e * (1 - t * (1 - E));
+  let T = 0, _ = 0, L = 0;
+  switch (f) {
     case 0:
-      f = e, d = c, _ = l;
+      T = e, _ = R, L = a;
       break;
     case 1:
-      f = u, d = e, _ = l;
+      T = u, _ = e, L = a;
       break;
     case 2:
-      f = l, d = e, _ = c;
+      T = a, _ = e, L = R;
       break;
     case 3:
-      f = l, d = u, _ = e;
+      T = a, _ = u, L = e;
       break;
     case 4:
-      f = c, d = l, _ = e;
+      T = R, _ = a, L = e;
       break;
     case 5:
-      f = e, d = l, _ = u;
+      T = e, _ = a, L = u;
       break;
   }
-  return i[0] = f * 255 + 0.5, i[1] = d * 255 + 0.5, i[2] = _ * 255 + 0.5, i;
-}, H = 0.5, U = 0.5, Wi = [0, 0, 0];
-class lt {
+  return r[0] = T * 255 + 0.5, r[1] = _ * 255 + 0.5, r[2] = L * 255 + 0.5, r;
+}, H = 0.5, z = 0.5, ke = [0, 0, 0];
+class ut {
   /**
    * Transform a color in-place given the drawable's effect uniforms.  Will apply
    * Ghost and Color and Brightness effects.
@@ -3070,25 +7452,25 @@ class lt {
    * @param {number} [effectMask] A bitmask for which effects to use. Optional.
    * @returns {Uint8ClampedArray} dst filled with the transformed color
    */
-  static transformColor(t, e, i) {
+  static transformColor(t, e, r) {
     if (e[3] === 0)
       return e;
-    let s = t.enabledEffects;
-    typeof i == "number" && (s &= i);
-    const o = t.getUniforms(), l = (s & y.EFFECT_INFO.color.mask) !== 0, u = (s & y.EFFECT_INFO.brightness.mask) !== 0;
-    if (l || u) {
-      const c = e[3] / 255;
-      if (e[0] /= c, e[1] /= c, e[2] /= c, l) {
-        const f = Hi(e, Wi), d = 0.11 / 2, _ = 0.09;
-        f[2] < d ? (f[0] = 0, f[1] = 1, f[2] = d) : f[1] < _ && (f[0] = 0, f[1] = _), f[0] = o.u_color + f[0] + 1, Ui(f, e);
+    let f = t.enabledEffects;
+    typeof r == "number" && (f &= r);
+    const E = t.getUniforms(), a = (f & B.EFFECT_INFO.color.mask) !== 0, u = (f & B.EFFECT_INFO.brightness.mask) !== 0;
+    if (a || u) {
+      const R = e[3] / 255;
+      if (e[0] /= R, e[1] /= R, e[2] /= R, a) {
+        const T = Oe(e, ke), _ = 0.11 / 2, L = 0.09;
+        T[2] < _ ? (T[0] = 0, T[1] = 1, T[2] = _) : T[1] < L && (T[0] = 0, T[1] = L), T[0] = E.u_color + T[0] + 1, Ge(T, e);
       }
       if (u) {
-        const f = o.u_brightness * 255;
-        e[0] += f, e[1] += f, e[2] += f;
+        const T = E.u_brightness * 255;
+        e[0] += T, e[1] += T, e[2] += T;
       }
-      e[0] *= c, e[1] *= c, e[2] *= c;
+      e[0] *= R, e[1] *= R, e[2] *= R;
     }
-    return s & y.EFFECT_INFO.ghost.mask && (e[0] *= o.u_ghost, e[1] *= o.u_ghost, e[2] *= o.u_ghost, e[3] *= o.u_ghost), e;
+    return f & B.EFFECT_INFO.ghost.mask && (e[0] *= E.u_ghost, e[1] *= E.u_ghost, e[2] *= E.u_ghost, e[3] *= E.u_ghost), e;
   }
   /**
    * Transform a texture coordinate to one that would be select after applying shader effects.
@@ -3097,96 +7479,96 @@ class lt {
    * @param {twgl.v3} dst A place to store the output coordinate.
    * @return {twgl.v3} dst - The coordinate after being transform by effects.
    */
-  static transformPoint(t, e, i) {
-    x.v3.copy(e, i);
-    const s = t.enabledEffects, o = t.getUniforms();
-    if (s & y.EFFECT_INFO.mosaic.mask && (i[0] = o.u_mosaic * i[0] % 1, i[1] = o.u_mosaic * i[1] % 1), s & y.EFFECT_INFO.pixelate.mask) {
-      const l = t.skin.getUniforms(), u = l.u_skinSize[0] / o.u_pixelate, c = l.u_skinSize[1] / o.u_pixelate;
-      i[0] = (Math.floor(i[0] * u) + H) / u, i[1] = (Math.floor(i[1] * c) + U) / c;
+  static transformPoint(t, e, r) {
+    h.v3.copy(e, r);
+    const f = t.enabledEffects, E = t.getUniforms();
+    if (f & B.EFFECT_INFO.mosaic.mask && (r[0] = E.u_mosaic * r[0] % 1, r[1] = E.u_mosaic * r[1] % 1), f & B.EFFECT_INFO.pixelate.mask) {
+      const a = t.skin.getUniforms(), u = a.u_skinSize[0] / E.u_pixelate, R = a.u_skinSize[1] / E.u_pixelate;
+      r[0] = (Math.floor(r[0] * u) + H) / u, r[1] = (Math.floor(r[1] * R) + z) / R;
     }
-    if (s & y.EFFECT_INFO.whirl.mask) {
-      const u = i[0] - H, c = i[1] - U, f = Math.sqrt(Math.pow(u, 2) + Math.pow(c, 2)), d = Math.max(1 - f / 0.5, 0), _ = o.u_whirl * d * d, w = Math.sin(_), E = Math.cos(_), g = E, m = -w, k = w, T = E;
-      i[0] = g * u + k * c + H, i[1] = m * u + T * c + U;
+    if (f & B.EFFECT_INFO.whirl.mask) {
+      const u = r[0] - H, R = r[1] - z, T = Math.sqrt(Math.pow(u, 2) + Math.pow(R, 2)), _ = Math.max(1 - T / 0.5, 0), L = E.u_whirl * _ * _, b = Math.sin(L), S = Math.cos(L), A = S, C = -b, p = b, N = S;
+      r[0] = A * u + p * R + H, r[1] = C * u + N * R + z;
     }
-    if (s & y.EFFECT_INFO.fisheye.mask) {
-      const l = (i[0] - H) / H, u = (i[1] - U) / U, c = Math.sqrt(l * l + u * u), f = Math.pow(Math.min(c, 1), o.u_fisheye) * Math.max(1, c), d = l / c, _ = u / c;
-      i[0] = H + f * d * H, i[1] = U + f * _ * U;
+    if (f & B.EFFECT_INFO.fisheye.mask) {
+      const a = (r[0] - H) / H, u = (r[1] - z) / z, R = Math.sqrt(a * a + u * u), T = Math.pow(Math.min(R, 1), E.u_fisheye) * Math.max(1, R), _ = a / R, L = u / R;
+      r[0] = H + T * _ * H, r[1] = z + T * L * z;
     }
-    return i;
+    return r;
   }
 }
-var At = { exports: {} }, kt = { exports: {} };
-function ht() {
+var Pt = { exports: {} }, vt = { exports: {} };
+function Tt() {
   this._events = {};
 }
-ht.prototype = {
-  on: function(a, t) {
+Tt.prototype = {
+  on: function(x, t) {
     this._events || (this._events = {});
     var e = this._events;
-    return (e[a] || (e[a] = [])).push(t), this;
+    return (e[x] || (e[x] = [])).push(t), this;
   },
-  removeListener: function(a, t) {
-    var e = this._events[a] || [], i;
-    for (i = e.length - 1; i >= 0 && e[i]; i--)
-      (e[i] === t || e[i].cb === t) && e.splice(i, 1);
+  removeListener: function(x, t) {
+    var e = this._events[x] || [], r;
+    for (r = e.length - 1; r >= 0 && e[r]; r--)
+      (e[r] === t || e[r].cb === t) && e.splice(r, 1);
   },
-  removeAllListeners: function(a) {
-    a ? this._events[a] && (this._events[a] = []) : this._events = {};
+  removeAllListeners: function(x) {
+    x ? this._events[x] && (this._events[x] = []) : this._events = {};
   },
-  listeners: function(a) {
-    return this._events ? this._events[a] || [] : [];
+  listeners: function(x) {
+    return this._events ? this._events[x] || [] : [];
   },
-  emit: function(a) {
+  emit: function(x) {
     this._events || (this._events = {});
-    var t = Array.prototype.slice.call(arguments, 1), e, i = this._events[a] || [];
-    for (e = i.length - 1; e >= 0 && i[e]; e--)
-      i[e].apply(this, t);
+    var t = Array.prototype.slice.call(arguments, 1), e, r = this._events[x] || [];
+    for (e = r.length - 1; e >= 0 && r[e]; e--)
+      r[e].apply(this, t);
     return this;
   },
-  when: function(a, t) {
-    return this.once(a, t, !0);
+  when: function(x, t) {
+    return this.once(x, t, !0);
   },
-  once: function(a, t, e) {
+  once: function(x, t, e) {
     if (!t) return this;
-    function i() {
-      e || this.removeListener(a, i), t.apply(this, arguments) && e && this.removeListener(a, i);
+    function r() {
+      e || this.removeListener(x, r), t.apply(this, arguments) && e && this.removeListener(x, r);
     }
-    return i.cb = t, this.on(a, i), this;
+    return r.cb = t, this.on(x, r), this;
   }
 };
-ht.mixin = function(a) {
-  var t = ht.prototype, e;
+Tt.mixin = function(x) {
+  var t = Tt.prototype, e;
   for (e in t)
-    t.hasOwnProperty(e) && (a.prototype[e] = t[e]);
+    t.hasOwnProperty(e) && (x.prototype[e] = t[e]);
 };
-var Gi = ht, Xi = Gi;
-function P() {
+var Fe = Tt, He = Fe;
+function G() {
 }
-Xi.mixin(P);
-P.prototype.write = function(a, t, e) {
-  this.emit("item", a, t, e);
+He.mixin(G);
+G.prototype.write = function(x, t, e) {
+  this.emit("item", x, t, e);
 };
-P.prototype.end = function() {
+G.prototype.end = function() {
   this.emit("end"), this.removeAllListeners();
 };
-P.prototype.pipe = function(a) {
+G.prototype.pipe = function(x) {
   var t = this;
-  t.emit("unpipe", a), a.emit("pipe", t);
+  t.emit("unpipe", x), x.emit("pipe", t);
   function e() {
-    a.write.apply(a, Array.prototype.slice.call(arguments));
+    x.write.apply(x, Array.prototype.slice.call(arguments));
   }
-  function i() {
-    !a._isStdio && a.end();
+  function r() {
+    !x._isStdio && x.end();
   }
-  return t.on("item", e), t.on("end", i), t.when("unpipe", function(s) {
-    var o = s === a || typeof s == "undefined";
-    return o && (t.removeListener("item", e), t.removeListener("end", i), a.emit("unpipe")), o;
-  }), a;
+  return t.on("item", e), t.on("end", r), t.when("unpipe", function(f) {
+    var E = f === x || typeof f == "undefined";
+    return E && (t.removeListener("item", e), t.removeListener("end", r), x.emit("unpipe")), E;
+  }), x;
 };
-P.prototype.unpipe = function(a) {
-  return this.emit("unpipe", a), this;
+G.prototype.unpipe = function(x) {
+  return this.emit("unpipe", x), this;
 };
-P.prototype.format = function(a) {
+G.prototype.format = function(x) {
   throw new Error([
     "Warning: .format() is deprecated in Minilog v2! Use .pipe() instead. For example:",
     "var Minilog = require('minilog');",
@@ -3196,67 +7578,67 @@ P.prototype.format = function(a) {
   ].join(`
 `));
 };
-P.mixin = function(a) {
-  var t = P.prototype, e;
+G.mixin = function(x) {
+  var t = G.prototype, e;
   for (e in t)
-    t.hasOwnProperty(e) && (a.prototype[e] = t[e]);
+    t.hasOwnProperty(e) && (x.prototype[e] = t[e]);
 };
-var R = P, Vi = R, ct = { debug: 1, info: 2, warn: 3, error: 4 };
-function G() {
+var F = G, ze = F, _t = { debug: 1, info: 2, warn: 3, error: 4 };
+function j() {
   this.enabled = !0, this.defaultResult = !0, this.clear();
 }
-Vi.mixin(G);
-G.prototype.allow = function(a, t) {
-  return this._white.push({ n: a, l: ct[t] }), this;
+ze.mixin(j);
+j.prototype.allow = function(x, t) {
+  return this._white.push({ n: x, l: _t[t] }), this;
 };
-G.prototype.deny = function(a, t) {
-  return this._black.push({ n: a, l: ct[t] }), this;
+j.prototype.deny = function(x, t) {
+  return this._black.push({ n: x, l: _t[t] }), this;
 };
-G.prototype.clear = function() {
+j.prototype.clear = function() {
   return this._white = [], this._black = [], this;
 };
-function Yt(a, t) {
-  return a.n.test ? a.n.test(t) : a.n == t;
+function ri(x, t) {
+  return x.n.test ? x.n.test(t) : x.n == t;
 }
-G.prototype.test = function(a, t) {
-  var e, i = Math.max(this._white.length, this._black.length);
-  for (e = 0; e < i; e++) {
-    if (this._white[e] && Yt(this._white[e], a) && ct[t] >= this._white[e].l)
+j.prototype.test = function(x, t) {
+  var e, r = Math.max(this._white.length, this._black.length);
+  for (e = 0; e < r; e++) {
+    if (this._white[e] && ri(this._white[e], x) && _t[t] >= this._white[e].l)
       return !0;
-    if (this._black[e] && Yt(this._black[e], a) && ct[t] <= this._black[e].l)
+    if (this._black[e] && ri(this._black[e], x) && _t[t] <= this._black[e].l)
       return !1;
   }
   return this.defaultResult;
 };
-G.prototype.write = function(a, t, e) {
-  if (!this.enabled || this.test(a, t))
-    return this.emit("item", a, t, e);
+j.prototype.write = function(x, t, e) {
+  if (!this.enabled || this.test(x, t))
+    return this.emit("item", x, t, e);
 };
-var $i = G;
-(function(a, t) {
-  var e = R, i = $i, s = new e(), o = Array.prototype.slice;
-  t = a.exports = function(u) {
-    var c = function() {
-      return s.write(u, void 0, o.call(arguments)), c;
+var We = j;
+(function(x, t) {
+  var e = F, r = We, f = new e(), E = Array.prototype.slice;
+  t = x.exports = function(u) {
+    var R = function() {
+      return f.write(u, void 0, E.call(arguments)), R;
     };
-    return c.debug = function() {
-      return s.write(u, "debug", o.call(arguments)), c;
-    }, c.info = function() {
-      return s.write(u, "info", o.call(arguments)), c;
-    }, c.warn = function() {
-      return s.write(u, "warn", o.call(arguments)), c;
-    }, c.error = function() {
-      return s.write(u, "error", o.call(arguments)), c;
-    }, c.log = c.debug, c.suggest = t.suggest, c.format = s.format, c;
-  }, t.defaultBackend = t.defaultFormatter = null, t.pipe = function(l) {
-    return s.pipe(l);
-  }, t.end = t.unpipe = t.disable = function(l) {
-    return s.unpipe(l);
-  }, t.Transform = e, t.Filter = i, t.suggest = new i(), t.enable = function() {
-    return t.defaultFormatter ? s.pipe(t.suggest).pipe(t.defaultFormatter).pipe(t.defaultBackend) : s.pipe(t.suggest).pipe(t.defaultBackend);
+    return R.debug = function() {
+      return f.write(u, "debug", E.call(arguments)), R;
+    }, R.info = function() {
+      return f.write(u, "info", E.call(arguments)), R;
+    }, R.warn = function() {
+      return f.write(u, "warn", E.call(arguments)), R;
+    }, R.error = function() {
+      return f.write(u, "error", E.call(arguments)), R;
+    }, R.log = R.debug, R.suggest = t.suggest, R.format = f.format, R;
+  }, t.defaultBackend = t.defaultFormatter = null, t.pipe = function(a) {
+    return f.pipe(a);
+  }, t.end = t.unpipe = t.disable = function(a) {
+    return f.unpipe(a);
+  }, t.Transform = e, t.Filter = r, t.suggest = new r(), t.enable = function() {
+    return t.defaultFormatter ? f.pipe(t.suggest).pipe(t.defaultFormatter).pipe(t.defaultBackend) : f.pipe(t.suggest).pipe(t.defaultBackend);
   };
-})(kt, kt.exports);
-var ji = kt.exports, Jt = {
+})(vt, vt.exports);
+var je = vt.exports, ni = {
   black: "#000",
   red: "#c23621",
   green: "#25bc26",
@@ -3267,128 +7649,128 @@ var ji = kt.exports, Jt = {
   gray: "#808080",
   purple: "#708"
 };
-function qi(a, t) {
-  return t ? "color: #fff; background: " + Jt[a] + ";" : "color: " + Jt[a] + ";";
+function $e(x, t) {
+  return t ? "color: #fff; background: " + ni[x] + ";" : "color: " + ni[x] + ";";
 }
-var xe = qi, Ki = R, wt = xe, Zi = { debug: ["cyan"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, Nt = new Ki();
-Nt.write = function(a, t, e) {
-  var i = console.log;
-  console[t] && console[t].apply && (i = console[t], i.apply(console, ["%c" + a + " %c" + t, wt("gray"), wt.apply(wt, Zi[t])].concat(e)));
+var Vi = $e, qe = F, Ut = Vi, Ze = { debug: ["cyan"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, Wt = new qe();
+Wt.write = function(x, t, e) {
+  var r = console.log;
+  console[t] && console[t].apply && (r = console[t], r.apply(console, ["%c" + x + " %c" + t, Ut("gray"), Ut.apply(Ut, Ze[t])].concat(e)));
 };
-Nt.pipe = function() {
+Wt.pipe = function() {
 };
-var Yi = Nt, Ji = R, it = xe, Qt = { debug: ["gray"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, Ot = new Ji();
-Ot.write = function(a, t, e) {
-  var i = console.log;
-  t != "debug" && console[t] && (i = console[t]);
-  var s = 0;
+var Je = Wt, Ye = F, ft = Vi, fi = { debug: ["gray"], info: ["purple"], warn: ["yellow", !0], error: ["red", !0] }, jt = new Ye();
+jt.write = function(x, t, e) {
+  var r = console.log;
+  t != "debug" && console[t] && (r = console[t]);
+  var f = 0;
   if (t != "info") {
-    for (; s < e.length && typeof e[s] == "string"; s++)
+    for (; f < e.length && typeof e[f] == "string"; f++)
       ;
-    i.apply(console, ["%c" + a + " " + e.slice(0, s).join(" "), it.apply(it, Qt[t])].concat(e.slice(s)));
+    r.apply(console, ["%c" + x + " " + e.slice(0, f).join(" "), ft.apply(ft, fi[t])].concat(e.slice(f)));
   } else
-    i.apply(console, ["%c" + a, it.apply(it, Qt[t])].concat(e));
+    r.apply(console, ["%c" + x, ft.apply(ft, fi[t])].concat(e));
 };
-Ot.pipe = function() {
+jt.pipe = function() {
 };
-var Qi = Ot, tn = R, en = /\n+$/, Q = new tn();
-Q.write = function(a, t, e) {
-  var i = e.length - 1;
+var Qe = jt, ce = F, oe = /\n+$/, tt = new ce();
+tt.write = function(x, t, e) {
+  var r = e.length - 1;
   if (!(typeof console == "undefined" || !console.log)) {
     if (console.log.apply)
-      return console.log.apply(console, [a, t].concat(e));
+      return console.log.apply(console, [x, t].concat(e));
     if (JSON && JSON.stringify) {
-      e[i] && typeof e[i] == "string" && (e[i] = e[i].replace(en, ""));
+      e[r] && typeof e[r] == "string" && (e[r] = e[r].replace(oe, ""));
       try {
-        for (i = 0; i < e.length; i++)
-          e[i] = JSON.stringify(e[i]);
-      } catch (s) {
+        for (r = 0; r < e.length; r++)
+          e[r] = JSON.stringify(e[r]);
+      } catch (f) {
       }
       console.log(e.join(" "));
     }
   }
 };
-Q.formatters = ["color", "minilog"];
-Q.color = Yi;
-Q.minilog = Qi;
-var nn = Q, xt, te;
-function sn() {
-  if (te) return xt;
-  te = 1;
-  var a = R, t = [], e = new a();
-  return e.write = function(i, s, o) {
-    t.push([i, s, o]);
+tt.formatters = ["color", "minilog"];
+tt.color = Je;
+tt.minilog = Qe;
+var de = tt, gt, si;
+function tr() {
+  if (si) return gt;
+  si = 1;
+  var x = F, t = [], e = new x();
+  return e.write = function(r, f, E) {
+    t.push([r, f, E]);
   }, e.get = function() {
     return t;
   }, e.empty = function() {
     t = [];
-  }, xt = e, xt;
+  }, gt = e, gt;
 }
-var Et, ee;
-function rn() {
-  if (ee) return Et;
-  ee = 1;
-  var a = R, t = !1, e = new a();
-  return e.write = function(i, s, o) {
+var Nt, Ei;
+function ir() {
+  if (Ei) return Nt;
+  Ei = 1;
+  var x = F, t = !1, e = new x();
+  return e.write = function(r, f, E) {
     if (!(typeof window == "undefined" || typeof JSON == "undefined" || !JSON.stringify || !JSON.parse))
       try {
-        t || (t = window.localStorage.minilog ? JSON.parse(window.localStorage.minilog) : []), t.push([(/* @__PURE__ */ new Date()).toString(), i, s, o]), window.localStorage.minilog = JSON.stringify(t);
-      } catch (l) {
+        t || (t = window.localStorage.minilog ? JSON.parse(window.localStorage.minilog) : []), t.push([(/* @__PURE__ */ new Date()).toString(), r, f, E]), window.localStorage.minilog = JSON.stringify(t);
+      } catch (a) {
       }
-  }, Et = e, Et;
+  }, Nt = e, Nt;
 }
-var yt, ie;
-function on() {
-  if (ie) return yt;
-  ie = 1;
-  var a = R, t = (/* @__PURE__ */ new Date()).valueOf().toString(36);
-  function e(i) {
-    this.url = i.url || "", this.cache = [], this.timer = null, this.interval = i.interval || 30 * 1e3, this.enabled = !0, this.jQuery = window.jQuery, this.extras = {};
+var Dt, xi;
+function er() {
+  if (xi) return Dt;
+  xi = 1;
+  var x = F, t = (/* @__PURE__ */ new Date()).valueOf().toString(36);
+  function e(r) {
+    this.url = r.url || "", this.cache = [], this.timer = null, this.interval = r.interval || 30 * 1e3, this.enabled = !0, this.jQuery = window.jQuery, this.extras = {};
   }
-  return a.mixin(e), e.prototype.write = function(i, s, o) {
-    this.timer || this.init(), this.cache.push([i, s].concat(o));
+  return x.mixin(e), e.prototype.write = function(r, f, E) {
+    this.timer || this.init(), this.cache.push([r, f].concat(E));
   }, e.prototype.init = function() {
     if (!(!this.enabled || !this.jQuery)) {
-      var i = this;
+      var r = this;
       this.timer = setTimeout(function() {
-        var s, o = [], l, u = i.url;
-        if (i.cache.length == 0) return i.init();
-        for (s = 0; s < i.cache.length; s++)
+        var f, E = [], a, u = r.url;
+        if (r.cache.length == 0) return r.init();
+        for (f = 0; f < r.cache.length; f++)
           try {
-            JSON.stringify(i.cache[s]), o.push(i.cache[s]);
-          } catch (c) {
+            JSON.stringify(r.cache[f]), E.push(r.cache[f]);
+          } catch (R) {
           }
-        i.jQuery.isEmptyObject(i.extras) ? (l = JSON.stringify({ logs: o }), u = i.url + "?client_id=" + t) : l = JSON.stringify(i.jQuery.extend({ logs: o }, i.extras)), i.jQuery.ajax(u, {
+        r.jQuery.isEmptyObject(r.extras) ? (a = JSON.stringify({ logs: E }), u = r.url + "?client_id=" + t) : a = JSON.stringify(r.jQuery.extend({ logs: E }, r.extras)), r.jQuery.ajax(u, {
           type: "POST",
           cache: !1,
           processData: !1,
-          data: l,
+          data: a,
           contentType: "application/json",
           timeout: 1e4
-        }).success(function(c, f, d) {
-          c.interval && (i.interval = Math.max(1e3, c.interval));
+        }).success(function(R, T, _) {
+          R.interval && (r.interval = Math.max(1e3, R.interval));
         }).error(function() {
-          i.interval = 3e4;
+          r.interval = 3e4;
         }).always(function() {
-          i.init();
-        }), i.cache = [];
+          r.init();
+        }), r.cache = [];
       }, this.interval);
     }
   }, e.prototype.end = function() {
-  }, e.jQueryWait = function(i) {
+  }, e.jQueryWait = function(r) {
     if (typeof window != "undefined" && (window.jQuery || window.$))
-      return i(window.jQuery || window.$);
+      return r(window.jQuery || window.$);
     typeof window != "undefined" && setTimeout(function() {
-      e.jQueryWait(i);
+      e.jQueryWait(r);
     }, 200);
-  }, yt = e, yt;
+  }, Dt = e, Dt;
 }
-(function(a, t) {
-  var e = ji, i = e.enable, s = e.disable, o = typeof navigator != "undefined" && /chrome/i.test(navigator.userAgent), l = nn;
-  if (e.defaultBackend = o ? l.minilog : l, typeof window != "undefined") {
+(function(x, t) {
+  var e = je, r = e.enable, f = e.disable, E = typeof navigator != "undefined" && /chrome/i.test(navigator.userAgent), a = de;
+  if (e.defaultBackend = E ? a.minilog : a, typeof window != "undefined") {
     try {
       e.enable(JSON.parse(window.localStorage.minilogSettings));
-    } catch (c) {
+    } catch (R) {
     }
     if (window.location && window.location.search) {
       var u = RegExp("[?&]minilog=([^&]*)").exec(window.location.search);
@@ -3396,34 +7778,34 @@ function on() {
     }
   }
   e.enable = function() {
-    i.call(e, !0);
+    r.call(e, !0);
     try {
       window.localStorage.minilogSettings = JSON.stringify(!0);
-    } catch (c) {
+    } catch (R) {
     }
     return this;
   }, e.disable = function() {
-    s.call(e);
+    f.call(e);
     try {
       delete window.localStorage.minilogSettings;
-    } catch (c) {
+    } catch (R) {
     }
     return this;
-  }, t = a.exports = e, t.backends = {
-    array: sn(),
+  }, t = x.exports = e, t.backends = {
+    array: tr(),
     browser: e.defaultBackend,
-    localStorage: rn(),
-    jQuery: on()
+    localStorage: ir(),
+    jQuery: er()
   };
-})(At, At.exports);
-var an = At.exports;
-const Ee = /* @__PURE__ */ ut(an);
-Ee.enable();
-const K = Ee("scratch-render"), ln = x.v3.create(), ne = 1e-6, Tt = (a, t) => {
-  const e = ln, i = t[0], s = t[1], o = a._inverseMatrix, l = i * o[3] + s * o[7] + o[15];
-  return e[0] = 0.5 - (i * o[0] + s * o[4] + o[12]) / l, e[1] = (i * o[1] + s * o[5] + o[13]) / l + 0.5, Math.abs(e[0]) < ne && (e[0] = 0), Math.abs(e[1]) < ne && (e[1] = 0), a.enabledEffects !== 0 && e[0] >= 0 && e[0] < 1 && e[1] >= 0 && e[1] < 1 && lt.transformPoint(a, e, e), e;
+})(Pt, Pt.exports);
+var rr = Pt.exports;
+const pi = /* @__PURE__ */ Xt(rr);
+pi.enable();
+const Q = pi("scratch-render"), nr = h.v3.create(), ai = 1e-6, Vt = (x, t) => {
+  const e = nr, r = t[0], f = t[1], E = x._inverseMatrix, a = r * E[3] + f * E[7] + E[15];
+  return e[0] = 0.5 - (r * E[0] + f * E[4] + E[12]) / a, e[1] = (r * E[1] + f * E[5] + E[13]) / a + 0.5, Math.abs(e[0]) < ai && (e[0] = 0), Math.abs(e[1]) < ai && (e[1] = 0), x.enabledEffects !== 0 && e[0] >= 0 && e[0] < 1 && e[1] >= 0 && e[1] < 1 && ut.transformPoint(x, e, e), e;
 };
-class Y {
+class o {
   /**
    * An object which can be drawn by the renderer.
    * @todo double-buffer all rendering state (position, skin, effects, etc.)
@@ -3436,19 +7818,19 @@ class Y {
        * The model matrix, to concat with projection at draw time.
        * @type {module:twgl/m4.Mat4}
        */
-      u_modelMatrix: x.m4.identity(),
+      u_modelMatrix: h.m4.identity(),
       /**
        * The color to use in the silhouette draw mode.
        * @type {Array<number>}
        */
-      u_silhouetteColor: Y.color4fFromID(this._id)
+      u_silhouetteColor: o.color4fFromID(this._id)
     };
-    const e = y.EFFECTS.length;
-    for (let i = 0; i < e; ++i) {
-      const s = y.EFFECTS[i], o = y.EFFECT_INFO[s], l = o.converter;
-      this._uniforms[o.uniformName] = l(0);
+    const e = B.EFFECTS.length;
+    for (let r = 0; r < e; ++r) {
+      const f = B.EFFECTS[r], E = B.EFFECT_INFO[f], a = E.converter;
+      this._uniforms[E.uniformName] = a(0);
     }
-    this._position = x.v3.create(0, 0), this._scale = x.v3.create(100, 100), this._direction = 90, this._transformDirty = !0, this._rotationMatrix = x.m4.identity(), this._rotationTransformDirty = !0, this._rotationAdjusted = x.v3.create(), this._rotationCenterDirty = !0, this._skinScale = x.v3.create(0, 0, 0), this._skinScaleDirty = !0, this._inverseMatrix = x.m4.identity(), this._inverseTransformDirty = !0, this._visible = !0, this.enabledEffects = 0, this._convexHullPoints = null, this._convexHullDirty = !0, this._transformedHullPoints = null, this._transformedHullDirty = !0, this._skinWasAltered = this._skinWasAltered.bind(this), this.isTouching = this._isTouchingNever;
+    this._position = h.v3.create(0, 0), this._scale = h.v3.create(100, 100), this._direction = 90, this._transformDirty = !0, this._rotationMatrix = h.m4.identity(), this._rotationTransformDirty = !0, this._rotationAdjusted = h.v3.create(), this._rotationCenterDirty = !0, this._skinScale = h.v3.create(0, 0, 0), this._skinScaleDirty = !0, this._inverseMatrix = h.m4.identity(), this._inverseTransformDirty = !0, this._visible = !0, this.enabledEffects = 0, this._convexHullPoints = null, this._convexHullDirty = !0, this._transformedHullPoints = null, this._transformedHullDirty = !0, this._skinWasAltered = this._skinWasAltered.bind(this), this.isTouching = this._isTouchingNever;
   }
   /**
    * Dispose of this Drawable. Do not use it after calling this method.
@@ -3479,7 +7861,7 @@ class Y {
    * @param {Skin} newSkin - A new Skin for this Drawable.
    */
   set skin(t) {
-    this._skin !== t && (this._skin && this._skin.removeListener(F.Events.WasAltered, this._skinWasAltered), this._skin = t, this._skin && this._skin.addListener(F.Events.WasAltered, this._skinWasAltered), this._skinWasAltered());
+    this._skin !== t && (this._skin && this._skin.removeListener(P.Events.WasAltered, this._skinWasAltered), this._skin = t, this._skin && this._skin.addListener(P.Events.WasAltered, this._skinWasAltered), this._skinWasAltered());
   }
   /**
    * @returns {Array<number>} the current scaling percentages applied to this Drawable. [100,100] is normal size.
@@ -3533,10 +7915,10 @@ class Y {
    * @param {number} rawValue A new effect value.
    */
   updateEffect(t, e) {
-    const i = y.EFFECT_INFO[t];
-    e ? this.enabledEffects |= i.mask : this.enabledEffects &= ~i.mask;
-    const s = i.converter;
-    this._uniforms[i.uniformName] = s(e), i.shapeChanges && this.setConvexHullDirty();
+    const r = B.EFFECT_INFO[t];
+    e ? this.enabledEffects |= r.mask : this.enabledEffects &= ~r.mask;
+    const f = r.converter;
+    this._uniforms[r.uniformName] = f(e), r.shapeChanges && this.setConvexHullDirty();
   }
   /**
    * Update the position, direction, scale, or effect properties of this Drawable.
@@ -3545,10 +7927,10 @@ class Y {
    */
   updateProperties(t) {
     "position" in t && this.updatePosition(t.position), "direction" in t && this.updateDirection(t.direction), "scale" in t && this.updateScale(t.scale), "visible" in t && this.updateVisible(t.visible);
-    const e = y.EFFECTS.length;
-    for (let i = 0; i < e; ++i) {
-      const s = y.EFFECTS[i];
-      s in t && this.updateEffect(s, t[s]);
+    const e = B.EFFECTS.length;
+    for (let r = 0; r < e; ++r) {
+      const f = B.EFFECTS[r];
+      f in t && this.updateEffect(f, t[f]);
     }
   }
   /**
@@ -3557,19 +7939,19 @@ class Y {
    */
   _calculateTransform() {
     if (this._rotationTransformDirty) {
-      const w = (270 - this._direction) * Math.PI / 180, E = Math.cos(w), g = Math.sin(w);
-      this._rotationMatrix[0] = E, this._rotationMatrix[1] = g, this._rotationMatrix[4] = -g, this._rotationMatrix[5] = E, this._rotationTransformDirty = !1;
+      const b = (270 - this._direction) * Math.PI / 180, S = Math.cos(b), A = Math.sin(b);
+      this._rotationMatrix[0] = S, this._rotationMatrix[1] = A, this._rotationMatrix[4] = -A, this._rotationMatrix[5] = S, this._rotationTransformDirty = !1;
     }
     if (this._rotationCenterDirty && this.skin !== null) {
-      const w = this.skin.rotationCenter, E = this.skin.size, g = w[0], m = w[1], k = E[0], T = E[1], b = this._scale[0], p = this._scale[1], v = this._rotationAdjusted;
-      v[0] = (g - k / 2) * b / 100, v[1] = (m - T / 2) * p / 100 * -1, this._rotationCenterDirty = !1;
+      const b = this.skin.rotationCenter, S = this.skin.size, A = b[0], C = b[1], p = S[0], N = S[1], D = this._scale[0], w = this._scale[1], V = this._rotationAdjusted;
+      V[0] = (A - p / 2) * D / 100, V[1] = (C - N / 2) * w / 100 * -1, this._rotationCenterDirty = !1;
     }
     if (this._skinScaleDirty && this.skin !== null) {
-      const w = this.skin.size, E = this._skinScale;
-      E[0] = w[0] * this._scale[0] / 100, E[1] = w[1] * this._scale[1] / 100, this._skinScaleDirty = !1;
+      const b = this.skin.size, S = this._skinScale;
+      S[0] = b[0] * this._scale[0] / 100, S[1] = b[1] * this._scale[1] / 100, this._skinScaleDirty = !1;
     }
-    const t = this._uniforms.u_modelMatrix, e = this._skinScale[0], i = this._skinScale[1], s = this._rotationMatrix[0], o = this._rotationMatrix[1], l = this._rotationMatrix[4], u = this._rotationMatrix[5], c = this._rotationAdjusted[0], f = this._rotationAdjusted[1], d = this._position[0], _ = this._position[1];
-    t[0] = e * s, t[1] = e * o, t[4] = i * l, t[5] = i * u, t[12] = s * c + l * f + d, t[13] = o * c + u * f + _, this._transformDirty = !1;
+    const t = this._uniforms.u_modelMatrix, e = this._skinScale[0], r = this._skinScale[1], f = this._rotationMatrix[0], E = this._rotationMatrix[1], a = this._rotationMatrix[4], u = this._rotationMatrix[5], R = this._rotationAdjusted[0], T = this._rotationAdjusted[1], _ = this._position[0], L = this._position[1];
+    t[0] = e * f, t[1] = e * E, t[4] = r * a, t[5] = r * u, t[12] = f * R + a * T + _, t[13] = E * R + u * T + L, this._transformDirty = !1;
   }
   /**
    * Whether the Drawable needs convex hull points provided by the renderer.
@@ -3592,7 +7974,7 @@ class Y {
   setConvexHullPoints(t) {
     this._convexHullPoints = t, this._convexHullDirty = !1, this._transformedHullPoints = [];
     for (let e = 0; e < t.length; e++)
-      this._transformedHullPoints.push(x.v3.create());
+      this._transformedHullPoints.push(h.v3.create());
     this._transformedHullDirty = !0;
   }
   /**
@@ -3615,10 +7997,10 @@ class Y {
     return !1;
   }
   _isTouchingNearest(t) {
-    return this.skin.isTouchingNearest(Tt(this, t));
+    return this.skin.isTouchingNearest(Vt(this, t));
   }
   _isTouchingLinear(t) {
-    return this.skin.isTouchingLinear(Tt(this, t));
+    return this.skin.isTouchingLinear(Vt(this, t));
   }
   /**
    * Get the precise bounds for a Drawable.
@@ -3633,7 +8015,7 @@ class Y {
       throw new Error("Needs updated convex hull points before bounds calculation.");
     this._transformDirty && this._calculateTransform();
     const e = this._getTransformedHullPoints();
-    return t = t || new M(), t.initFromPointsAABB(e), t;
+    return t = t || new m(), t.initFromPointsAABB(e), t;
   }
   /**
    * Get the precise bounds for the upper 8px slice of the Drawable.
@@ -3646,8 +8028,8 @@ class Y {
     if (this.needsConvexHullPoints())
       throw new Error("Needs updated convex hull points before bubble bounds calculation.");
     this._transformDirty && this._calculateTransform();
-    const e = 8, i = this._getTransformedHullPoints(), s = Math.max.apply(null, i.map((l) => l[1])), o = i.filter((l) => l[1] > s - e);
-    return t = t || new M(), t.initFromPointsAABB(o), t;
+    const e = 8, r = this._getTransformedHullPoints(), f = Math.max.apply(null, r.map((a) => a[1])), E = r.filter((a) => a[1] > f - e);
+    return t = t || new m(), t.initFromPointsAABB(E), t;
   }
   /**
    * Get the rough axis-aligned bounding box for the Drawable.
@@ -3662,7 +8044,7 @@ class Y {
   getAABB(t) {
     this._transformDirty && this._calculateTransform();
     const e = this._uniforms.u_modelMatrix;
-    return t = t || new M(), t.initFromModelMatrix(e), t;
+    return t = t || new m(), t.initFromModelMatrix(e), t;
   }
   /**
    * Return the best Drawable bounds possible without performing graphics queries.
@@ -3684,10 +8066,10 @@ class Y {
   _getTransformedHullPoints() {
     if (!this._transformedHullDirty)
       return this._transformedHullPoints;
-    const t = x.m4.ortho(-1, 1, -1, 1, -1, 1), e = this.skin.size, i = 1 / e[0] / 2, s = 1 / e[1] / 2, o = x.m4.multiply(this._uniforms.u_modelMatrix, t);
-    for (let l = 0; l < this._convexHullPoints.length; l++) {
-      const u = this._convexHullPoints[l], c = this._transformedHullPoints[l];
-      c[0] = 0.5 + -u[0] / e[0] - i, c[1] = u[1] / e[1] - 0.5 + s, x.m4.transformPoint(o, c, c);
+    const t = h.m4.ortho(-1, 1, -1, 1, -1, 1), e = this.skin.size, r = 1 / e[0] / 2, f = 1 / e[1] / 2, E = h.m4.multiply(this._uniforms.u_modelMatrix, t);
+    for (let a = 0; a < this._convexHullPoints.length; a++) {
+      const u = this._convexHullPoints[a], R = this._transformedHullPoints[a];
+      R[0] = 0.5 + -u[0] / e[0] - r, R[1] = u[1] / e[1] - 0.5 + f, h.m4.transformPoint(E, R, R);
     }
     return this._transformedHullDirty = !1, this._transformedHullPoints;
   }
@@ -3698,14 +8080,14 @@ class Y {
   updateMatrix() {
     if (this._transformDirty && this._calculateTransform(), this._inverseTransformDirty) {
       const t = this._inverseMatrix;
-      x.m4.copy(this._uniforms.u_modelMatrix, t), t[10] = 1, x.m4.inverse(t, t), this._inverseTransformDirty = !1;
+      h.m4.copy(this._uniforms.u_modelMatrix, t), t[10] = 1, h.m4.inverse(t, t), this._inverseTransformDirty = !1;
     }
   }
   /**
    * Update everything necessary to render this drawable on the CPU.
    */
   updateCPURenderAttributes() {
-    this.updateMatrix(), this.skin ? (this.skin.updateSilhouette(this._scale), this.skin.useNearest(this._scale, this) ? this.isTouching = this._isTouchingNearest : this.isTouching = this._isTouchingLinear) : (K.warn(`Could not find skin for drawable with id: ${this._id}`), this.isTouching = this._isTouchingNever);
+    this.updateMatrix(), this.skin ? (this.skin.updateSilhouette(this._scale), this.skin.useNearest(this._scale, this) ? this.isTouching = this._isTouchingNearest : this.isTouching = this._isTouchingLinear) : (Q.warn(`Could not find skin for drawable with id: ${this._id}`), this.isTouching = this._isTouchingNever);
   }
   /**
    * Respond to an internal change in the current Skin.
@@ -3721,9 +8103,9 @@ class Y {
    * @returns {Array<number>} An array of [r,g,b,a], each component in the range [0,1].
    */
   static color4fFromID(t) {
-    t -= L.ID_NONE;
-    const e = (t >> 0 & 255) / 255, i = (t >> 8 & 255) / 255, s = (t >> 16 & 255) / 255;
-    return [e, i, s, 1];
+    t -= I.ID_NONE;
+    const e = (t >> 0 & 255) / 255, r = (t >> 8 & 255) / 255, f = (t >> 16 & 255) / 255;
+    return [e, r, f, 1];
   }
   /**
    * Calculate the ID number represented by the given color. If all components of
@@ -3734,9 +8116,9 @@ class Y {
    * @param {int} b The blue value of the color, in the range [0,255].
    * @returns {int} The ID represented by that color.
    */
-  static color3bToID(t, e, i) {
-    let s;
-    return s = (t & 255) << 0, s |= (e & 255) << 8, s |= (i & 255) << 16, s + L.ID_NONE;
+  static color3bToID(t, e, r) {
+    let f;
+    return f = (t & 255) << 0, f |= (e & 255) << 8, f |= (r & 255) << 16, f + I.ID_NONE;
   }
   /**
    * Sample a color from a drawable's texture.
@@ -3748,23 +8130,23 @@ class Y {
    * @param {number} [effectMask] A bitmask for which effects to use. Optional.
    * @returns {Uint8ClampedArray} The dst object filled with the color4b
    */
-  static sampleColor4b(t, e, i, s) {
-    const o = Tt(e, t);
-    if (o[0] < 0 || o[1] < 0 || o[0] > 1 || o[1] > 1)
-      return i[0] = 0, i[1] = 0, i[2] = 0, i[3] = 0, i;
-    const l = (
+  static sampleColor4b(t, e, r, f) {
+    const E = Vt(e, t);
+    if (E[0] < 0 || E[1] < 0 || E[0] > 1 || E[1] > 1)
+      return r[0] = 0, r[1] = 0, r[2] = 0, r[3] = 0, r;
+    const a = (
       // commenting out to only use nearest for now
       // drawable.skin.useNearest(drawable._scale, drawable) ?
-      e.skin._silhouette.colorAtNearest(o, i)
+      e.skin._silhouette.colorAtNearest(E, r)
     );
-    return e.enabledEffects === 0 ? l : lt.transformColor(e, l, s);
+    return e.enabledEffects === 0 ? a : ut.transformColor(e, a, f);
   }
 }
-const se = x.v3.create(), hn = new M(), cn = new M(), un = new Uint8ClampedArray(4), j = new Uint8ClampedArray(4), fn = 4e4, nt = [3, 3], _n = 2, re = 2048, dn = (a, t) => (
+const li = h.v3.create(), fr = new m(), sr = new m(), Er = new Uint8ClampedArray(4), J = new Uint8ClampedArray(4), xr = 4e4, st = [3, 3], ar = 2, Ri = 2048, lr = (x, t) => (
   // has some non-alpha component to test against
-  a[3] > 0 && (a[0] & 252) === (t[0] & 252) && (a[1] & 252) === (t[1] & 252) && (a[2] & 252) === (t[2] & 252)
-), St = (a, t, e) => (a[0] & 248) === (t[e + 0] & 248) && (a[1] & 248) === (t[e + 1] & 248) && (a[2] & 240) === (t[e + 2] & 240), oe = 15;
-class B extends ae {
+  x[3] > 0 && (x[0] & 252) === (t[0] & 252) && (x[1] & 252) === (t[1] & 252) && (x[2] & 252) === (t[2] & 252)
+), pt = (x, t, e) => (x[0] & 248) === (t[e + 0] & 248) && (x[1] & 248) === (t[e + 1] & 248) && (x[2] & 240) === (t[e + 2] & 240), ui = 15;
+class v extends Ti {
   /**
    * Check if this environment appears to support this renderer before attempting to create an instance.
    * Catching an exception from the constructor is also a valid way to test for (lack of) support.
@@ -3773,7 +8155,7 @@ class B extends ae {
    */
   static isSupported(t) {
     try {
-      return !!B._getContext(t || document.createElement("canvas"));
+      return !!v._getContext(t || document.createElement("canvas"));
     } catch (e) {
       return !1;
     }
@@ -3786,7 +8168,7 @@ class B extends ae {
    */
   static _getContext(t) {
     const e = { alpha: !1, stencil: !0, antialias: !1 };
-    return x.getWebGLContext(t, e) || x.getContext(t, e);
+    return h.getWebGLContext(t, e) || h.getContext(t, e);
   }
   /**
    * Create a renderer for drawing Scratch sprites to a canvas using WebGL.
@@ -3804,15 +8186,15 @@ class B extends ae {
    * @constructor
    * @listens RenderWebGL#event:NativeSizeChanged
    */
-  constructor(t, e, i, s, o) {
+  constructor(t, e, r, f, E) {
     super();
-    const l = this._gl = B._getContext(t);
-    if (!l)
+    const a = this._gl = v._getContext(t);
+    if (!a)
       throw new Error("Could not get WebGL context: this browser or environment may not support WebGL.");
-    this._useGpuMode = B.UseGpuModes.Automatic, this._allDrawables = [], this._allSkins = [], this._drawList = [], this._groupOrdering = [], this._layerGroups = {}, this._nextDrawableId = L.ID_NONE + 1, this._nextSkinId = L.ID_NONE + 1, this._projection = x.m4.identity(), this._shaderManager = new y(l), this._tempCanvas = document.createElement("canvas"), this._regionId = null, this._exitRegion = null, this._backgroundDrawRegionId = {
+    this._useGpuMode = v.UseGpuModes.Automatic, this._allDrawables = [], this._allSkins = [], this._drawList = [], this._groupOrdering = [], this._layerGroups = {}, this._nextDrawableId = I.ID_NONE + 1, this._nextSkinId = I.ID_NONE + 1, this._projection = h.m4.identity(), this._shaderManager = new B(a), this._tempCanvas = document.createElement("canvas"), this._regionId = null, this._exitRegion = null, this._backgroundDrawRegionId = {
       enter: () => this._enterDrawBackground(),
       exit: () => this._exitDrawBackground()
-    }, this._snapshotCallbacks = [], this._backgroundColor4f = [0, 0, 0, 1], this._backgroundColor3b = new Uint8ClampedArray(3), this._createGeometry(), this.on(L.Events.NativeSizeChanged, this.onNativeSizeChanged), this.setBackgroundColor(1, 1, 1), this.setStageSize(e || -240, i || 240, s || -180, o || 180), this.resize(this._nativeSize[0], this._nativeSize[1]), l.disable(l.DEPTH_TEST), l.enable(l.BLEND), l.blendFunc(l.ONE, l.ONE_MINUS_SRC_ALPHA);
+    }, this._snapshotCallbacks = [], this._backgroundColor4f = [0, 0, 0, 1], this._backgroundColor3b = new Uint8ClampedArray(3), this._createGeometry(), this.on(I.Events.NativeSizeChanged, this.onNativeSizeChanged), this.setBackgroundColor(1, 1, 1), this.setStageSize(e || -240, r || 240, f || -180, E || 180), this.resize(this._nativeSize[0], this._nativeSize[1]), a.disable(a.DEPTH_TEST), a.enable(a.BLEND), a.blendFunc(a.ONE, a.ONE_MINUS_SRC_ALPHA);
   }
   /**
    * @returns {WebGLRenderingContext} the WebGL rendering context associated with this renderer.
@@ -3833,8 +8215,8 @@ class B extends ae {
    * @param {int} pixelsTall The desired height in device-independent pixels.
    */
   resize(t, e) {
-    const { canvas: i } = this._gl, s = window.devicePixelRatio || 1, o = t * s, l = e * s;
-    (i.width !== o || i.height !== l) && (i.width = o, i.height = l, this.draw());
+    const { canvas: r } = this._gl, f = window.devicePixelRatio || 1, E = t * f, a = e * f;
+    (r.width !== E || r.height !== a) && (r.width = E, r.height = a, this.draw());
   }
   /**
    * Set the background color for the stage. The stage will be cleared with this
@@ -3843,8 +8225,8 @@ class B extends ae {
    * @param {number} green The green component for the background.
    * @param {number} blue The blue component for the background.
    */
-  setBackgroundColor(t, e, i) {
-    this._backgroundColor4f[0] = t, this._backgroundColor4f[1] = e, this._backgroundColor4f[2] = i, this._backgroundColor3b[0] = t * 255, this._backgroundColor3b[1] = e * 255, this._backgroundColor3b[2] = i * 255;
+  setBackgroundColor(t, e, r) {
+    this._backgroundColor4f[0] = t, this._backgroundColor4f[1] = e, this._backgroundColor4f[2] = r, this._backgroundColor3b[0] = t * 255, this._backgroundColor3b[1] = e * 255, this._backgroundColor3b[2] = r * 255;
   }
   /**
    * Tell the renderer to draw various debug information to the provided canvas
@@ -3868,8 +8250,8 @@ class B extends ae {
    * @param {int} yBottom The bottom edge's y-coordinate. Scratch 2 uses -180.
    * @param {int} yTop The top edge's y-coordinate. Scratch 2 uses 180.
    */
-  setStageSize(t, e, i, s) {
-    this._xLeft = t, this._xRight = e, this._yBottom = i, this._yTop = s, this._projection = x.m4.ortho(t, e, i, s, -1, 1), this._setNativeSize(Math.abs(e - t), Math.abs(i - s));
+  setStageSize(t, e, r, f) {
+    this._xLeft = t, this._xRight = e, this._yBottom = r, this._yTop = f, this._projection = h.m4.ortho(t, e, r, f, -1, 1), this._setNativeSize(Math.abs(e - t), Math.abs(r - f));
   }
   /**
    * @return {Array<int>} the "native" size of the stage, which is used for pen, query renders, etc.
@@ -3885,7 +8267,7 @@ class B extends ae {
    * @fires RenderWebGL#event:NativeSizeChanged
    */
   _setNativeSize(t, e) {
-    this._nativeSize = [t, e], this.emit(L.Events.NativeSizeChanged, { newSize: this._nativeSize });
+    this._nativeSize = [t, e], this.emit(I.Events.NativeSizeChanged, { newSize: this._nativeSize });
   }
   /**
    * Create a new bitmap skin from a snapshot of the provided bitmap data.
@@ -3895,9 +8277,9 @@ class B extends ae {
    * the skin will be used.
    * @returns {!int} the ID for the new skin.
    */
-  createBitmapSkin(t, e, i) {
-    const s = this._nextSkinId++, o = new Z(s, this);
-    return o.setBitmap(t, e, i), this._allSkins[s] = o, s;
+  createBitmapSkin(t, e, r) {
+    const f = this._nextSkinId++, E = new c(f, this);
+    return E.setBitmap(t, e, r), this._allSkins[f] = E, f;
   }
   /**
    * Create a new SVG skin.
@@ -3907,15 +8289,15 @@ class B extends ae {
    * @returns {!int} the ID for the new skin.
    */
   createSVGSkin(t, e) {
-    const i = this._nextSkinId++, s = new dt(i, this);
-    return s.setSVG(t, e), this._allSkins[i] = s, i;
+    const r = this._nextSkinId++, f = new ht(r, this);
+    return f.setSVG(t, e), this._allSkins[r] = f, r;
   }
   /**
    * Create a new PenSkin - a skin which implements a Scratch pen layer.
    * @returns {!int} the ID for the new skin.
    */
   createPenSkin() {
-    const t = this._nextSkinId++, e = new ke(t, this);
+    const t = this._nextSkinId++, e = new yi(t, this);
     return this._allSkins[t] = e, t;
   }
   /**
@@ -3926,9 +8308,9 @@ class B extends ae {
    * @param {!boolean} pointsLeft - which side the bubble is pointing.
    * @returns {!int} the ID for the new skin.
    */
-  createTextSkin(t, e, i) {
-    const s = this._nextSkinId++, o = new et(s, this);
-    return o.setTextBubble(t, e, i), this._allSkins[s] = o, s;
+  createTextSkin(t, e, r) {
+    const f = this._nextSkinId++, E = new nt(f, this);
+    return E.setTextBubble(t, e, r), this._allSkins[f] = E, f;
   }
   /**
    * Update an existing SVG skin, or create an SVG skin if the previous skin was not SVG.
@@ -3937,13 +8319,13 @@ class B extends ae {
    * @param {?Array<number>} rotationCenter Optional: rotation center of the skin. If not supplied, the center of the
    * skin will be used
    */
-  updateSVGSkin(t, e, i) {
-    if (this._allSkins[t] instanceof dt) {
-      this._allSkins[t].setSVG(e, i);
+  updateSVGSkin(t, e, r) {
+    if (this._allSkins[t] instanceof ht) {
+      this._allSkins[t].setSVG(e, r);
       return;
     }
-    const s = new dt(t, this);
-    s.setSVG(e, i), this._reskin(t, s);
+    const f = new ht(t, this);
+    f.setSVG(e, r), this._reskin(t, f);
   }
   /**
    * Update an existing bitmap skin, or create a bitmap skin if the previous skin was not bitmap.
@@ -3953,20 +8335,20 @@ class B extends ae {
    * @param {?Array<number>} rotationCenter Optional: rotation center of the skin. If not supplied, the center of the
    * skin will be used
    */
-  updateBitmapSkin(t, e, i, s) {
-    if (this._allSkins[t] instanceof Z) {
-      this._allSkins[t].setBitmap(e, i, s);
+  updateBitmapSkin(t, e, r, f) {
+    if (this._allSkins[t] instanceof c) {
+      this._allSkins[t].setBitmap(e, r, f);
       return;
     }
-    const o = new Z(t, this);
-    o.setBitmap(e, i, s), this._reskin(t, o);
+    const E = new c(t, this);
+    E.setBitmap(e, r, f), this._reskin(t, E);
   }
   _reskin(t, e) {
-    const i = this._allSkins[t];
+    const r = this._allSkins[t];
     this._allSkins[t] = e;
-    for (const s of this._allDrawables)
-      s && s.skin === i && (s.skin = e);
-    i.dispose();
+    for (const f of this._allDrawables)
+      f && f.skin === r && (f.skin = e);
+    r.dispose();
   }
   /**
    * Update a skin using the text bubble svg creator.
@@ -3975,13 +8357,13 @@ class B extends ae {
    * @param {!string} text - the text for the bubble.
    * @param {!boolean} pointsLeft - which side the bubble is pointing.
    */
-  updateTextSkin(t, e, i, s) {
-    if (this._allSkins[t] instanceof et) {
-      this._allSkins[t].setTextBubble(e, i, s);
+  updateTextSkin(t, e, r, f) {
+    if (this._allSkins[t] instanceof nt) {
+      this._allSkins[t].setTextBubble(e, r, f);
       return;
     }
-    const o = new et(t, this);
-    o.setTextBubble(e, i, s), this._reskin(t, o);
+    const E = new nt(t, this);
+    E.setTextBubble(e, r, f), this._reskin(t, E);
   }
   /**
    * Destroy an existing skin. Do not use the skin or its ID after calling this.
@@ -3997,11 +8379,11 @@ class B extends ae {
    */
   createDrawable(t) {
     if (!t || !Object.prototype.hasOwnProperty.call(this._layerGroups, t)) {
-      K.warn("Cannot create a drawable without a known layer group");
+      Q.warn("Cannot create a drawable without a known layer group");
       return;
     }
-    const e = this._nextDrawableId++, i = new Y(e);
-    return this._allDrawables[e] = i, this._addToDrawList(e, t), i.skin = null, e;
+    const e = this._nextDrawableId++, r = new o(e);
+    return this._allDrawables[e] = r, this._addToDrawList(e, t), r.skin = null, e;
   }
   /**
    * Set the layer group ordering for the renderer.
@@ -4017,13 +8399,13 @@ class B extends ae {
       };
   }
   _addToDrawList(t, e) {
-    const i = this._layerGroups[e], s = i.groupIndex, o = this._endIndexForKnownLayerGroup(i);
-    this._drawList.splice(o, 0, t), this._updateOffsets("add", s);
+    const r = this._layerGroups[e], f = r.groupIndex, E = this._endIndexForKnownLayerGroup(r);
+    this._drawList.splice(E, 0, t), this._updateOffsets("add", f);
   }
   _updateOffsets(t, e) {
-    for (let i = e + 1; i < this._groupOrdering.length; i++) {
-      const s = this._groupOrdering[i];
-      t === "add" ? this._layerGroups[s].drawListOffset++ : t === "delete" && this._layerGroups[s].drawListOffset--;
+    for (let r = e + 1; r < this._groupOrdering.length; r++) {
+      const f = this._groupOrdering[r];
+      t === "add" ? this._layerGroups[f].drawListOffset++ : t === "delete" && this._layerGroups[f].drawListOffset--;
     }
   }
   get _visibleDrawList() {
@@ -4042,18 +8424,18 @@ class B extends ae {
    */
   destroyDrawable(t, e) {
     if (!e || !Object.prototype.hasOwnProperty.call(this._layerGroups, e)) {
-      K.warn("Cannot destroy drawable without known layer group.");
+      Q.warn("Cannot destroy drawable without known layer group.");
       return;
     }
     this._allDrawables[t].dispose(), delete this._allDrawables[t];
-    const s = this._layerGroups[e], o = this._endIndexForKnownLayerGroup(s);
-    let l = s.drawListOffset;
-    for (; l < o && this._drawList[l] !== t; )
-      l++;
-    if (l < o)
-      this._drawList.splice(l, 1), this._updateOffsets("delete", s.groupIndex);
+    const f = this._layerGroups[e], E = this._endIndexForKnownLayerGroup(f);
+    let a = f.drawListOffset;
+    for (; a < E && this._drawList[a] !== t; )
+      a++;
+    if (a < E)
+      this._drawList.splice(a, 1), this._updateOffsets("delete", f.groupIndex);
     else {
-      K.warn("Could not destroy drawable that could not be found in layer group.");
+      Q.warn("Could not destroy drawable that could not be found in layer group.");
       return;
     }
   }
@@ -4082,23 +8464,23 @@ class B extends ae {
    * @param {number=} optMin If set, order constrained to be at least `optMin`.
    * @return {?number} New order if changed, or null.
    */
-  setDrawableOrder(t, e, i, s, o) {
-    if (!i || !Object.prototype.hasOwnProperty.call(this._layerGroups, i)) {
-      K.warn("Cannot set the order of a drawable without a known layer group.");
+  setDrawableOrder(t, e, r, f, E) {
+    if (!r || !Object.prototype.hasOwnProperty.call(this._layerGroups, r)) {
+      Q.warn("Cannot set the order of a drawable without a known layer group.");
       return;
     }
-    const l = this._layerGroups[i], u = l.drawListOffset, c = this._endIndexForKnownLayerGroup(l);
-    let f = u;
-    for (; f < c && this._drawList[f] !== t; )
-      f++;
-    if (f < c) {
+    const a = this._layerGroups[r], u = a.drawListOffset, R = this._endIndexForKnownLayerGroup(a);
+    let T = u;
+    for (; T < R && this._drawList[T] !== t; )
+      T++;
+    if (T < R) {
       if (e === 0)
-        return f;
-      this._drawList.splice(f, 1)[0];
-      let d = e;
-      s && (d += f);
-      const _ = (o || 0) + u, w = _ >= u && _ < c ? _ : u;
-      return d = Math.max(d, w), d = Math.min(d, c), this._drawList.splice(d, 0, t), d;
+        return T;
+      this._drawList.splice(T, 1)[0];
+      let _ = e;
+      f && (_ += T);
+      const L = (E || 0) + u, b = L >= u && L < R ? L : u;
+      return _ = Math.max(_, b), _ = Math.min(_, R), this._drawList.splice(_, 0, t), _;
     }
     return null;
   }
@@ -4108,12 +8490,12 @@ class B extends ae {
   draw() {
     this._doExitDrawRegion();
     const t = this._gl;
-    if (x.bindFramebufferInfo(t, null), t.viewport(0, 0, t.canvas.width, t.canvas.height), t.clearColor(...this._backgroundColor4f), t.clear(t.COLOR_BUFFER_BIT), this._drawThese(this._drawList, y.DRAW_MODE.default, this._projection, {
+    if (h.bindFramebufferInfo(t, null), t.viewport(0, 0, t.canvas.width, t.canvas.height), t.clearColor(...this._backgroundColor4f), t.clear(t.COLOR_BUFFER_BIT), this._drawThese(this._drawList, B.DRAW_MODE.default, this._projection, {
       framebufferWidth: t.canvas.width,
       framebufferHeight: t.canvas.height
     }), this._snapshotCallbacks.length > 0) {
       const e = t.canvas.toDataURL();
-      this._snapshotCallbacks.forEach((i) => i(e)), this._snapshotCallbacks = [];
+      this._snapshotCallbacks.forEach((r) => r(e)), this._snapshotCallbacks = [];
     }
   }
   /**
@@ -4124,24 +8506,24 @@ class B extends ae {
   getBounds(t) {
     const e = this._allDrawables[t];
     if (e.needsConvexHullPoints()) {
-      const s = this._getConvexHullPointsForDrawable(t);
-      e.setConvexHullPoints(s);
+      const f = this._getConvexHullPointsForDrawable(t);
+      e.setConvexHullPoints(f);
     }
-    const i = e.getFastBounds();
+    const r = e.getFastBounds();
     if (this._debugCanvas) {
-      const s = this._gl;
-      this._debugCanvas.width = s.canvas.width, this._debugCanvas.height = s.canvas.height;
-      const o = this._debugCanvas.getContext("2d");
-      o.drawImage(s.canvas, 0, 0), o.strokeStyle = "#FF0000";
-      const l = window.devicePixelRatio;
-      o.strokeRect(
-        l * (i.left + this._nativeSize[0] / 2),
-        l * (-i.top + this._nativeSize[1] / 2),
-        l * (i.right - i.left),
-        l * (-i.bottom + i.top)
+      const f = this._gl;
+      this._debugCanvas.width = f.canvas.width, this._debugCanvas.height = f.canvas.height;
+      const E = this._debugCanvas.getContext("2d");
+      E.drawImage(f.canvas, 0, 0), E.strokeStyle = "#FF0000";
+      const a = window.devicePixelRatio;
+      E.strokeRect(
+        a * (r.left + this._nativeSize[0] / 2),
+        a * (-r.top + this._nativeSize[1] / 2),
+        a * (r.right - r.left),
+        a * (-r.bottom + r.top)
       );
     }
-    return i;
+    return r;
   }
   /**
    * Get the precise bounds for a Drawable around the top slice.
@@ -4152,24 +8534,24 @@ class B extends ae {
   getBoundsForBubble(t) {
     const e = this._allDrawables[t];
     if (e.needsConvexHullPoints()) {
-      const s = this._getConvexHullPointsForDrawable(t);
-      e.setConvexHullPoints(s);
+      const f = this._getConvexHullPointsForDrawable(t);
+      e.setConvexHullPoints(f);
     }
-    const i = e.getBoundsForBubble();
+    const r = e.getBoundsForBubble();
     if (this._debugCanvas) {
-      const s = this._gl;
-      this._debugCanvas.width = s.canvas.width, this._debugCanvas.height = s.canvas.height;
-      const o = this._debugCanvas.getContext("2d");
-      o.drawImage(s.canvas, 0, 0), o.strokeStyle = "#FF0000";
-      const l = window.devicePixelRatio;
-      o.strokeRect(
-        l * (i.left + this._nativeSize[0] / 2),
-        l * (-i.top + this._nativeSize[1] / 2),
-        l * (i.right - i.left),
-        l * (-i.bottom + i.top)
+      const f = this._gl;
+      this._debugCanvas.width = f.canvas.width, this._debugCanvas.height = f.canvas.height;
+      const E = this._debugCanvas.getContext("2d");
+      E.drawImage(f.canvas, 0, 0), E.strokeStyle = "#FF0000";
+      const a = window.devicePixelRatio;
+      E.strokeRect(
+        a * (r.left + this._nativeSize[0] / 2),
+        a * (-r.top + this._nativeSize[1] / 2),
+        a * (r.right - r.left),
+        a * (-r.bottom + r.top)
       );
     }
-    return i;
+    return r;
   }
   /**
    * Get the current skin (costume) size of a Drawable.
@@ -4204,94 +8586,94 @@ class B extends ae {
    * @param {Array<int>} [mask3b] Optionally mask the check to this part of Drawable.
    * @returns {boolean} True iff the Drawable is touching the color.
    */
-  isTouchingColor(t, e, i) {
-    const s = this._candidatesTouching(t, this._visibleDrawList);
-    let o;
-    if (St(e, this._backgroundColor3b, 0)) {
-      if (o = this._touchingBounds(t), o === null) return !1;
+  isTouchingColor(t, e, r) {
+    const f = this._candidatesTouching(t, this._visibleDrawList);
+    let E;
+    if (pt(e, this._backgroundColor3b, 0)) {
+      if (E = this._touchingBounds(t), E === null) return !1;
     } else {
-      if (s.length === 0)
+      if (f.length === 0)
         return !1;
-      o = this._candidatesBounds(s);
+      E = this._candidatesBounds(f);
     }
-    const l = this._getMaxPixelsForCPU(), u = this._debugCanvas && this._debugCanvas.getContext("2d");
-    u && (this._debugCanvas.width = o.width, this._debugCanvas.height = o.height), o.width * o.height * (s.length + 1) >= l && this._isTouchingColorGpuStart(t, s.map(({ id: E }) => E).reverse(), o, e, i);
-    const c = this._allDrawables[t], f = se, d = un, _ = !!i;
-    c.updateCPURenderAttributes();
-    const w = ~y.EFFECT_INFO.ghost.mask;
-    for (let E = o.bottom; E <= o.top; E++) {
-      if (o.width * (E - o.bottom) * (s.length + 1) >= l)
-        return this._isTouchingColorGpuFin(o, e, E - o.bottom);
-      for (let g = o.left; g <= o.right; g++)
-        if (f[1] = E, f[0] = g, (_ ? dn(Y.sampleColor4b(f, c, d, w), i) : c.isTouching(f)) && (B.sampleColor3b(f, s, d), u && (u.fillStyle = `rgb(${d[0]},${d[1]},${d[2]})`, u.fillRect(g - o.left, o.bottom - E, 1, 1)), St(d, e, 0)))
+    const a = this._getMaxPixelsForCPU(), u = this._debugCanvas && this._debugCanvas.getContext("2d");
+    u && (this._debugCanvas.width = E.width, this._debugCanvas.height = E.height), E.width * E.height * (f.length + 1) >= a && this._isTouchingColorGpuStart(t, f.map(({ id: S }) => S).reverse(), E, e, r);
+    const R = this._allDrawables[t], T = li, _ = Er, L = !!r;
+    R.updateCPURenderAttributes();
+    const b = ~B.EFFECT_INFO.ghost.mask;
+    for (let S = E.bottom; S <= E.top; S++) {
+      if (E.width * (S - E.bottom) * (f.length + 1) >= a)
+        return this._isTouchingColorGpuFin(E, e, S - E.bottom);
+      for (let A = E.left; A <= E.right; A++)
+        if (T[1] = S, T[0] = A, (L ? lr(o.sampleColor4b(T, R, _, b), r) : R.isTouching(T)) && (v.sampleColor3b(T, f, _), u && (u.fillStyle = `rgb(${_[0]},${_[1]},${_[2]})`, u.fillRect(A - E.left, E.bottom - S, 1, 1)), pt(_, e, 0)))
           return !0;
     }
     return !1;
   }
   _getMaxPixelsForCPU() {
     switch (this._useGpuMode) {
-      case B.UseGpuModes.ForceCPU:
+      case v.UseGpuModes.ForceCPU:
         return 1 / 0;
-      case B.UseGpuModes.ForceGPU:
+      case v.UseGpuModes.ForceGPU:
         return 0;
-      case B.UseGpuModes.Automatic:
+      case v.UseGpuModes.Automatic:
       default:
-        return fn;
+        return xr;
     }
   }
   _enterDrawBackground() {
-    const t = this.gl, e = this._shaderManager.getShader(y.DRAW_MODE.background, 0);
-    t.disable(t.BLEND), t.useProgram(e.program), x.setBuffersAndAttributes(t, e, this._bufferInfo);
+    const t = this.gl, e = this._shaderManager.getShader(B.DRAW_MODE.background, 0);
+    t.disable(t.BLEND), t.useProgram(e.program), h.setBuffersAndAttributes(t, e, this._bufferInfo);
   }
   _exitDrawBackground() {
     const t = this.gl;
     t.enable(t.BLEND);
   }
-  _isTouchingColorGpuStart(t, e, i, s, o) {
+  _isTouchingColorGpuStart(t, e, r, f, E) {
     this._doExitDrawRegion();
-    const l = this._gl;
-    x.bindFramebufferInfo(l, this._queryBufferInfo), l.viewport(0, 0, i.width, i.height);
-    const u = x.m4.ortho(i.left, i.right, i.top, i.bottom, -1, 1);
-    l.clearColor(0, 0, 0, 0), l.clear(l.COLOR_BUFFER_BIT | l.STENCIL_BUFFER_BIT);
-    let c;
-    o && (c = {
-      u_colorMask: [o[0] / 255, o[1] / 255, o[2] / 255],
-      u_colorMaskTolerance: _n / 255
+    const a = this._gl;
+    h.bindFramebufferInfo(a, this._queryBufferInfo), a.viewport(0, 0, r.width, r.height);
+    const u = h.m4.ortho(r.left, r.right, r.top, r.bottom, -1, 1);
+    a.clearColor(0, 0, 0, 0), a.clear(a.COLOR_BUFFER_BIT | a.STENCIL_BUFFER_BIT);
+    let R;
+    E && (R = {
+      u_colorMask: [E[0] / 255, E[1] / 255, E[2] / 255],
+      u_colorMaskTolerance: ar / 255
     });
     try {
-      l.enable(l.STENCIL_TEST), l.stencilFunc(l.ALWAYS, 1, 1), l.stencilOp(l.KEEP, l.KEEP, l.REPLACE), l.colorMask(!1, !1, !1, !1), this._drawThese(
+      a.enable(a.STENCIL_TEST), a.stencilFunc(a.ALWAYS, 1, 1), a.stencilOp(a.KEEP, a.KEEP, a.REPLACE), a.colorMask(!1, !1, !1, !1), this._drawThese(
         [t],
-        o ? y.DRAW_MODE.colorMask : y.DRAW_MODE.silhouette,
+        E ? B.DRAW_MODE.colorMask : B.DRAW_MODE.silhouette,
         u,
         {
-          extraUniforms: c,
+          extraUniforms: R,
           ignoreVisibility: !0,
           // Touching color ignores sprite visibility,
-          effectMask: ~y.EFFECT_INFO.ghost.mask
+          effectMask: ~B.EFFECT_INFO.ghost.mask
         }
-      ), l.stencilFunc(l.EQUAL, 1, 1), l.stencilOp(l.KEEP, l.KEEP, l.KEEP), l.colorMask(!0, !0, !0, !0), this.enterDrawRegion(this._backgroundDrawRegionId);
-      const f = {
+      ), a.stencilFunc(a.EQUAL, 1, 1), a.stencilOp(a.KEEP, a.KEEP, a.KEEP), a.colorMask(!0, !0, !0, !0), this.enterDrawRegion(this._backgroundDrawRegionId);
+      const T = {
         u_backgroundColor: this._backgroundColor4f
-      }, d = this._shaderManager.getShader(y.DRAW_MODE.background, 0);
-      x.setUniforms(d, f), x.drawBufferInfo(l, this._bufferInfo, l.TRIANGLES), this._drawThese(
+      }, _ = this._shaderManager.getShader(B.DRAW_MODE.background, 0);
+      h.setUniforms(_, T), h.drawBufferInfo(a, this._bufferInfo, a.TRIANGLES), this._drawThese(
         e,
-        y.DRAW_MODE.default,
+        B.DRAW_MODE.default,
         u,
-        { idFilterFunc: (_) => _ !== t }
+        { idFilterFunc: (L) => L !== t }
       );
     } finally {
-      l.colorMask(!0, !0, !0, !0), l.disable(l.STENCIL_TEST), this._doExitDrawRegion();
+      a.colorMask(!0, !0, !0, !0), a.disable(a.STENCIL_TEST), this._doExitDrawRegion();
     }
   }
-  _isTouchingColorGpuFin(t, e, i) {
-    const s = this._gl, o = new Uint8Array(Math.floor(t.width * (t.height - i) * 4));
-    if (s.readPixels(0, 0, t.width, t.height - i, s.RGBA, s.UNSIGNED_BYTE, o), this._debugCanvas) {
+  _isTouchingColorGpuFin(t, e, r) {
+    const f = this._gl, E = new Uint8Array(Math.floor(t.width * (t.height - r) * 4));
+    if (f.readPixels(0, 0, t.width, t.height - r, f.RGBA, f.UNSIGNED_BYTE, E), this._debugCanvas) {
       this._debugCanvas.width = t.width, this._debugCanvas.height = t.height;
-      const l = this._debugCanvas.getContext("2d"), u = l.getImageData(0, 0, t.width, t.height - i);
-      u.data.set(o), l.putImageData(u, 0, 0);
+      const a = this._debugCanvas.getContext("2d"), u = a.getImageData(0, 0, t.width, t.height - r);
+      u.data.set(E), a.putImageData(u, 0, 0);
     }
-    for (let l = 0; l < o.length; l += 4)
-      if (o[l + 3] !== 0 && St(e, o, l))
+    for (let a = 0; a < E.length; a += 4)
+      if (E[a + 3] !== 0 && pt(e, E, a))
         return !0;
     return !1;
   }
@@ -4302,21 +8684,21 @@ class B extends ae {
    * @returns {boolean} True if the Drawable is touching one of candidateIDs.
    */
   isTouchingDrawables(t, e = this._drawList) {
-    const i = this._candidatesTouching(
+    const r = this._candidatesTouching(
       t,
       // even if passed an invisible drawable, we will NEVER touch it!
       e.filter((u) => this._allDrawables[u]._visible)
     );
-    if (i.length === 0 || !this._allDrawables[t]._visible)
+    if (r.length === 0 || !this._allDrawables[t]._visible)
       return !1;
-    const s = this._candidatesBounds(i), o = this._allDrawables[t], l = se;
-    o.updateCPURenderAttributes();
-    for (let u = s.left; u <= s.right; u++) {
-      l[0] = u;
-      for (let c = s.bottom; c <= s.top; c++)
-        if (l[1] = c, o.isTouching(l)) {
-          for (let f = 0; f < i.length; f++)
-            if (i[f].drawable.isTouching(l))
+    const f = this._candidatesBounds(r), E = this._allDrawables[t], a = li;
+    E.updateCPURenderAttributes();
+    for (let u = f.left; u <= f.right; u++) {
+      a[0] = u;
+      for (let R = f.bottom; R <= f.top; R++)
+        if (a[1] = R, E.isTouching(a)) {
+          for (let T = 0; T < r.length; T++)
+            if (r[T].drawable.isTouching(a))
               return !0;
         }
     }
@@ -4334,16 +8716,16 @@ class B extends ae {
    * @returns {Rectangle} Scratch world space rectangle, iterate bottom <= top,
    *                      left <= right.
    */
-  clientSpaceToScratchBounds(t, e, i = 1, s = 1) {
-    const o = this._gl, l = this._nativeSize[0] / o.canvas.clientWidth, u = this._nativeSize[1] / o.canvas.clientHeight;
-    i *= l, s *= u, i = Math.max(1, Math.min(Math.round(i), nt[0])), s = Math.max(1, Math.min(Math.round(s), nt[1]));
-    const c = t * l - (i - 1) / 2, f = e * u + (s - 1) / 2, d = i % 2 ? 0 : -0.5, _ = s % 2 ? 0 : -0.5, w = new M();
-    return w.initFromBounds(
-      Math.floor(this._xLeft + c + d),
-      Math.floor(this._xLeft + c + d + i - 1),
-      Math.ceil(this._yTop - f + _),
-      Math.ceil(this._yTop - f + _ + s - 1)
-    ), w;
+  clientSpaceToScratchBounds(t, e, r = 1, f = 1) {
+    const E = this._gl, a = this._nativeSize[0] / E.canvas.clientWidth, u = this._nativeSize[1] / E.canvas.clientHeight;
+    r *= a, f *= u, r = Math.max(1, Math.min(Math.round(r), st[0])), f = Math.max(1, Math.min(Math.round(f), st[1]));
+    const R = t * a - (r - 1) / 2, T = e * u + (f - 1) / 2, _ = r % 2 ? 0 : -0.5, L = f % 2 ? 0 : -0.5, b = new m();
+    return b.initFromBounds(
+      Math.floor(this._xLeft + R + _),
+      Math.floor(this._xLeft + R + _ + r - 1),
+      Math.ceil(this._yTop - T + L),
+      Math.ceil(this._yTop - T + L + f - 1)
+    ), b;
   }
   /**
    * Determine if the drawable is touching a client based x/y.  Helper method for sensing
@@ -4356,14 +8738,14 @@ class B extends ae {
    * @param {int} [touchHeight] The client height of the touch event (optional).
    * @returns {boolean} If the drawable has any pixels that would draw in the touch area
    */
-  drawableTouching(t, e, i, s, o) {
-    const l = this._allDrawables[t];
-    if (!l)
+  drawableTouching(t, e, r, f, E) {
+    const a = this._allDrawables[t];
+    if (!a)
       return !1;
-    const u = this.clientSpaceToScratchBounds(e, i, s, o), c = x.v3.create();
-    for (l.updateCPURenderAttributes(), c[1] = u.bottom; c[1] <= u.top; c[1]++)
-      for (c[0] = u.left; c[0] <= u.right; c[0]++)
-        if (l.isTouching(c))
+    const u = this.clientSpaceToScratchBounds(e, r, f, E), R = h.v3.create();
+    for (a.updateCPURenderAttributes(), R[1] = u.bottom; R[1] <= u.top; R[1]++)
+      for (R[0] = u.left; R[0] <= u.right; R[0]++)
+        if (a.isTouching(R))
           return !0;
     return !1;
   }
@@ -4381,32 +8763,32 @@ class B extends ae {
    * @returns {int} The ID of the topmost Drawable under the picking location, or
    * RenderConstants.ID_NONE if there is no Drawable at that location.
    */
-  pick(t, e, i, s, o) {
-    const l = this.clientSpaceToScratchBounds(t, e, i, s);
-    if (l.left === -1 / 0 || l.bottom === -1 / 0 || (o = (o || this._drawList).filter((d) => {
-      const _ = this._allDrawables[d];
-      if (_.getVisible() && _.getUniforms().u_ghost !== 0) {
-        const w = _.getFastBounds();
-        return l.intersects(w) ? (_.updateCPURenderAttributes(), !0) : !1;
+  pick(t, e, r, f, E) {
+    const a = this.clientSpaceToScratchBounds(t, e, r, f);
+    if (a.left === -1 / 0 || a.bottom === -1 / 0 || (E = (E || this._drawList).filter((_) => {
+      const L = this._allDrawables[_];
+      if (L.getVisible() && L.getUniforms().u_ghost !== 0) {
+        const b = L.getFastBounds();
+        return a.intersects(b) ? (L.updateCPURenderAttributes(), !0) : !1;
       }
       return !1;
-    }), o.length === 0))
+    }), E.length === 0))
       return !1;
-    const u = [], c = x.v3.create(0, 0, 0);
-    for (c[1] = l.bottom; c[1] <= l.top; c[1]++)
-      for (c[0] = l.left; c[0] <= l.right; c[0]++)
-        for (let d = o.length - 1; d >= 0; d--) {
-          const _ = o[d];
-          if (this._allDrawables[_].isTouching(c)) {
-            u[_] = (u[_] || 0) + 1;
+    const u = [], R = h.v3.create(0, 0, 0);
+    for (R[1] = a.bottom; R[1] <= a.top; R[1]++)
+      for (R[0] = a.left; R[0] <= a.right; R[0]++)
+        for (let _ = E.length - 1; _ >= 0; _--) {
+          const L = E[_];
+          if (this._allDrawables[L].isTouching(R)) {
+            u[L] = (u[L] || 0) + 1;
             break;
           }
         }
-    u[L.ID_NONE] = 0;
-    let f = L.ID_NONE;
-    for (const d in u)
-      Object.prototype.hasOwnProperty.call(u, d) && u[d] > u[f] && (f = d);
-    return Number(f);
+    u[I.ID_NONE] = 0;
+    let T = I.ID_NONE;
+    for (const _ in u)
+      Object.prototype.hasOwnProperty.call(u, _) && u[_] > u[T] && (T = _);
+    return Number(T);
   }
   /**
    * @typedef DrawableExtraction
@@ -4425,55 +8807,55 @@ class B extends ae {
     const e = this._allDrawables[t];
     if (!e) throw new Error(`Could not extract drawable with ID ${t}; it does not exist`);
     this._doExitDrawRegion();
-    const i = this._nativeSize[0] * 0.5, s = this._nativeSize[1] * 0.5, o = e.getFastBounds(), l = this.canvas, u = l.width / this._nativeSize[0], c = new M();
-    c.initFromBounds(
-      (o.left + i) * u,
-      (o.right + i) * u,
+    const r = this._nativeSize[0] * 0.5, f = this._nativeSize[1] * 0.5, E = e.getFastBounds(), a = this.canvas, u = a.width / this._nativeSize[0], R = new m();
+    R.initFromBounds(
+      (E.left + r) * u,
+      (E.right + r) * u,
       // in "canvas space", +y is down, but Rectangle methods assume bottom < top, so swap them
-      (s - o.top) * u,
-      (s - o.bottom) * u
-    ), c.snapToInt(), o.initFromBounds(
-      c.left / u - i,
-      c.right / u - i,
-      s - c.top / u,
-      s - c.bottom / u
+      (f - E.top) * u,
+      (f - E.bottom) * u
+    ), R.snapToInt(), E.initFromBounds(
+      R.left / u - r,
+      R.right / u - r,
+      f - R.top / u,
+      f - R.bottom / u
     );
-    const f = this._gl, d = f.getParameter(f.MAX_TEXTURE_SIZE), _ = Math.min(re, c.width, d), w = Math.min(re, c.height, d), E = x.createFramebufferInfo(f, [{ format: f.RGBA }], _, w);
+    const T = this._gl, _ = T.getParameter(T.MAX_TEXTURE_SIZE), L = Math.min(Ri, R.width, _), b = Math.min(Ri, R.height, _), S = h.createFramebufferInfo(T, [{ format: T.RGBA }], L, b);
     try {
-      x.bindFramebufferInfo(f, E), f.viewport(0, 0, _, w);
-      const g = x.m4.ortho(
-        o.left,
-        o.right,
-        o.top,
-        o.bottom,
+      h.bindFramebufferInfo(T, S), T.viewport(0, 0, L, b);
+      const A = h.m4.ortho(
+        E.left,
+        E.right,
+        E.top,
+        E.bottom,
         -1,
         1
       );
-      f.clearColor(0, 0, 0, 0), f.clear(f.COLOR_BUFFER_BIT), this._drawThese(
+      T.clearColor(0, 0, 0, 0), T.clear(T.COLOR_BUFFER_BIT), this._drawThese(
         [t],
-        y.DRAW_MODE.straightAlpha,
-        g,
+        B.DRAW_MODE.straightAlpha,
+        A,
         {
           // Don't apply the ghost effect. TODO: is this an intentional design decision?
-          effectMask: ~y.EFFECT_INFO.ghost.mask,
+          effectMask: ~B.EFFECT_INFO.ghost.mask,
           // We're doing this in screen-space, so the framebuffer dimensions should be those of the canvas in
           // screen-space. This is used to ensure SVG skins are rendered at the proper resolution.
-          framebufferWidth: l.width,
-          framebufferHeight: l.height
+          framebufferWidth: a.width,
+          framebufferHeight: a.height
         }
       );
-      const m = new Uint8Array(Math.floor(_ * w * 4));
-      f.readPixels(0, 0, _, w, f.RGBA, f.UNSIGNED_BYTE, m);
-      const k = new ImageData(new Uint8ClampedArray(m.buffer), _, w), T = l.getBoundingClientRect().width / l.width;
+      const C = new Uint8Array(Math.floor(L * b * 4));
+      T.readPixels(0, 0, L, b, T.RGBA, T.UNSIGNED_BYTE, C);
+      const p = new ImageData(new Uint8ClampedArray(C.buffer), L, b), N = a.getBoundingClientRect().width / a.width;
       return {
-        imageData: k,
-        x: c.left * T,
-        y: c.bottom * T,
-        width: c.width * T,
-        height: c.height * T
+        imageData: p,
+        x: R.left * N,
+        y: R.bottom * N,
+        width: R.width * N,
+        height: R.height * N
       };
     } finally {
-      f.deleteFramebuffer(E.framebuffer);
+      T.deleteFramebuffer(S.framebuffer);
     }
   }
   /**
@@ -4490,34 +8872,34 @@ class B extends ae {
    * @param {int} radius The client radius to extract pixels with.
    * @return {?ColorExtraction} Data about the picked color
    */
-  extractColor(t, e, i) {
+  extractColor(t, e, r) {
     this._doExitDrawRegion();
-    const s = Math.round(this._nativeSize[0] * (t / this._gl.canvas.clientWidth - 0.5)), o = Math.round(-this._nativeSize[1] * (e / this._gl.canvas.clientHeight - 0.5)), l = this._gl;
-    x.bindFramebufferInfo(l, this._queryBufferInfo);
-    const u = new M();
-    u.initFromBounds(s - i, s + i, o - i, o + i);
-    const c = s - u.left, f = u.top - o;
-    l.viewport(0, 0, u.width, u.height);
-    const d = x.m4.ortho(u.left, u.right, u.top, u.bottom, -1, 1);
-    l.clearColor(...this._backgroundColor4f), l.clear(l.COLOR_BUFFER_BIT), this._drawThese(this._drawList, y.DRAW_MODE.default, d);
-    const _ = new Uint8Array(Math.floor(u.width * u.height * 4));
-    l.readPixels(0, 0, u.width, u.height, l.RGBA, l.UNSIGNED_BYTE, _);
-    const w = Math.floor(4 * (f * u.width + c)), E = {
-      r: _[w],
-      g: _[w + 1],
-      b: _[w + 2],
-      a: _[w + 3]
+    const f = Math.round(this._nativeSize[0] * (t / this._gl.canvas.clientWidth - 0.5)), E = Math.round(-this._nativeSize[1] * (e / this._gl.canvas.clientHeight - 0.5)), a = this._gl;
+    h.bindFramebufferInfo(a, this._queryBufferInfo);
+    const u = new m();
+    u.initFromBounds(f - r, f + r, E - r, E + r);
+    const R = f - u.left, T = u.top - E;
+    a.viewport(0, 0, u.width, u.height);
+    const _ = h.m4.ortho(u.left, u.right, u.top, u.bottom, -1, 1);
+    a.clearColor(...this._backgroundColor4f), a.clear(a.COLOR_BUFFER_BIT), this._drawThese(this._drawList, B.DRAW_MODE.default, _);
+    const L = new Uint8Array(Math.floor(u.width * u.height * 4));
+    a.readPixels(0, 0, u.width, u.height, a.RGBA, a.UNSIGNED_BYTE, L);
+    const b = Math.floor(4 * (T * u.width + R)), S = {
+      r: L[b],
+      g: L[b + 1],
+      b: L[b + 2],
+      a: L[b + 3]
     };
     if (this._debugCanvas) {
       this._debugCanvas.width = u.width, this._debugCanvas.height = u.height;
-      const g = this._debugCanvas.getContext("2d"), m = g.createImageData(u.width, u.height);
-      m.data.set(_), g.putImageData(m, 0, 0), g.strokeStyle = "black", g.fillStyle = `rgba(${E.r}, ${E.g}, ${E.b}, ${E.a})`, g.rect(c - 4, f - 4, 8, 8), g.fill(), g.stroke();
+      const A = this._debugCanvas.getContext("2d"), C = A.createImageData(u.width, u.height);
+      C.data.set(L), A.putImageData(C, 0, 0), A.strokeStyle = "black", A.fillStyle = `rgba(${S.r}, ${S.g}, ${S.b}, ${S.a})`, A.rect(R - 4, T - 4, 8, 8), A.fill(), A.stroke();
     }
     return {
-      data: _,
+      data: L,
       width: u.width,
       height: u.height,
-      color: E
+      color: S
     };
   }
   /**
@@ -4528,8 +8910,8 @@ class B extends ae {
   _touchingBounds(t) {
     const e = this._allDrawables[t];
     if (!e.skin || !e.skin.getTexture([100, 100])) return null;
-    const i = e.getFastBounds();
-    return i.clamp(this._xLeft, this._xRight, this._yBottom, this._yTop), i.snapToInt(), i.width === 0 || i.height === 0 ? null : i;
+    const r = e.getFastBounds();
+    return r.clamp(this._xLeft, this._xRight, this._yBottom, this._yTop), r.snapToInt(), r.width === 0 || r.height === 0 ? null : r;
   }
   /**
    * Filter a list of candidates for a touching query into only those that
@@ -4539,26 +8921,26 @@ class B extends ae {
    * @return {?Array< {id, drawable, intersection} >} Filtered candidates with useful data.
    */
   _candidatesTouching(t, e) {
-    const i = this._touchingBounds(t), s = [];
-    if (i === null)
-      return s;
-    for (let o = e.length - 1; o >= 0; o--) {
-      const l = e[o];
-      if (l !== t) {
-        const u = this._allDrawables[l];
-        if (u.skin instanceof et) continue;
+    const r = this._touchingBounds(t), f = [];
+    if (r === null)
+      return f;
+    for (let E = e.length - 1; E >= 0; E--) {
+      const a = e[E];
+      if (a !== t) {
+        const u = this._allDrawables[a];
+        if (u.skin instanceof nt) continue;
         if (u.skin && u._visible) {
           u.updateCPURenderAttributes();
-          const c = u.getFastBounds();
-          c.snapToInt(), i.intersects(c) && s.push({
-            id: l,
+          const R = u.getFastBounds();
+          R.snapToInt(), r.intersects(R) && f.push({
+            id: a,
             drawable: u,
-            intersection: M.intersect(i, c)
+            intersection: m.intersect(r, R)
           });
         }
       }
     }
-    return s;
+    return f;
   }
   /**
    * Helper to get the union bounds from a set of candidates returned from the above method
@@ -4567,7 +8949,7 @@ class B extends ae {
    * @return {Rectangle} the outer bounding box union
    */
   _candidatesBounds(t) {
-    return t.reduce((e, { intersection: i }) => e ? M.union(e, i, hn) : i, null);
+    return t.reduce((e, { intersection: r }) => e ? m.union(e, r, fr) : r, null);
   }
   /**
    * Update a drawable's skin.
@@ -4575,8 +8957,8 @@ class B extends ae {
    * @param {number} skinId The skin to update to.
    */
   updateDrawableSkinId(t, e) {
-    const i = this._allDrawables[t];
-    i && (i.skin = this._allSkins[e]);
+    const r = this._allDrawables[t];
+    r && (r.skin = this._allSkins[e]);
   }
   /**
    * Update a drawable's position.
@@ -4584,8 +8966,8 @@ class B extends ae {
    * @param {Array.<number>} position The new position.
    */
   updateDrawablePosition(t, e) {
-    const i = this._allDrawables[t];
-    i && i.updatePosition(e);
+    const r = this._allDrawables[t];
+    r && r.updatePosition(e);
   }
   /**
    * Update a drawable's direction.
@@ -4593,8 +8975,8 @@ class B extends ae {
    * @param {number} direction A new direction.
    */
   updateDrawableDirection(t, e) {
-    const i = this._allDrawables[t];
-    i && i.updateDirection(e);
+    const r = this._allDrawables[t];
+    r && r.updateDirection(e);
   }
   /**
    * Update a drawable's scale.
@@ -4602,8 +8984,8 @@ class B extends ae {
    * @param {Array.<number>} scale A new scale.
    */
   updateDrawableScale(t, e) {
-    const i = this._allDrawables[t];
-    i && i.updateScale(e);
+    const r = this._allDrawables[t];
+    r && r.updateScale(e);
   }
   /**
    * Update a drawable's direction and scale together.
@@ -4611,9 +8993,9 @@ class B extends ae {
    * @param {number} direction A new direction.
    * @param {Array.<number>} scale A new scale.
    */
-  updateDrawableDirectionScale(t, e, i) {
-    const s = this._allDrawables[t];
-    s && (s.updateDirection(e), s.updateScale(i));
+  updateDrawableDirectionScale(t, e, r) {
+    const f = this._allDrawables[t];
+    f && (f.updateDirection(e), f.updateScale(r));
   }
   /**
    * Update a drawable's visibility.
@@ -4621,8 +9003,8 @@ class B extends ae {
    * @param {boolean} visible Will the drawable be visible?
    */
   updateDrawableVisible(t, e) {
-    const i = this._allDrawables[t];
-    i && i.updateVisible(e);
+    const r = this._allDrawables[t];
+    r && r.updateVisible(e);
   }
   /**
    * Update a drawable's visual effect.
@@ -4630,9 +9012,9 @@ class B extends ae {
    * @param {string} effectName The effect to change.
    * @param {number} value A new effect value.
    */
-  updateDrawableEffect(t, e, i) {
-    const s = this._allDrawables[t];
-    s && s.updateEffect(e, i);
+  updateDrawableEffect(t, e, r) {
+    const f = this._allDrawables[t];
+    f && f.updateEffect(e, r);
   }
   /**
    * Update the position, direction, scale, or effect properties of this Drawable.
@@ -4641,8 +9023,8 @@ class B extends ae {
    * @param {object.<string,*>} properties The new property values to set.
    */
   updateDrawableProperties(t, e) {
-    const i = this._allDrawables[t];
-    i && ("skinId" in e && this.updateDrawableSkinId(t, e.skinId), i.updateProperties(e));
+    const r = this._allDrawables[t];
+    r && ("skinId" in e && this.updateDrawableSkinId(t, e.skinId), r.updateProperties(e));
   }
   /**
    * Update the position object's x & y members to keep the drawable fenced in view.
@@ -4651,14 +9033,14 @@ class B extends ae {
    * @return {Array.<number, number>} The fenced position as an array [x, y]
    */
   getFencedPositionOfDrawable(t, e) {
-    let i = e[0], s = e[1];
-    const o = this._allDrawables[t];
-    if (!o)
-      return [i, s];
-    const l = i - o._position[0], u = s - o._position[1], c = o._skin.getFenceBounds(o, cn), f = Math.floor(Math.min(c.width, c.height) / 2), d = this._xRight - Math.min(oe, f);
-    c.right + l < -d ? i = Math.ceil(o._position[0] - (d + c.right)) : c.left + l > d && (i = Math.floor(o._position[0] + (d - c.left)));
-    const _ = this._yTop - Math.min(oe, f);
-    return c.top + u < -_ ? s = Math.ceil(o._position[1] - (_ + c.top)) : c.bottom + u > _ && (s = Math.floor(o._position[1] + (_ - c.bottom))), [i, s];
+    let r = e[0], f = e[1];
+    const E = this._allDrawables[t];
+    if (!E)
+      return [r, f];
+    const a = r - E._position[0], u = f - E._position[1], R = E._skin.getFenceBounds(E, sr), T = Math.floor(Math.min(R.width, R.height) / 2), _ = this._xRight - Math.min(ui, T);
+    R.right + a < -_ ? r = Math.ceil(E._position[0] - (_ + R.right)) : R.left + a > _ && (r = Math.floor(E._position[0] + (_ - R.left)));
+    const L = this._yTop - Math.min(ui, T);
+    return R.top + u < -L ? f = Math.ceil(E._position[1] - (L + R.top)) : R.bottom + u > L && (f = Math.floor(E._position[1] + (L - R.bottom))), [r, f];
   }
   /**
    * Clear a pen layer.
@@ -4675,9 +9057,9 @@ class B extends ae {
    * @param {number} x - the X coordinate of the point to draw.
    * @param {number} y - the Y coordinate of the point to draw.
    */
-  penPoint(t, e, i, s) {
+  penPoint(t, e, r, f) {
     /** @type {PenSkin} */
-    this._allSkins[t].drawPoint(e, i, s);
+    this._allSkins[t].drawPoint(e, r, f);
   }
   /**
    * Draw a line on a pen layer.
@@ -4688,9 +9070,9 @@ class B extends ae {
    * @param {number} x1 - the X coordinate of the end of the line.
    * @param {number} y1 - the Y coordinate of the end of the line.
    */
-  penLine(t, e, i, s, o, l) {
+  penLine(t, e, r, f, E, a) {
     /** @type {PenSkin} */
-    this._allSkins[t].drawLine(e, i, s, o, l);
+    this._allSkins[t].drawLine(e, r, f, E, a);
   }
   /**
    * Stamp a Drawable onto a pen layer.
@@ -4700,22 +9082,22 @@ class B extends ae {
   penStamp(t, e) {
     if (!this._allDrawables[e])
       return;
-    const s = this._touchingBounds(e);
-    if (!s)
+    const f = this._touchingBounds(e);
+    if (!f)
       return;
     this._doExitDrawRegion();
-    const o = (
+    const E = (
       /** @type {PenSkin} */
       this._allSkins[t]
-    ), l = this._gl;
-    x.bindFramebufferInfo(l, o._framebuffer), l.viewport(
-      this._nativeSize[0] * 0.5 + s.left,
-      this._nativeSize[1] * 0.5 - s.top,
-      s.width,
-      s.height
+    ), a = this._gl;
+    h.bindFramebufferInfo(a, E._framebuffer), a.viewport(
+      this._nativeSize[0] * 0.5 + f.left,
+      this._nativeSize[1] * 0.5 - f.top,
+      f.width,
+      f.height
     );
-    const u = x.m4.ortho(s.left, s.right, s.top, s.bottom, -1, 1);
-    this._drawThese([e], y.DRAW_MODE.default, u, { ignoreVisibility: !0 }), o._silhouetteDirty = !0;
+    const u = h.m4.ortho(f.left, f.right, f.top, f.bottom, -1, 1);
+    this._drawThese([e], B.DRAW_MODE.default, u, { ignoreVisibility: !0 }), E._silhouetteDirty = !0;
   }
   /* ******
    * Truly internal functions: these support the functions above.
@@ -4761,7 +9143,7 @@ class B extends ae {
         ]
       }
     };
-    this._bufferInfo = x.createBufferInfoFromArrays(this._gl, t);
+    this._bufferInfo = h.createBufferInfoFromArrays(this._gl, t);
   }
   /**
    * Respond to a change in the "native" rendering size. The native size is used by buffers which are fixed in size
@@ -4771,11 +9153,11 @@ class B extends ae {
    * @private
    */
   onNativeSizeChanged(t) {
-    const [e, i] = t.newSize, s = this._gl, o = [
-      { format: s.RGBA },
-      { format: s.DEPTH_STENCIL }
+    const [e, r] = t.newSize, f = this._gl, E = [
+      { format: f.RGBA },
+      { format: f.DEPTH_STENCIL }
     ];
-    this._pickBufferInfo || (this._pickBufferInfo = x.createFramebufferInfo(s, o, nt[0], nt[1])), this._queryBufferInfo ? x.resizeFramebufferInfo(s, this._queryBufferInfo, o, e, i) : this._queryBufferInfo = x.createFramebufferInfo(s, o, e, i);
+    this._pickBufferInfo || (this._pickBufferInfo = h.createFramebufferInfo(f, E, st[0], st[1])), this._queryBufferInfo ? h.resizeFramebufferInfo(f, this._queryBufferInfo, E, e, r) : this._queryBufferInfo = h.createFramebufferInfo(f, E, e, r);
   }
   /**
    * Enter a draw region.
@@ -4792,8 +9174,8 @@ class B extends ae {
    * @param {function} enter - handle to call when first entering a region
    * @param {function} exit - handle to call when leaving a region
    */
-  enterDrawRegion(t, e = t.enter, i = t.exit) {
-    this._regionId !== t && (this._doExitDrawRegion(), this._regionId = t, e(), this._exitRegion = i);
+  enterDrawRegion(t, e = t.enter, r = t.exit) {
+    this._regionId !== t && (this._doExitDrawRegion(), this._regionId = t, e(), this._exitRegion = r);
   }
   /**
    * Forcefully exit the current region returning to a common inbetween GL
@@ -4816,37 +9198,37 @@ class B extends ae {
    * @param {int} opts.framebufferHeight The height of the framebuffer being drawn onto. Defaults to "native" height
    * @private
    */
-  _drawThese(t, e, i, s = {}) {
-    const o = this._gl;
-    let l = null;
-    const u = "framebufferWidth" in s && "framebufferHeight" in s && s.framebufferWidth !== this._nativeSize[0] && s.framebufferHeight !== this._nativeSize[1], c = t.length;
-    for (let f = 0; f < c; ++f) {
-      const d = t[f];
-      if (s.filter && !s.filter(d)) continue;
-      const _ = this._allDrawables[d];
-      if (!_.getVisible() && !s.ignoreVisibility) continue;
-      const w = u ? [
-        _.scale[0] * s.framebufferWidth / this._nativeSize[0],
-        _.scale[1] * s.framebufferHeight / this._nativeSize[1]
-      ] : _.scale;
-      if (!_.skin || !_.skin.getTexture(w)) continue;
-      const E = {};
-      let g = _.enabledEffects;
-      g &= Object.prototype.hasOwnProperty.call(s, "effectMask") ? s.effectMask : g;
-      const m = this._shaderManager.getShader(e, g);
-      this._regionId !== m && (this._doExitDrawRegion(), this._regionId = m, l = m, o.useProgram(l.program), x.setBuffersAndAttributes(o, l, this._bufferInfo), Object.assign(E, {
-        u_projectionMatrix: i
+  _drawThese(t, e, r, f = {}) {
+    const E = this._gl;
+    let a = null;
+    const u = "framebufferWidth" in f && "framebufferHeight" in f && f.framebufferWidth !== this._nativeSize[0] && f.framebufferHeight !== this._nativeSize[1], R = t.length;
+    for (let T = 0; T < R; ++T) {
+      const _ = t[T];
+      if (f.filter && !f.filter(_)) continue;
+      const L = this._allDrawables[_];
+      if (!L.getVisible() && !f.ignoreVisibility) continue;
+      const b = u ? [
+        L.scale[0] * f.framebufferWidth / this._nativeSize[0],
+        L.scale[1] * f.framebufferHeight / this._nativeSize[1]
+      ] : L.scale;
+      if (!L.skin || !L.skin.getTexture(b)) continue;
+      const S = {};
+      let A = L.enabledEffects;
+      A &= Object.prototype.hasOwnProperty.call(f, "effectMask") ? f.effectMask : A;
+      const C = this._shaderManager.getShader(e, A);
+      this._regionId !== C && (this._doExitDrawRegion(), this._regionId = C, a = C, E.useProgram(a.program), h.setBuffersAndAttributes(E, a, this._bufferInfo), Object.assign(S, {
+        u_projectionMatrix: r
       })), Object.assign(
+        S,
+        L.skin.getUniforms(b),
+        L.getUniforms()
+      ), f.extraUniforms && Object.assign(S, f.extraUniforms), S.u_skin && h.setTextureParameters(
         E,
-        _.skin.getUniforms(w),
-        _.getUniforms()
-      ), s.extraUniforms && Object.assign(E, s.extraUniforms), E.u_skin && x.setTextureParameters(
-        o,
-        E.u_skin,
+        S.u_skin,
         {
-          minMag: _.skin.useNearest(w, _) ? o.NEAREST : o.LINEAR
+          minMag: L.skin.useNearest(b, L) ? E.NEAREST : E.LINEAR
         }
-      ), x.setUniforms(l, E), x.drawBufferInfo(o, this._bufferInfo, o.TRIANGLES);
+      ), h.setUniforms(a, S), h.drawBufferInfo(E, this._bufferInfo, E.TRIANGLES);
     }
     this._regionId = null;
   }
@@ -4857,42 +9239,42 @@ class B extends ae {
    * @return {Array<Array<number>>} points Convex hull points, as [[x, y], ...]
    */
   _getConvexHullPointsForDrawable(t) {
-    const e = this._allDrawables[t], [i, s] = e.skin.size;
-    if (!e.getVisible() || i === 0 || s === 0)
+    const e = this._allDrawables[t], [r, f] = e.skin.size;
+    if (!e.getVisible() || r === 0 || f === 0)
       return [];
     e.updateCPURenderAttributes();
-    const o = function(g, m, k) {
-      return (m[0] - g[0]) * (k[1] - g[1]) - (m[1] - g[1]) * (k[0] - g[0]);
-    }, l = [], u = [];
-    let c = -1, f = -1;
-    const d = x.v3.create(), _ = x.v3.create();
-    let w;
-    for (let g = 0; g < s; g++) {
-      d[1] = g / s;
-      let m = 0;
-      for (; m < i; m++)
-        if (d[0] = m / i, lt.transformPoint(e, d, _), e.skin.isTouchingLinear(_)) {
-          w = [m, g];
+    const E = function(A, C, p) {
+      return (C[0] - A[0]) * (p[1] - A[1]) - (C[1] - A[1]) * (p[0] - A[0]);
+    }, a = [], u = [];
+    let R = -1, T = -1;
+    const _ = h.v3.create(), L = h.v3.create();
+    let b;
+    for (let A = 0; A < f; A++) {
+      _[1] = A / f;
+      let C = 0;
+      for (; C < r; C++)
+        if (_[0] = C / r, ut.transformPoint(e, _, L), e.skin.isTouchingLinear(L)) {
+          b = [C, A];
           break;
         }
-      if (!(m >= i)) {
-        for (; c > 0 && !(o(l[c], l[c - 1], w) > 0); )
-          --c;
-        for (l[++c] = w, m = i - 1; m >= 0; m--)
-          if (d[0] = m / i, lt.transformPoint(e, d, _), e.skin.isTouchingLinear(_)) {
-            w = [m, g];
+      if (!(C >= r)) {
+        for (; R > 0 && !(E(a[R], a[R - 1], b) > 0); )
+          --R;
+        for (a[++R] = b, C = r - 1; C >= 0; C--)
+          if (_[0] = C / r, ut.transformPoint(e, _, L), e.skin.isTouchingLinear(L)) {
+            b = [C, A];
             break;
           }
-        for (; f > 0 && !(o(u[f], u[f - 1], w) < 0); )
-          --f;
-        u[++f] = w;
+        for (; T > 0 && !(E(u[T], u[T - 1], b) < 0); )
+          --T;
+        u[++T] = b;
       }
     }
-    const E = l;
-    E.length = c + 1;
-    for (let g = f; g >= 0; --g)
-      E.push(u[g]);
-    return ye(E, 1 / 0);
+    const S = a;
+    S.length = R + 1;
+    for (let A = T; A >= 0; --A)
+      S.push(u[A]);
+    return Ii(S, 1 / 0);
   }
   /**
    * Sample a "final" color from an array of drawables at a given scratch space.
@@ -4903,12 +9285,12 @@ class B extends ae {
    * @param {Uint8ClampedArray} dst The color3b space to store the answer in.
    * @return {Uint8ClampedArray} The dst vector with everything blended down.
    */
-  static sampleColor3b(t, e, i) {
-    i = i || new Uint8ClampedArray(3), i.fill(0);
-    let s = 1;
-    for (let o = 0; s !== 0 && o < e.length; o++)
-      Y.sampleColor4b(t, e[o].drawable, j), i[0] += j[0] * s, i[1] += j[1] * s, i[2] += j[2] * s, s *= 1 - j[3] / 255;
-    return i[0] += s * 255, i[1] += s * 255, i[2] += s * 255, i;
+  static sampleColor3b(t, e, r) {
+    r = r || new Uint8ClampedArray(3), r.fill(0);
+    let f = 1;
+    for (let E = 0; f !== 0 && E < e.length; E++)
+      o.sampleColor4b(t, e[E].drawable, J), r[0] += J[0] * f, r[1] += J[1] * f, r[2] += J[2] * f, f *= 1 - J[3] / 255;
+    return r[0] += f * 255, r[1] += f * 255, r[2] += f * 255, r;
   }
   /**
    * @callback RenderWebGL#snapshotCallback
@@ -4921,8 +9303,8 @@ class B extends ae {
     this._snapshotCallbacks.push(t);
   }
 }
-B.prototype.canHazPixels = B.prototype.extractDrawableScreenSpace;
-B.UseGpuModes = {
+v.prototype.canHazPixels = v.prototype.extractDrawableScreenSpace;
+v.UseGpuModes = {
   /**
    * Heuristically decide whether to use the GPU path, the CPU path, or a dynamic mixture of the two.
    */
@@ -4937,5 +9319,5 @@ B.UseGpuModes = {
   ForceCPU: "ForceCPU"
 };
 export {
-  B as default
+  v as default
 };

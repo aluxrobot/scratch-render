@@ -1,6 +1,6 @@
 {
     "name": "scratch-render",
-    "version": "2.0.391",
+    "version": "2.0.392",
     "description": "WebGL Renderer for Scratch 3.0",
     "author": "Massachusetts Institute of Technology",
     "license": "AGPL-3.0-only",
@@ -43,7 +43,7 @@
         "iOS >= 8"
     ],
     "dependencies": {
-        "grapheme-breaker": "^0.3.2",
+        "graphemer": "^1.4.0",
         "hull.js": "0.2.10",
         "linebreak": "^1.1.0",
         "minilog": "^3.1.0",
