@@ -1,5 +1,6 @@
 import LineBreaker from 'linebreak';
-import GraphemeBreaker from 'grapheme-breaker';
+// grapheme-breaker 대신 graphemer 사용 (브라우저 호환)
+import Graphemer from 'graphemer';
 
 /**
  * Tell this text wrapper to use a specific measurement provider.
@@ -27,6 +28,8 @@ class TextWrapper {
     constructor (measurementProvider) {
         this._measurementProvider = measurementProvider;
         this._cache = {};
+        // graphemer 인스턴스 생성
+        this._graphemer = new Graphemer();
     }
 
     /**
@@ -52,50 +55,55 @@ class TextWrapper {
         let currentLine = null;
         const lines = [];
 
-        while ((nextBreak = breaker.nextBreak())) {
-            const word = text.slice(lastPosition, nextBreak.position).replace(/\n+$/, '');
+        try {
+            while ((nextBreak = breaker.nextBreak())) {
+                const word = text.slice(lastPosition, nextBreak.position).replace(/\n+$/, '');
 
-            let proposedLine = (currentLine || '').concat(word);
-            let proposedLineWidth = this._measurementProvider.measureText(proposedLine);
+                let proposedLine = (currentLine || '').concat(word);
+                let proposedLineWidth = this._measurementProvider.measureText(proposedLine);
 
-            if (proposedLineWidth > maxWidth) {
-                // The next word won't fit on this line. Will it fit on a line by itself?
-                const wordWidth = this._measurementProvider.measureText(word);
-                if (wordWidth > maxWidth) {
-                    // The next word can't even fit on a line by itself. Consume it one grapheme cluster at a time.
-                    let lastCluster = 0;
-                    let nextCluster;
-                    while (lastCluster !== (nextCluster = GraphemeBreaker.nextBreak(word, lastCluster))) {
-                        const cluster = word.substring(lastCluster, nextCluster);
-                        proposedLine = (currentLine || '').concat(cluster);
-                        proposedLineWidth = this._measurementProvider.measureText(proposedLine);
-                        if ((currentLine === null) || (proposedLineWidth <= maxWidth)) {
-                            // first cluster of a new line or the cluster fits
-                            currentLine = proposedLine;
-                        } else {
-                            // no more can fit
-                            lines.push(currentLine);
-                            currentLine = cluster;
+                if (proposedLineWidth > maxWidth) {
+                    // The next word won't fit on this line. Will it fit on a line by itself?
+                    const wordWidth = this._measurementProvider.measureText(word);
+                    if (wordWidth > maxWidth) {
+                        // The next word can't even fit on a line by itself. Consume it one grapheme cluster at a time.
+                        // graphemer 사용으로 변경
+                        const graphemes = this._graphemer.splitGraphemes(word);
+
+                        for (const cluster of graphemes) {
+                            proposedLine = (currentLine || '').concat(cluster);
+                            proposedLineWidth = this._measurementProvider.measureText(proposedLine);
+                            if ((currentLine === null) || (proposedLineWidth <= maxWidth)) {
+                                // first cluster of a new line or the cluster fits
+                                currentLine = proposedLine;
+                            } else {
+                                // no more can fit
+                                lines.push(currentLine);
+                                currentLine = cluster;
+                            }
                         }
-                        lastCluster = nextCluster;
+                    } else {
+                        // The next word can fit on the next line. Finish the current line and move on.
+                        if (currentLine !== null) lines.push(currentLine);
+                        currentLine = word;
                     }
                 } else {
-                    // The next word can fit on the next line. Finish the current line and move on.
-                    if (currentLine !== null) lines.push(currentLine);
-                    currentLine = word;
+                    // The next word fits on this line. Just keep going.
+                    currentLine = proposedLine;
                 }
-            } else {
-                // The next word fits on this line. Just keep going.
-                currentLine = proposedLine;
-            }
 
-            // Did we find a \n or similar?
-            if (nextBreak.required) {
-                if (currentLine !== null) lines.push(currentLine);
-                currentLine = null;
-            }
+                // Did we find a \n or similar?
+                if (nextBreak.required) {
+                    if (currentLine !== null) lines.push(currentLine);
+                    currentLine = null;
+                }
 
-            lastPosition = nextBreak.position;
+                lastPosition = nextBreak.position;
+            }
+        } catch (error) {
+            // 브라우저 환경에서 linebreak가 실패할 경우 fallback
+            console.warn('LineBreaker failed, using simple word wrapping:', error);
+            return this._fallbackWrapText(maxWidth, text, measurementSession);
         }
 
         currentLine = currentLine || '';
@@ -106,6 +114,38 @@ class TextWrapper {
         this._cache[cacheKey] = lines;
         this._measurementProvider.endMeasurementSession(measurementSession);
         return lines;
+    }
+
+    /**
+     * Fallback text wrapping method for when LineBreaker fails
+     * @param {number} maxWidth - the maximum allowed width of a line.
+     * @param {string} text - the text to be wrapped.
+     * @param {*} measurementSession - the current measurement session.
+     * @returns {Array.<string>} wrapped lines of text.
+     */
+    _fallbackWrapText(maxWidth, text, measurementSession) {
+        const words = text.split(/\s+/);
+        const lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+            const proposedLine = currentLine ? `${currentLine} ${word}` : word;
+            const proposedLineWidth = this._measurementProvider.measureText(proposedLine);
+
+            if (proposedLineWidth <= maxWidth || currentLine === '') {
+                currentLine = proposedLine;
+            } else {
+                lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+
+        if (currentLine) {
+            lines.push(currentLine);
+        }
+
+        this._measurementProvider.endMeasurementSession(measurementSession);
+        return lines.length > 0 ? lines : [''];
     }
 }
 
