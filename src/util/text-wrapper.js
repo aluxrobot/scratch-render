@@ -1,5 +1,5 @@
-const LineBreaker = require('!ify-loader!linebreak');
-const GraphemeBreaker = require('!ify-loader!grapheme-breaker');
+import LineBreaker from 'linebreak';
+import GraphemeBreaker from 'grapheme-breaker';
 
 /**
  * Tell this text wrapper to use a specific measurement provider.
@@ -109,4 +109,4 @@ class TextWrapper {
     }
 }
 
-module.exports = TextWrapper;
+export default TextWrapper;

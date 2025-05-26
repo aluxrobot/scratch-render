@@ -4,10 +4,9 @@
  * representing how the shaders apply effects.
  */
 
-const twgl = require('twgl.js');
-
-const {rgbToHsv, hsvToRgb} = require('./util/color-conversions');
-const ShaderManager = require('./ShaderManager');
+import * as twgl from 'twgl.js';
+import {rgbToHsv, hsvToRgb} from './util/color-conversions';
+import ShaderManager from './ShaderManager';
 
 /**
  * A texture coordinate is between 0 and 1. 0.5 is the center position.
@@ -37,7 +36,7 @@ class EffectTransform {
      * @param {number} [effectMask] A bitmask for which effects to use. Optional.
      * @returns {Uint8ClampedArray} dst filled with the transformed color
      */
-    static transformColor (drawable, inOutColor, effectMask) {
+    static transformColor(drawable, inOutColor, effectMask) {
         // If the color is fully transparent, don't bother attempting any transformations.
         if (inOutColor[3] === 0) {
             return inOutColor;
@@ -77,7 +76,7 @@ class EffectTransform {
                     hsv[0] = 0;
                     hsv[1] = 1;
                     hsv[2] = minV;
-                // else if (hsv.y < minSaturation) hsv = vec3(0.0, minSaturation, hsv.z);
+                    // else if (hsv.y < minSaturation) hsv = vec3(0.0, minSaturation, hsv.z);
                 } else if (hsv[1] < minS) {
                     hsv[0] = 0;
                     hsv[1] = minS;
@@ -125,7 +124,7 @@ class EffectTransform {
      * @param {twgl.v3} dst A place to store the output coordinate.
      * @return {twgl.v3} dst - The coordinate after being transform by effects.
      */
-    static transformPoint (drawable, vec, dst) {
+    static transformPoint(drawable, vec, dst) {
         twgl.v3.copy(vec, dst);
 
         const effects = drawable.enabledEffects;
@@ -194,4 +193,4 @@ class EffectTransform {
     }
 }
 
-module.exports = EffectTransform;
+export default EffectTransform;

@@ -1,18 +1,23 @@
-const EventEmitter = require('events');
+// External Dependencies
+import EventEmitter from 'events';
+import hull from 'hull.js';
+import twgl from 'twgl.js';
 
-const hull = require('hull.js');
-const twgl = require('twgl.js');
+// Skins
+import BitmapSkin from './BitmapSkin';
+import PenSkin from './PenSkin';
+import SVGSkin from './SVGSkin';
+import TextBubbleSkin from './TextBubbleSkin';
 
-const BitmapSkin = require('./BitmapSkin');
-const Drawable = require('./Drawable');
-const Rectangle = require('./Rectangle');
-const PenSkin = require('./PenSkin');
-const RenderConstants = require('./RenderConstants');
-const ShaderManager = require('./ShaderManager');
-const SVGSkin = require('./SVGSkin');
-const TextBubbleSkin = require('./TextBubbleSkin');
-const EffectTransform = require('./EffectTransform');
-const log = require('./util/log');
+// Core Components
+import Drawable from './Drawable';
+import EffectTransform from './EffectTransform';
+import Rectangle from './Rectangle';
+import RenderConstants from './RenderConstants';
+import ShaderManager from './ShaderManager';
+
+// Utilities
+import log from './util/log';
 
 const __isTouchingDrawablesPoint = twgl.v3.create();
 const __candidatesBounds = new Rectangle();
@@ -2026,4 +2031,4 @@ RenderWebGL.UseGpuModes = {
     ForceCPU: 'ForceCPU'
 };
 
-module.exports = RenderWebGL;
+export default RenderWebGL;

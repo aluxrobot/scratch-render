@@ -1,4 +1,4 @@
-const twgl = require('twgl.js');
+import twgl from 'twgl.js';
 
 
 class ShaderManager {
@@ -6,7 +6,7 @@ class ShaderManager {
      * @param {WebGLRenderingContext} gl WebGL rendering context to create shaders for
      * @constructor
      */
-    constructor (gl) {
+    constructor(gl) {
         this._gl = gl;
 
         /**
@@ -29,7 +29,7 @@ class ShaderManager {
      * @param {int} effectBits Bitmask representing the enabled effects.
      * @returns {ProgramInfo} The shader's program info.
      */
-    getShader (drawMode, effectBits) {
+    getShader(drawMode, effectBits) {
         const cache = this._shaderCache[drawMode];
         if (drawMode === ShaderManager.DRAW_MODE.silhouette) {
             // Silhouette mode isn't affected by these effects.
@@ -49,7 +49,7 @@ class ShaderManager {
      * @returns {ProgramInfo} The new shader's program info.
      * @private
      */
-    _buildShader (drawMode, effectBits) {
+    _buildShader(drawMode, effectBits) {
         const numEffects = ShaderManager.EFFECTS.length;
 
         const defines = [
@@ -184,4 +184,4 @@ ShaderManager.DRAW_MODE = {
     background: 'background'
 };
 
-module.exports = ShaderManager;
+export default ShaderManager;

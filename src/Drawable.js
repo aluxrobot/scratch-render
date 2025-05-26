@@ -1,12 +1,10 @@
-const twgl = require('twgl.js');
-
-const Rectangle = require('./Rectangle');
-const RenderConstants = require('./RenderConstants');
-const ShaderManager = require('./ShaderManager');
-const Skin = require('./Skin');
-const EffectTransform = require('./EffectTransform');
-const log = require('./util/log');
-
+import twgl from 'twgl.js';
+import Rectangle from './Rectangle';
+import RenderConstants from './RenderConstants';
+import ShaderManager from './ShaderManager';
+import Skin from './Skin';
+import EffectTransform from './EffectTransform';
+import log from './util/log';
 /**
  * An internal workspace for calculating texture locations from world vectors
  * this is REUSED for memory conservation reasons
@@ -731,4 +729,4 @@ class Drawable {
     }
 }
 
-module.exports = Drawable;
+export default Drawable;

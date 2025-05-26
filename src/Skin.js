@@ -1,9 +1,7 @@
-const EventEmitter = require('events');
-
-const twgl = require('twgl.js');
-
-const RenderConstants = require('./RenderConstants');
-const Silhouette = require('./Silhouette');
+import EventEmitter from 'events';
+import twgl from 'twgl.js';
+import RenderConstants from './RenderConstants';
+import Silhouette from './Silhouette';
 
 class Skin extends EventEmitter {
     /**
@@ -11,7 +9,7 @@ class Skin extends EventEmitter {
      * @param {int} id - The unique ID for this Skin.
      * @constructor
      */
-    constructor (id) {
+    constructor(id) {
         super();
 
         /** @type {int} */
@@ -55,21 +53,21 @@ class Skin extends EventEmitter {
     /**
      * Dispose of this object. Do not use it after calling this method.
      */
-    dispose () {
+    dispose() {
         this._id = RenderConstants.ID_NONE;
     }
 
     /**
      * @return {int} the unique ID for this Skin.
      */
-    get id () {
+    get id() {
         return this._id;
     }
 
     /**
      * @returns {Vec3} the origin, in object space, about which this Skin should rotate.
      */
-    get rotationCenter () {
+    get rotationCenter() {
         return this._rotationCenter;
     }
 
@@ -77,7 +75,7 @@ class Skin extends EventEmitter {
      * @abstract
      * @return {Array<number>} the "native" size, in texels, of this skin.
      */
-    get size () {
+    get size() {
         return [0, 0];
     }
 
@@ -90,7 +88,7 @@ class Skin extends EventEmitter {
      * nearest-neighbor interpolation.
      */
     // eslint-disable-next-line no-unused-vars
-    useNearest (scale, drawable) {
+    useNearest(scale, drawable) {
         return true;
     }
 
@@ -98,7 +96,7 @@ class Skin extends EventEmitter {
      * Get the center of the current bounding box
      * @return {Array<number>} the center of the current bounding box
      */
-    calculateRotationCenter () {
+    calculateRotationCenter() {
         return [this.size[0] / 2, this.size[1] / 2];
     }
 
@@ -108,7 +106,7 @@ class Skin extends EventEmitter {
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given size.
      */
     // eslint-disable-next-line no-unused-vars
-    getTexture (scale) {
+    getTexture(scale) {
         return this._emptyImageTexture;
     }
 
@@ -118,7 +116,7 @@ class Skin extends EventEmitter {
      * @param {?Rectangle} result - Optional destination for bounds calculation.
      * @return {!Rectangle} The drawable's bounds. For compatibility with Scratch 2, we always use getAABB.
      */
-    getFenceBounds (drawable, result) {
+    getFenceBounds(drawable, result) {
         return drawable.getAABB(result);
     }
 
@@ -127,7 +125,7 @@ class Skin extends EventEmitter {
      * @param {Array<number>} scale - The scaling factors to be used.
      * @returns {object.<string, *>} the shader uniforms to be used when rendering with this Skin.
      */
-    getUniforms (scale) {
+    getUniforms(scale) {
         this._uniforms.u_skin = this.getTexture(scale);
         this._uniforms.u_skinSize = this.size;
         return this._uniforms;
@@ -138,13 +136,14 @@ class Skin extends EventEmitter {
      * this will be called before isTouching uses the silhouette.
      * @abstract
      */
-    updateSilhouette () {}
+    updateSilhouette() {
+    }
 
     /**
      * Set this skin's texture to the given image.
      * @param {ImageData|HTMLCanvasElement} textureData - The canvas or image data to set the texture to.
      */
-    _setTexture (textureData) {
+    _setTexture(textureData) {
         const gl = this._renderer.gl;
 
         gl.bindTexture(gl.TEXTURE_2D, this._texture);
@@ -161,7 +160,7 @@ class Skin extends EventEmitter {
      * Set the contents of this skin to an empty skin.
      * @fires Skin.event:WasAltered
      */
-    setEmptyImageData () {
+    setEmptyImageData() {
         // Free up the current reference to the _texture
         this._texture = null;
 
@@ -201,7 +200,7 @@ class Skin extends EventEmitter {
      * @param {twgl.v3} vec A texture coordinate.
      * @return {boolean} Did it touch?
      */
-    isTouchingNearest (vec) {
+    isTouchingNearest(vec) {
         return this._silhouette.isTouchingNearest(vec);
     }
 
@@ -214,7 +213,7 @@ class Skin extends EventEmitter {
      * @param {twgl.v3} vec A texture coordinate.
      * @return {boolean} Did it touch?
      */
-    isTouchingLinear (vec) {
+    isTouchingLinear(vec) {
         return this._silhouette.isTouchingLinear(vec);
     }
 
@@ -232,4 +231,4 @@ Skin.Events = {
     WasAltered: 'WasAltered'
 };
 
-module.exports = Skin;
+export default Skin;

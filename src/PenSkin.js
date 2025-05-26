@@ -1,9 +1,9 @@
-const twgl = require('twgl.js');
+import twgl from 'twgl.js';
 
-const RenderConstants = require('./RenderConstants');
-const Skin = require('./Skin');
+import RenderConstants from './RenderConstants';
+import Skin from './Skin';
 
-const ShaderManager = require('./ShaderManager');
+import ShaderManager from './ShaderManager';
 
 /**
  * Attributes to use when drawing with the pen
@@ -38,7 +38,7 @@ class PenSkin extends Skin {
      * @extends Skin
      * @listens RenderWebGL#event:NativeSizeChanged
      */
-    constructor (id, renderer) {
+    constructor(id, renderer) {
         super(id);
 
         /**
@@ -102,7 +102,7 @@ class PenSkin extends Skin {
     /**
      * Dispose of this object. Do not use it after calling this method.
      */
-    dispose () {
+    dispose() {
         this._renderer.removeListener(RenderConstants.Events.NativeSizeChanged, this.onNativeSizeChanged);
         this._renderer.gl.deleteTexture(this._texture);
         this._texture = null;
@@ -112,11 +112,11 @@ class PenSkin extends Skin {
     /**
      * @return {Array<number>} the "native" size, in texels, of this skin. [width, height]
      */
-    get size () {
+    get size() {
         return this._size;
     }
 
-    useNearest (scale) {
+    useNearest(scale) {
         // Use nearest-neighbor interpolation when scaling up the pen skin-- this matches Scratch 2.0.
         // When scaling it down, use linear interpolation to avoid giving pen lines a "dashed" appearance.
         return Math.max(scale[0], scale[1]) >= 100;
@@ -127,14 +127,14 @@ class PenSkin extends Skin {
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given size.
      */
     // eslint-disable-next-line no-unused-vars
-    getTexture (scale) {
+    getTexture(scale) {
         return this._texture;
     }
 
     /**
      * Clear the pen layer.
      */
-    clear () {
+    clear() {
         this._renderer.enterDrawRegion(this._usePenBufferDrawRegionId);
 
         /* Reset framebuffer to transparent black */
@@ -151,7 +151,7 @@ class PenSkin extends Skin {
      * @param {number} x - the X coordinate of the point to draw.
      * @param {number} y - the Y coordinate of the point to draw.
      */
-    drawPoint (penAttributes, x, y) {
+    drawPoint(penAttributes, x, y) {
         this.drawLine(penAttributes, x, y, x, y);
     }
 
@@ -163,7 +163,7 @@ class PenSkin extends Skin {
      * @param {number} x1 - the X coordinate of the end of the line.
      * @param {number} y1 - the Y coordinate of the end of the line.
      */
-    drawLine (penAttributes, x0, y0, x1, y1) {
+    drawLine(penAttributes, x0, y0, x1, y1) {
         // For compatibility with Scratch 2.0, offset pen lines of width 1 and 3 so they're pixel-aligned.
         // See https://github.com/LLK/scratch-render/pull/314
         const diameter = penAttributes.diameter || DefaultPenAttributes.diameter;
@@ -181,7 +181,7 @@ class PenSkin extends Skin {
     /**
      * Prepare to draw lines in the _lineOnBufferDrawRegionId region.
      */
-    _enterDrawLineOnBuffer () {
+    _enterDrawLineOnBuffer() {
         const gl = this._renderer.gl;
 
         twgl.bindFramebufferInfo(gl, this._framebuffer);
@@ -203,7 +203,7 @@ class PenSkin extends Skin {
     /**
      * Return to a base state from _lineOnBufferDrawRegionId.
      */
-    _exitDrawLineOnBuffer () {
+    _exitDrawLineOnBuffer() {
         const gl = this._renderer.gl;
 
         twgl.bindFramebufferInfo(gl, null);
@@ -212,14 +212,14 @@ class PenSkin extends Skin {
     /**
      * Prepare to do things with this PenSkin's framebuffer
      */
-    _enterUsePenBuffer () {
+    _enterUsePenBuffer() {
         twgl.bindFramebufferInfo(this._renderer.gl, this._framebuffer);
     }
 
     /**
      * Return to a base state
      */
-    _exitUsePenBuffer () {
+    _exitUsePenBuffer() {
         twgl.bindFramebufferInfo(this._renderer.gl, null);
     }
 
@@ -233,7 +233,7 @@ class PenSkin extends Skin {
      * @param {number} x1 - the X coordinate of the end of the line.
      * @param {number} y1 - the Y coordinate of the end of the line.
      */
-    _drawLineOnBuffer (penAttributes, x0, y0, x1, y1) {
+    _drawLineOnBuffer(penAttributes, x0, y0, x1, y1) {
         const gl = this._renderer.gl;
 
         const currentShader = this._lineShader;
@@ -274,7 +274,7 @@ class PenSkin extends Skin {
      * React to a change in the renderer's native size.
      * @param {object} event - The change event.
      */
-    onNativeSizeChanged (event) {
+    onNativeSizeChanged(event) {
         this._setCanvasSize(event.newSize);
     }
 
@@ -283,7 +283,7 @@ class PenSkin extends Skin {
      * @param {Array<int>} canvasSize - the new width and height for the canvas.
      * @private
      */
-    _setCanvasSize (canvasSize) {
+    _setCanvasSize(canvasSize) {
         const [width, height] = canvasSize;
 
         this._size = canvasSize;
@@ -328,7 +328,7 @@ class PenSkin extends Skin {
      * If there have been pen operations that have dirtied the canvas, update
      * now before someone wants to use our silhouette.
      */
-    updateSilhouette () {
+    updateSilhouette() {
         if (this._silhouetteDirty) {
             this._renderer.enterDrawRegion(this._usePenBufferDrawRegionId);
             // Sample the framebuffer's pixels into the silhouette instance
@@ -347,4 +347,4 @@ class PenSkin extends Skin {
     }
 }
 
-module.exports = PenSkin;
+export default PenSkin;

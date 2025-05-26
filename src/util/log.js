@@ -1,4 +1,5 @@
-const minilog = require('minilog');
+import minilog from 'minilog';
+
 minilog.enable();
 
-module.exports = minilog('scratch-render');
+export default minilog('scratch-render');

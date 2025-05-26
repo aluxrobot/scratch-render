@@ -1,6 +1,6 @@
-const twgl = require('twgl.js');
+import twgl from 'twgl.js';
 
-const Skin = require('./Skin');
+import Skin from './Skin';
 
 class BitmapSkin extends Skin {
     /**
@@ -117,4 +117,4 @@ class BitmapSkin extends Skin {
 
 }
 
-module.exports = BitmapSkin;
+export default BitmapSkin;

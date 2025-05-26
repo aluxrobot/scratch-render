@@ -1,8 +1,8 @@
-const twgl = require('twgl.js');
+import twgl from 'twgl.js';
 
-const TextWrapper = require('./util/text-wrapper');
-const CanvasMeasurementProvider = require('./util/canvas-measurement-provider');
-const Skin = require('./Skin');
+import TextWrapper from './util/text-wrapper';
+import CanvasMeasurementProvider from './util/canvas-measurement-provider';
+import Skin from './Skin';
 
 const BubbleStyle = {
     MAX_LINE_WIDTH: 170, // Maximum width, in Scratch pixels, of a single line of text
@@ -33,7 +33,7 @@ class TextBubbleSkin extends Skin {
      * @constructor
      * @extends Skin
      */
-    constructor (id, renderer) {
+    constructor(id, renderer) {
         super(id);
 
         /** @type {RenderWebGL} */
@@ -75,7 +75,7 @@ class TextBubbleSkin extends Skin {
     /**
      * Dispose of this object. Do not use it after calling this method.
      */
-    dispose () {
+    dispose() {
         if (this._texture) {
             this._renderer.gl.deleteTexture(this._texture);
             this._texture = null;
@@ -87,7 +87,7 @@ class TextBubbleSkin extends Skin {
     /**
      * @return {Array<number>} the dimensions, in Scratch units, of this skin.
      */
-    get size () {
+    get size() {
         if (this._textDirty) {
             this._reflowLines();
         }
@@ -100,7 +100,7 @@ class TextBubbleSkin extends Skin {
      * @param {!string} text - the text for the bubble.
      * @param {!boolean} pointsLeft - which side the bubble is pointing.
      */
-    setTextBubble (type, text, pointsLeft) {
+    setTextBubble(type, text, pointsLeft) {
         this._text = text;
         this._bubbleType = type;
         this._pointsLeft = pointsLeft;
@@ -113,14 +113,14 @@ class TextBubbleSkin extends Skin {
     /**
      * Re-style the canvas after resizing it. This is necessary to ensure proper text measurement.
      */
-    _restyleCanvas () {
+    _restyleCanvas() {
         this._canvas.getContext('2d').font = `${BubbleStyle.FONT_SIZE}px ${BubbleStyle.FONT}, sans-serif`;
     }
 
     /**
      * Update the array of wrapped lines and the text dimensions.
      */
-    _reflowLines () {
+    _reflowLines() {
         this._lines = this.textWrapper.wrapText(BubbleStyle.MAX_LINE_WIDTH, this._text);
 
         // Measure width of longest line to avoid extra-wide bubbles
@@ -146,7 +146,7 @@ class TextBubbleSkin extends Skin {
      * Render this text bubble at a certain scale, using the current parameters, to the canvas.
      * @param {number} scale The scale to render the bubble at
      */
-    _renderTextBubble (scale) {
+    _renderTextBubble(scale) {
         const ctx = this._canvas.getContext('2d');
 
         if (this._textDirty) {
@@ -234,14 +234,14 @@ class TextBubbleSkin extends Skin {
                 line,
                 BubbleStyle.PADDING,
                 BubbleStyle.PADDING + (BubbleStyle.LINE_HEIGHT * lineNumber) +
-                    (BubbleStyle.FONT_HEIGHT_RATIO * BubbleStyle.FONT_SIZE)
+                (BubbleStyle.FONT_HEIGHT_RATIO * BubbleStyle.FONT_SIZE)
             );
         }
 
         this._renderedScale = scale;
     }
 
-    updateSilhouette (scale = [100, 100]) {
+    updateSilhouette(scale = [100, 100]) {
         // Ensure a silhouette exists.
         this.getTexture(scale);
     }
@@ -250,7 +250,7 @@ class TextBubbleSkin extends Skin {
      * @param {Array<number>} scale - The scaling factors to be used, each in the [0,100] range.
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
      */
-    getTexture (scale) {
+    getTexture(scale) {
         // The texture only ever gets uniform scale. Take the larger of the two axes.
         const scaleMax = scale ? Math.max(Math.abs(scale[0]), Math.abs(scale[1])) : 100;
         const requestedScale = scaleMax / 100;
@@ -281,4 +281,4 @@ class TextBubbleSkin extends Skin {
     }
 }
 
-module.exports = TextBubbleSkin;
+export default TextBubbleSkin;
