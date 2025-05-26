@@ -57,6 +57,7 @@
         "@babel/core": "7.27.1",
         "@babel/eslint-parser": "7.27.1",
         "@babel/preset-env": "7.27.2",
+        "buffer": "^6.0.3",
         "docdash": "0.4.0",
         "eslint": "8.57.1",
         "eslint-config-scratch": "9.0.9",
@@ -71,8 +72,8 @@
         "scratch-vm": "5.0.300",
         "semantic-release": "19.0.5",
         "tap": "11.1.5",
+        "terser": "^5.39.2",
         "travis-after-all": "1.4.5",
-        "vite": "^5.0.0",
-        "buffer": "^6.0.3"
+        "vite": "^5.0.0"
     }
 }

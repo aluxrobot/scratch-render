@@ -94,4 +94,4 @@ const hsvToRgb = ([h, s, v], dst) => {
     return dst;
 };
 
-module.exports = {rgbToHsv, hsvToRgb};
+export {rgbToHsv, hsvToRgb};
