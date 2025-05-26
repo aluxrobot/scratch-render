@@ -23,7 +23,6 @@ export default defineConfig(({ mode }) => ({
         rollupOptions: {
             external: [
                 'events',
-                'grapheme-breaker',
                 'hull.js',
                 'scratch-svg-renderer',
                 'twgl.js',
