@@ -57,7 +57,9 @@ export default defineConfig(({ mode }) => ({
 
     resolve: {
         alias: {
-            '@': resolve(process.cwd(), './src')
+            '@': resolve(process.cwd(), './src'),
+            // twgl.js default export 문제 해결
+            'twgl.js': resolve(process.cwd(), 'node_modules/twgl.js/dist/4.x/twgl-full.js')
         }
     },
 
@@ -77,4 +79,3 @@ export default defineConfig(({ mode }) => ({
         exclude: ['raw-loader']
     }
 }));
-
