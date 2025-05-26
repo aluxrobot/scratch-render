@@ -1,6 +1,6 @@
 {
     "name": "scratch-render",
-    "version": "2.0.392",
+    "version": "2.0.393",
     "description": "WebGL Renderer for Scratch 3.0",
     "author": "Massachusetts Institute of Technology",
     "license": "AGPL-3.0-only",
