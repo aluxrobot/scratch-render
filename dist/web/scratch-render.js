@@ -7886,7 +7886,7 @@ class o {
    * @param {Array.<number>} position A new position.
    */
   updatePosition(t) {
-    (this._position[0] !== t[0] || this._position[1] !== t[1]) && (this._position[0] = Math.round(t[0]), this._position[1] = Math.round(t[1]), this.setTransformDirty());
+    (this._position[0] !== t[0] || this._position[1] !== t[1]) && (this._position[0] = t[0], this._position[1] = t[1], this.setTransformDirty());
   }
   /**
    * Update the direction if it is different. Marks the transform as dirty.

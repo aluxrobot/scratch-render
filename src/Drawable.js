@@ -205,8 +205,8 @@ class Drawable {
     updatePosition (position) {
         if (this._position[0] !== position[0] ||
             this._position[1] !== position[1]) {
-            this._position[0] = Math.round(position[0]);
-            this._position[1] = Math.round(position[1]);
+            this._position[0] = position[0];
+            this._position[1] = position[1];
             this.setTransformDirty();
         }
     }
